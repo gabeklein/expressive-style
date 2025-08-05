@@ -35,6 +35,10 @@ export function getNames(path: NodePath<JSXElement>) {
     if (typeof name !== "string")
       name = name.name;
 
+    //TODO: add flag for this to be enforced by plugin
+    if(name.startsWith("_"))
+      name = name.slice(1);
+
     names.set(name, attr);
   });
 
