@@ -44,6 +44,12 @@ function JSX(path: NodePath<JSXElement> | NodePath<JSXFragment>) {
     getNames(path).forEach((attr, name) => {
       let used = false;
 
+      //TODO: add flag for this to be enforced by plugin
+      if (name.startsWith("_")) {
+        name = name.slice(1);
+        used = true;
+      }
+
       for (let { define } of scope) {
         const apply = [] as Context[];
 
