@@ -24,83 +24,83 @@ const USING_KEY = Symbol("expressive context");
 function getUsing(path: NodePath) {
   return new Set(path.getData(USING_KEY)) as Set<Context>;
 }
+const SCOPE = new WeakMap<NodePath, Set<Context>>();
 
-function Plugin(_compiler: any, options: Options): PluginObj<State> {
-  const SCOPE = new WeakMap<NodePath, Set<Context>>();
-
-  Object.assign(t, _compiler.types);
-
-  function JSX(path: NodePath<JSXElement> | NodePath<JSXFragment>) {
-    if (path.getData(USING_KEY)) return;
+function JSX(path: NodePath<JSXElement> | NodePath<JSXFragment>) {
+  if (path.getData(USING_KEY)) return;
 
   let { parentPath: parent } = path;
 
   if (fixImplicitReturn(path)) return;
 
-    const context =
-      !parent.isJSXElement() && !parent.isJSXFragment() && getContext(path);
-    const scope = new Set(context ? [context] : SCOPE.get(parent));
-    const using = new Set<Context>();
+  const context =
+    !parent.isJSXElement() && !parent.isJSXFragment() && getContext(path);
+  const scope = new Set(context ? [context] : SCOPE.get(parent));
+  const using = new Set<Context>();
 
-    SCOPE.set(path, scope);
+  SCOPE.set(path, scope);
 
-    if (path.isJSXElement())
-      getNames(path).forEach((attr, name) => {
-        let used = false;
+  if (path.isJSXElement())
+    getNames(path).forEach((attr, name) => {
+      let used = false;
 
-        for (let { define } of scope) {
-          const apply = [] as Context[];
+      for (let { define } of scope) {
+        const apply = [] as Context[];
 
-          for (
-            let mod: Context;
-            (mod = define[name]);
-            define = Object.getPrototypeOf(define)
-          ) {
-            apply.push(mod, ...mod.also);
-            used = true;
+        for (
+          let mod: Context;
+          (mod = define[name]);
+          define = Object.getPrototypeOf(define)
+        ) {
+          apply.push(mod, ...mod.also);
+          used = true;
 
-            if (name == "this") break;
-          }
-
-          apply.reverse().forEach((ctx) => {
-            ctx.usedBy.add(path);
-            scope.add(ctx);
-            using.add(ctx);
-          });
+          if (name == "this") break;
         }
 
-        if (used && attr.isJSXAttribute()) attr.remove();
-      });
+        apply.reverse().forEach((ctx) => {
+          ctx.usedBy.add(path);
+          scope.add(ctx);
+          using.add(ctx);
+        });
+      }
 
-    path.setData(USING_KEY, using);
+      if (used && attr.isJSXAttribute()) attr.remove();
+    });
 
-    if (
-      context === false ||
-      context.define.this !== context ||
-      context.props.size === 0 ||
-      context.usedBy.size
-    )
-      return;
+  path.setData(USING_KEY, using);
 
-    if (parent.isParenthesizedExpression()) parent = parent.parentPath;
+  if (
+    context === false ||
+    context.define.this !== context ||
+    context.props.size === 0 ||
+    context.usedBy.size
+  )
+    return;
 
-    if (
-      !parent.isArrowFunctionExpression() &&
-      !parent.isReturnStatement() &&
-      !parent.isExpressionStatement()
-    )
-      return;
+  if (parent.isParenthesizedExpression()) {
+    parent = parent.parentPath;
+  }
 
+  if (
+    parent.isArrowFunctionExpression() ||
+    parent.isReturnStatement() ||
+    parent.isExpressionStatement()
+  ) {
     const [inserted] = path.replaceWith(
       t.jsxElement(
         t.jsxOpeningElement(t.jSXIdentifier("this"), []),
         t.jsxClosingElement(t.jSXIdentifier("this")),
-        path.isJSXElement() ? [path.node] : path.node.children
+        path.isJSXFragment() ? path.node.children : [path.node]
       )
     );
 
     inserted.setData(USING_KEY, new Set([context]));
   }
+}
+
+function Plugin(_compiler: any, options: Options): PluginObj<State> {
+  Object.assign(t, _compiler.types);
 
   return {
     manipulateOptions(_options, parse) {
