@@ -26,6 +26,49 @@ function getUsing(path: NodePath) {
 }
 const SCOPE = new WeakMap<NodePath, Set<Context>>();
 
+/**
+ * Checks if the JSXElement or JSXFragment is returned by a component.
+ * The function may be a declaration, expression, or arrow function.
+ * The function must have a name with a capital letter to be considered a component.
+ */
+function isReturnedByComponent(
+  path: NodePath<JSXElement> | NodePath<JSXFragment>
+) {
+  let parent = path.parentPath;
+
+  if (parent.isParenthesizedExpression()) parent = parent.parentPath;
+
+  if (!parent.isReturnStatement() && !parent.isArrowFunctionExpression())
+    return false;
+
+  // Traverse up to find the containing function
+  while (!parent.isFunction()) {
+    if (parent.isProgram() || !parent.parentPath) return false;
+    parent = parent.parentPath;
+  }
+
+  // Check for named function declarations/expressions
+  if (parent.isFunctionDeclaration() || parent.isFunctionExpression()) {
+    const { id } = parent.node;
+    if (t.isIdentifier(id) && /^[A-Z]/.test(id.name)) return true;
+  }
+
+  // Handle arrow functions - check if assigned to a capitalized variable
+  if (parent.isFunctionExpression() || parent.isArrowFunctionExpression()) {
+    const varParent = parent.parentPath;
+
+    if (varParent.isVariableDeclarator()) {
+      const { id } = varParent.node;
+      if (t.isIdentifier(id) && /^[A-Z]/.test(id.name)) {
+        const binding = path.scope.getBinding(id.name);
+        return binding ? binding.constantViolations.length === 0 : false;
+      }
+    }
+  }
+
+  return false;
+}
+
 function JSX(path: NodePath<JSXElement> | NodePath<JSXFragment>) {
   if (path.getData(USING_KEY)) return;
 
@@ -40,10 +83,7 @@ function JSX(path: NodePath<JSXElement> | NodePath<JSXFragment>) {
 
   if (parent.isParenthesizedExpression()) parent = parent.parentPath;
 
-  const returned =
-    parent.isArrowFunctionExpression() ||
-    parent.isReturnStatement() ||
-    parent.isExpressionStatement();
+  const returned = isReturnedByComponent(path);
 
   SCOPE.set(path, scope);
 
