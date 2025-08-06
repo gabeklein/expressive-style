@@ -1,6 +1,6 @@
 {
   "name": "@expressive/babel-plugin-jsx",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "Babel parse plugin for Expressive JSX.",
   "repository": "https://github.com/gabeklein/expressive-dsl",
   "author": {
