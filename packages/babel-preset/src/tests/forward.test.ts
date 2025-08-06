@@ -2,7 +2,7 @@ import { expect, it } from "vitest";
 
 import { parser } from "./adapter";
 
-it("will forward props", async () => {
+it("will forward className", async () => {
   const output = await parser(`
     const Component = () => {
       color: blue;
@@ -14,27 +14,45 @@ it("will forward props", async () => {
   expect(output.code).toMatchInlineSnapshot(`
     const Component = (props) => (
       <div
-        {...props}
-        className={classNames(props.className, 'Component_16i')}
+        className={classNames(props.className, 'Component_240')}
       />
     );
   `);
 });
 
-it("will forward existing props", async () => {
+it("will forward from existing props", async () => {
   const output = await parser(`
-    const Component = () => {
+    const Component = (props) => {
       color: blue;
 
-      <this />
+      <this something={props.something} />
     }
   `);
 
   expect(output.code).toMatchInlineSnapshot(`
     const Component = (props) => (
       <div
-        {...props}
-        className={classNames(props.className, 'Component_22h')}
+        something={props.something}
+        className={classNames(props.className, 'Component_2a2')}
+      />
+    );
+  `);
+});
+
+it("will forward from destructured props", async () => {
+  const output = await parser(`
+    const Component = ({ something }) => {
+      color: blue;
+
+      <this something={something} />
+    }
+  `);
+
+  expect(output.code).toMatchInlineSnapshot(`
+    const Component = ({ className, something }) => (
+      <div
+        something={something}
+        className={classNames(className, 'Component_18f')}
       />
     );
   `);
@@ -52,14 +70,13 @@ it("will return this if no JSX", async () => {
   expect(output.code).toMatchInlineSnapshot(`
     const Component = (props) => (
       <div
-        {...props}
         className={classNames(props.className, 'Component_2jp')}
       />
     );
   `);
 });
 
-it("will forward props to this attribute", async () => {
+it("will forward className to this attribute", async () => {
   const output = await parser(`
     const Component = () => {
       color: blue;
@@ -71,7 +88,6 @@ it("will forward props to this attribute", async () => {
   expect(output.code).toMatchInlineSnapshot(`
     const Component = (props) => (
       <input
-        {...props}
         className={classNames(props.className, 'Component_16v')}
       />
     );
@@ -86,7 +102,11 @@ it("will forward props with no styles", async () => {
   `);
 
   expect(output.code).toMatchInlineSnapshot(
-    `export const Row = (props) => <div {...props} />;`
+    `
+    export const Row = (props) => (
+      <div className={props.className} />
+    );
+  `
   );
 });
 
@@ -104,9 +124,7 @@ it("will apply styles by wrapping fragment", async () => {
 
   expect(output.code).toMatchInlineSnapshot(`
     export const Row = (props) => (
-      <div
-        {...props}
-        className={classNames(props.className, 'Row_2gs')}>
+      <div className={classNames(props.className, 'Row_2gs')}>
         <span>Something</span>
         <span>Something</span>
       </div>
@@ -133,11 +151,9 @@ it("will apply styles by wrapping fragment with this", async () => {
   `);
 
   expect(output.code).toMatchInlineSnapshot(`
-    const Steps = ({ className, steps, currentStep, ...rest }) => {
+    const Steps = ({ className, steps, currentStep }) => {
       return (
-        <div
-          {...rest}
-          className={classNames(className, 'Steps_11k')}>
+        <div className={classNames(className, 'Steps_11k')}>
           {steps.map((step, i) => (
             <Step key={i} index={i} current={currentStep}>
               {step}
@@ -166,9 +182,7 @@ it("will not wrap an expression in element", async () => {
   expect(output.code).toMatchInlineSnapshot(`
     const Test = (props) => {
       return (
-        <div
-          {...props}
-          className={classNames(props.className, 'Test_2b1')}>
+        <div className={classNames(props.className, 'Test_2b1')}>
           {true && <div />}
         </div>
       );

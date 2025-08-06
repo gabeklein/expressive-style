@@ -13,9 +13,7 @@ it("will apply hover pseudo class", async () => {
 
   expect(output.code).toMatchInlineSnapshot(`
     const Component = (props) => (
-      <div
-        {...props}
-        className={classNames(props.className, 'Component_2bb')}>
+      <div className={classNames(props.className, 'Component_2bb')}>
         Hello
       </div>
     );
@@ -52,9 +50,7 @@ it("will apply hover pseudo class with nested", async () => {
 
   expect(output.code).toMatchInlineSnapshot(`
     const Component = (props) => (
-      <div
-        {...props}
-        className={classNames(props.className, 'Component_2id')}>
+      <div className={classNames(props.className, 'Component_2id')}>
         Hello
       </div>
     );

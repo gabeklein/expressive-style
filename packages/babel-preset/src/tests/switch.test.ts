@@ -12,10 +12,8 @@ it("will apply to this", async () => {
   `);
 
   expect(output.code).toMatchInlineSnapshot(`
-    const Component = ({ className, active, ...rest }) => (
-      <div
-        {...rest}
-        className={classNames(className, active && 'active_tla')}>
+    const Component = ({ className, active }) => (
+      <div className={classNames(className, active && 'active_tla')}>
         Hello
       </div>
     );
@@ -43,9 +41,8 @@ it("will apply else", async () => {
   `);
 
   expect(output.code).toMatchInlineSnapshot(`
-    const Component = ({ className, active, ...rest }) => (
+    const Component = ({ className, active }) => (
       <div
-        {...rest}
         className={classNames(
           'Component_2a2',
           active ? 'active_tla' : 'else_tla',
@@ -107,10 +104,8 @@ it("will apply to child selector", async () => {
   `);
 
   expect(output.code).toMatchInlineSnapshot(`
-    const Component = ({ className, active, ...rest }) => (
-      <div
-        {...rest}
-        className={classNames(className, active && 'active_tla')}>
+    const Component = ({ className, active }) => (
+      <div className={classNames(className, active && 'active_tla')}>
         <div className="div_xt4">Hello</div>
       </div>
     );

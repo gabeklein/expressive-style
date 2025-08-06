@@ -4,14 +4,8 @@ import { Context, getUsing } from "@expressive/babel-plugin-jsx";
 
 import { Preset, State } from "..";
 import t from "../types";
-import { getComponentProp, getComponentProps } from "./component";
-import {
-  addClassName,
-  fixTagName,
-  getClassName,
-  hasProp,
-  spreadProps,
-} from "./jsx";
+import { getComponentProp } from "./component";
+import { addClassName, fixTagName, getClassName } from "./jsx";
 import { uniqueIdentifier } from "./uniqueIdentifier";
 
 const classNamesHelper = template.ast`
@@ -54,12 +48,8 @@ export function CSSPlugin(
           styles.set(key, context);
         }
 
-        if (forward) {
-          spreadProps(path, getComponentProps(forward));
-
-          if (hasProp(path, "className"))
-            addClassName(path, getComponentProp(path, "className"), getHelper);
-        }
+        if (forward)
+          addClassName(path, getComponentProp(path, "className"), getHelper);
       },
       Program: {
         enter(path, state) {

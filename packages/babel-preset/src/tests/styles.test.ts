@@ -36,9 +36,7 @@ it("will apply to this", async () => {
 
   expect(output.code).toMatchInlineSnapshot(`
     const Component = (props) => (
-      <div
-        {...props}
-        className={classNames(props.className, 'Component_26k')}>
+      <div className={classNames(props.className, 'Component_26k')}>
         Hello World
       </div>
     );
@@ -87,7 +85,6 @@ it("will apply to attribute this", async () => {
   expect(output.code).toMatchInlineSnapshot(`
     const RedInput = (props) => (
       <input
-        {...props}
         className={classNames(props.className, 'RedInput_245')}
       />
     );
@@ -179,7 +176,7 @@ it("will apply to jsx in conditional statement", async () => {
 
   expect(output.code).toMatchInlineSnapshot(`
     const Component = (props) => (
-      <div {...props}>
+      <div className={props.className}>
         {true && <div className="div_tla">Hello</div>}
       </div>
     );

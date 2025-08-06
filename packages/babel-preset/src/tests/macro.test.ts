@@ -51,7 +51,6 @@ it("will apply complex style", async () => {
   expect(output.code).toMatchInlineSnapshot(`
     const Component = (props) => (
       <div
-        {...props}
         className={classNames(props.className, 'Component_2du')}
       />
     );

@@ -67,7 +67,6 @@ it("will wrap elements if 'this' is styled", async () => {
     function Component(props) {
       return (
         <div
-          {...props}
           className={classNames(props.className, 'Component_215')}>
           <div className="inner_tla">
             <div className="thing_tla">Hello</div>

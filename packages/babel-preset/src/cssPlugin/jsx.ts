@@ -101,12 +101,6 @@ export function addClassName(
   throw new Error("Could not insert className");
 }
 
-export function spreadProps(path: NodePath<JSXElement>, props: Expression) {
-  path
-    .get("openingElement")
-    .unshiftContainer("attributes", t.jsxSpreadAttribute(props));
-}
-
 export function setTagName(path: NodePath<JSXElement>, name: string) {
   const { openingElement, closingElement } = path.node;
   const tag = t.jsxIdentifier(name);
