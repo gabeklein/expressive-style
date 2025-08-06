@@ -33,22 +33,9 @@ function Plugin(_compiler: any, options: Options): PluginObj<State> {
   function JSX(path: NodePath<JSXElement> | NodePath<JSXFragment>) {
     if (path.getData(USING_KEY)) return;
 
-    let { node, parentPath: parent } = path;
+  let { parentPath: parent } = path;
 
-    if (parent.isExpressionStatement()) {
-      const block = parent.parentPath;
-
-      if (
-        block.isBlockStatement() &&
-        block.get("body").length == 1 &&
-        block.parentPath.isArrowFunctionExpression()
-      )
-        block.replaceWith(t.parenthesizedExpression(node));
-      else parent.replaceWith(t.returnStatement(node));
-
-      path.skip();
-      return;
-    }
+  if (fixImplicitReturn(path)) return;
 
     const context =
       !parent.isJSXElement() && !parent.isJSXFragment() && getContext(path);
@@ -147,6 +134,25 @@ function Plugin(_compiler: any, options: Options): PluginObj<State> {
       },
     },
   };
+}
+
+function fixImplicitReturn(path: NodePath<JSXElement> | NodePath<JSXFragment>) {
+  let { node, parentPath: parent } = path;
+
+  if (!parent.isExpressionStatement()) return;
+
+  const block = parent.parentPath;
+
+  if (
+    block.isBlockStatement() &&
+    block.get("body").length == 1 &&
+    block.parentPath.isArrowFunctionExpression()
+  )
+    block.replaceWith(t.parenthesizedExpression(node));
+  else parent.replaceWith(t.returnStatement(node));
+
+  path.skip();
+  return true;
 }
 
 type ExitCallback = (path: NodePath, key: string | number | null) => void;
