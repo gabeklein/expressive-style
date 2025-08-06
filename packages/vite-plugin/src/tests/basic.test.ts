@@ -1,6 +1,6 @@
-import { expect, it } from 'vitest';
+import { expect, it } from "vitest";
 
-import { bundle } from './adapter';
+import { bundle } from "./adapter";
 
 it("will do", async () => {
   const files = await bundle(`  
@@ -28,7 +28,7 @@ it("will do", async () => {
       }, "Hello!");
     a();
   `);
-})
+});
 
 it("will import polyfill", async () => {
   const files = await bundle(`  
@@ -65,4 +65,4 @@ it("will import polyfill", async () => {
       }, "Hello!");
     a();
   `);
-})
+});

@@ -17,10 +17,7 @@
       "program": "./debug/index.ts",
       "runtimeExecutable": "tsx",
       "runtimeArgs": ["--watch"],
-      "skipFiles": [
-        "<node_internals>/**",
-        "${workspaceFolder}/node_modules/**",
-      ]
+      "skipFiles": ["<node_internals>/**", "${workspaceFolder}/node_modules/**"]
     },
     {
       "type": "node",
@@ -57,7 +54,7 @@
       "runtimeExecutable": "tsx",
       "skipFiles": [
         "<node_internals>/**",
-        "${workspaceFolder}/node_modules/**",
+        "${workspaceFolder}/node_modules/**"
       ],
       "console": "integratedTerminal"
     }

@@ -1,87 +1,88 @@
 import { appendUnit } from "./appendUnit";
 
-function margin(a1){
+function margin(a1) {
   let margin;
 
-  if(arguments.length == 1 && a1 == "auto" || a1 == "none" || / /.test(a1))
-    margin = a1
+  if ((arguments.length == 1 && a1 == "auto") || a1 == "none" || / /.test(a1))
+    margin = a1;
   else
-    margin = Array.from(arguments).map(x => appendUnit(x)).join(" ")
+    margin = Array.from(arguments)
+      .map((x) => appendUnit(x))
+      .join(" ");
 
   return {
-    margin
-  }
+    margin,
+  };
 }
 
-function padding(a1){
+function padding(a1) {
   let padding;
 
-  if(arguments.length == 1 && a1 == "auto" || a1 == "none" || / /.test(a1))
-    padding = a1
+  if ((arguments.length == 1 && a1 == "auto") || a1 == "none" || / /.test(a1))
+    padding = a1;
   else
-    padding = Array.from(arguments).map(x => appendUnit(x)).join(" ")
+    padding = Array.from(arguments)
+      .map((x) => appendUnit(x))
+      .join(" ");
 
   return {
-    padding
-  }
+    padding,
+  };
 }
 
 function marginTop(...args) {
   return {
-    marginTop: appendUnit(...args)
+    marginTop: appendUnit(...args),
   };
 }
 
 function marginLeft(...args) {
   return {
-    marginLeft: appendUnit(...args)
+    marginLeft: appendUnit(...args),
   };
 }
 
 function marginRight(...args) {
   return {
-    marginRight: appendUnit(...args)
+    marginRight: appendUnit(...args),
   };
 }
 
 function marginBottom(...args) {
   return {
-    marginBottom: appendUnit(...args)
+    marginBottom: appendUnit(...args),
   };
 }
 
-function paddingHorizontal(a, b){
+function paddingHorizontal(a, b) {
   return {
     paddingLeft: a,
-    paddingRight: b || a
+    paddingRight: b || a,
   };
 }
 
-function paddingVertical(a, b){
+function paddingVertical(a, b) {
   return {
     paddingTop: a,
-    paddingBottom: b || a
+    paddingBottom: b || a,
   };
 }
 
-function marginHorizontal(a, b){
+function marginHorizontal(a, b) {
   return {
     marginLeft: a,
-    marginRight: b || a
+    marginRight: b || a,
   };
 }
 
-function marginVertical(a, b){
+function marginVertical(a, b) {
   return {
     marginTop: a,
-    marginBottom: b || a
+    marginBottom: b || a,
   };
 }
 
-export {
-  margin,
-  padding
-}
+export { margin, padding };
 
 export {
   marginTop,
@@ -92,18 +93,18 @@ export {
   marginLeft as marginL,
   marginRight as marginR,
   marginBottom as marginB,
-}
+};
 
 export {
   paddingHorizontal as paddingH,
   paddingHorizontal,
   paddingVertical as paddingV,
-  paddingVertical
-}
+  paddingVertical,
+};
 
 export {
   marginHorizontal as marginH,
   marginHorizontal,
   marginVertical as marginV,
   marginVertical,
-}
+};

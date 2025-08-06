@@ -1,37 +1,34 @@
-import { transform } from '@babel/core';
-import { resolve } from 'path';
-import { format } from 'prettier';
-import { expect } from 'vitest';
-import webpack, { Compilation, Compiler, Stats } from 'webpack';
-import VirtualModulesPlugin from 'webpack-virtual-modules';
+import { transform } from "@babel/core";
+import { resolve } from "path";
+import { format } from "prettier";
+import { expect } from "vitest";
+import webpack, { Compilation, Compiler, Stats } from "webpack";
+import VirtualModulesPlugin from "webpack-virtual-modules";
 
-import JSXPlugin from '../';
+import JSXPlugin from "../";
 
 // drop quotes from string snapshot
 expect.addSnapshotSerializer({
-  test: x => typeof x == "string",
-  print: output => output as string
+  test: (x) => typeof x == "string",
+  print: (output) => output as string,
 });
 
-export async function bundle(
-  input: Record<string, string> | string = ""){
-
-  if(typeof input === 'string')
-    input = { './input.jsx': input };
+export async function bundle(input: Record<string, string> | string = "") {
+  if (typeof input === "string") input = { "./input.jsx": input };
 
   const output: Record<string, string> = {};
   const entry = Object.keys(input)[0];
   const compiler = webpack({
     context: resolve(__dirname, "../.."),
-    mode: 'development',
+    mode: "development",
     devtool: false,
     entry,
     output: {
-      filename: 'output.js'
+      filename: "output.js",
     },
-    externals({ request }, callback){
+    externals({ request }, callback) {
       if (/node_modules/.test(request!))
-        return callback(null, 'commonjs ' + request);
+        return callback(null, "commonjs " + request);
 
       callback();
     },
@@ -42,7 +39,7 @@ export async function bundle(
       minimize: false,
     },
     experiments: {
-      outputModule: true
+      outputModule: true,
     },
     plugins: [
       new JSXPlugin(),
@@ -53,7 +50,7 @@ export async function bundle(
       rules: [
         {
           test: /\.css$/,
-          use: 'css-loader'
+          use: "css-loader",
         },
         {
           test: /\.jsx?$/,
@@ -64,19 +61,19 @@ export async function bundle(
               jsc: {
                 target: "es2020",
                 parser: {
-                  jsx: true
+                  jsx: true,
                 },
                 transform: {
                   react: {
                     development: false,
                     pragma: "element",
-                  }
-                }
-              }
-            }
-          }
-        }
-      ]
+                  },
+                },
+              },
+            },
+          },
+        },
+      ],
     },
   });
 
@@ -93,30 +90,28 @@ export async function bundle(
 
   return {
     files: output,
-    output: output['output.js'],
-    stats
-  }
+    output: output["output.js"],
+    stats,
+  };
 }
 
 class TestSnapshotPlugin {
-  constructor(private files: Record<string, string> = {}){}
+  constructor(private files: Record<string, string> = {}) {}
 
   apply(compiler: Compiler): void {
     // do not actually write any files to the filesystem
-    compiler.hooks.shouldEmit.tap('PreventEmitPlugin', () => false);
+    compiler.hooks.shouldEmit.tap("PreventEmitPlugin", () => false);
 
     // intercept the output and store it in `files` after format
-    compiler.hooks.compilation.tap('OutputPlugin', (compilation) => {
+    compiler.hooks.compilation.tap("OutputPlugin", (compilation) => {
       compilation.hooks.processAssets.tapAsync(
         {
-          name: 'OutputPlugin',
+          name: "OutputPlugin",
           stage: Compilation.PROCESS_ASSETS_STAGE_OPTIMIZE,
         },
         (assets, callback) => {
           Object.entries(assets).forEach(([assetName, source]) => {
-            this.files[assetName] = pretty(
-              source.source().toString()
-            );
+            this.files[assetName] = pretty(source.source().toString());
           });
 
           callback();
@@ -126,29 +121,30 @@ class TestSnapshotPlugin {
   }
 }
 
-function pretty(code: string){
+function pretty(code: string) {
   const result = transform(code, {
     comments: false,
-    plugins: [{
-      visitor: {
-        Identifier({ node }) {
-          node.name = node.name.replace(/\w+?__WEBPACK_IMPORTED_/, "");
+    plugins: [
+      {
+        visitor: {
+          Identifier({ node }) {
+            node.name = node.name.replace(/\w+?__WEBPACK_IMPORTED_/, "");
+          },
+          StringLiteral({ node }) {
+            node.value = node.value.replace(/^.+\/node_modules\//, "");
+          },
         },
-        StringLiteral({ node }){
-          node.value = node.value.replace(/^.+\/node_modules\//, "");
-        }
-      }
-    }]
-  })
-  
-  if(result)
-    code = result.code!;
+      },
+    ],
+  });
+
+  if (result) code = result.code!;
 
   return format(code, {
-    parser: 'babel',
-    trailingComma: 'none',
+    parser: "babel",
+    trailingComma: "none",
     jsxBracketSameLine: true,
     printWidth: 80,
-    singleQuote: true
+    singleQuote: true,
   });
 }

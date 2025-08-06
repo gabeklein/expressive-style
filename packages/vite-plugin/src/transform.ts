@@ -1,5 +1,5 @@
-import * as babel from '@babel/core';
-import BabelPreset from '@expressive/babel-preset';
+import * as babel from "@babel/core";
+import BabelPreset from "@expressive/babel-preset";
 
 export type TransformOptions = BabelPreset.Options;
 
@@ -21,31 +21,27 @@ export async function transform(
     sourceMaps: true,
     parserOpts: {
       sourceType: "module",
-      allowAwaitOutsideFunction: true
+      allowAwaitOutsideFunction: true,
     },
     generatorOpts: {
-      decoratorsBeforeExport: true
+      decoratorsBeforeExport: true,
     },
-    presets: [
-      [BabelPreset, presetOptions]
-    ]
+    presets: [[BabelPreset, presetOptions]],
   });
 
-  if (!result)
-    throw new Error("No result");
+  if (!result) throw new Error("No result");
 
   let {
     code,
     map,
-    metadata: { css }
+    metadata: { css },
   } = result as BabelPreset.Result;
 
-  if (!code)
-    throw new Error("No code");
+  if (!code) throw new Error("No code");
 
-  return <TransformResult> {
+  return <TransformResult>{
     code,
     css,
-    map
+    map,
   };
 }

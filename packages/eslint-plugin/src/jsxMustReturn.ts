@@ -1,17 +1,18 @@
-import { Rule } from 'eslint';
+import { Rule } from "eslint";
 
 export const jsxMustReturn: Rule.RuleModule = {
   meta: {
     fixable: "code",
-    type: 'problem',
+    type: "problem",
     docs: {
-      description: 'JSX elements must be returned, not left floating in a function',
-      recommended: true
+      description:
+        "JSX elements must be returned, not left floating in a function",
+      recommended: true,
     },
     schema: [],
     messages: {
-      mustReturn: 'JSX element is not returned. Did you mean to return it?'
-    }
+      mustReturn: "JSX element is not returned. Did you mean to return it?",
+    },
   },
   create(context: Rule.RuleContext) {
     return {
@@ -21,30 +22,35 @@ export const jsxMustReturn: Rule.RuleModule = {
 
         // Only check inside functions
         while (parent) {
-          if ([
-            'FunctionDeclaration',
-            'FunctionExpression',
-            'ArrowFunctionExpression'
-          ].includes(parent.type))
+          if (
+            [
+              "FunctionDeclaration",
+              "FunctionExpression",
+              "ArrowFunctionExpression",
+            ].includes(parent.type)
+          )
             break;
 
           parent = parent.parent;
         }
 
-        if (parent &&
+        if (
+          parent &&
           expression &&
-          ['JSXElement', 'JSXFragment'].includes(expression.type)) {
+          ["JSXElement", "JSXFragment"].includes(expression.type)
+        ) {
           context.report({
             node,
-            messageId: 'mustReturn',
+            messageId: "mustReturn",
             fix(fixer) {
-              return fixer.replaceText(node,
+              return fixer.replaceText(
+                node,
                 `return (${context.sourceCode.getText(expression)})`
               );
-            }
+            },
           });
         }
-      }
+      },
     };
-  }
+  },
 };

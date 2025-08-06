@@ -1,17 +1,19 @@
-import { NodePath } from '@babel/traverse';
-import { Expression, Identifier, JSXElement } from '@babel/types';
-import { Plugin } from '@expressive/babel-plugin-jsx';
+import { NodePath } from "@babel/traverse";
+import { Expression, Identifier, JSXElement } from "@babel/types";
+import { Plugin } from "@expressive/babel-plugin-jsx";
 
-import t from '../types';
-import { isStandard } from './tags';
+import t from "../types";
+import { isStandard } from "./tags";
 
 /** TODO: Move to a default handler included with macros. */
-export function fixTagName(path: any){
+export function fixTagName(path: any) {
   const { name } = path.node.openingElement;
 
-  if(t.isJSXIdentifier(name)
-  && !/^[A-Z]/.test(name.name)
-  && !isStandard(name.name))
+  if (
+    t.isJSXIdentifier(name) &&
+    !/^[A-Z]/.test(name.name) &&
+    !isStandard(name.name)
+  )
     setTagName(path, "div");
 }
 
@@ -19,29 +21,24 @@ export function getClassName(
   context: Plugin.Context,
   module?: Expression
 ): Expression | undefined {
-  if(!context.props.size && !context.children.size)
-    return;
+  if (!context.props.size && !context.children.size) return;
 
   const { condition, alternate, uid } = context;
 
-  if(typeof condition == "string" || t.isStringLiteral(condition))
-    return;
+  if (typeof condition == "string" || t.isStringLiteral(condition)) return;
 
   const value = module
     ? t.memberExpression(module, t.identifier(uid), false)
     : t.stringLiteral(uid);
 
-  if(!condition)
-    return value;
+  if (!condition) return value;
 
-  if(alternate){
+  if (alternate) {
     let alt = getClassName(alternate, module);
 
-    if(typeof alt === "string")
-      alt = t.stringLiteral(alt);
+    if (typeof alt === "string") alt = t.stringLiteral(alt);
 
-    if(alt)
-      return t.conditionalExpression(condition, value, alt);
+    if (alt) return t.conditionalExpression(condition, value, alt);
   }
 
   return t.logicalExpression("&&", condition, value);
@@ -50,26 +47,24 @@ export function getClassName(
 export function addClassName(
   path: NodePath<JSXElement>,
   name: string | Expression,
-  getHelper: () => Identifier) {
-
+  getHelper: () => Identifier
+) {
   const existing = hasProp(path, "className");
   const opening = path.get("openingElement");
 
-  if(typeof name == "string")
-    name = t.stringLiteral(name);
+  if (typeof name == "string") name = t.stringLiteral(name);
 
-  if(t.isStringLiteral(existing) && t.isStringLiteral(name)) {
+  if (t.isStringLiteral(existing) && t.isStringLiteral(name)) {
     existing.value += " " + name.value;
     return;
   }
 
-  if(!existing) {
+  if (!existing) {
     opening.pushContainer(
       "attributes",
       t.jsxAttribute(
         t.jsxIdentifier("className"),
-        t.isStringLiteral(name)
-          ? name : t.jsxExpressionContainer(name)
+        t.isStringLiteral(name) ? name : t.jsxExpressionContainer(name)
       )
     );
     return;
@@ -77,21 +72,26 @@ export function addClassName(
 
   const helper = getHelper();
 
-  if(t.isCallExpression(existing) && t.isIdentifier(existing.callee, { name: helper.name })){
-    if(t.isStringLiteral(name))
-      for(const value of existing.arguments)
-        if(t.isStringLiteral(value)) {
+  if (
+    t.isCallExpression(existing) &&
+    t.isIdentifier(existing.callee, { name: helper.name })
+  ) {
+    if (t.isStringLiteral(name))
+      for (const value of existing.arguments)
+        if (t.isStringLiteral(value)) {
           value.value += " " + name.value;
           return;
         }
-    
+
     existing.arguments.push(name);
     return;
   }
 
-  for(const attr of opening.get("attributes"))
-    if(attr.isJSXAttribute()
-    && attr.get("name").isJSXIdentifier({ name: "className" })) {
+  for (const attr of opening.get("attributes"))
+    if (
+      attr.isJSXAttribute() &&
+      attr.get("name").isJSXIdentifier({ name: "className" })
+    ) {
       attr.node.value = t.jsxExpressionContainer(
         t.callExpression(helper, [name, existing])
       );
@@ -101,32 +101,29 @@ export function addClassName(
   throw new Error("Could not insert className");
 }
 
-export function spreadProps(path: NodePath<JSXElement>, props: Expression){
+export function spreadProps(path: NodePath<JSXElement>, props: Expression) {
   path
     .get("openingElement")
-    .unshiftContainer("attributes", t.jsxSpreadAttribute(props))
+    .unshiftContainer("attributes", t.jsxSpreadAttribute(props));
 }
 
-export function setTagName(path: NodePath<JSXElement>, name: string){
+export function setTagName(path: NodePath<JSXElement>, name: string) {
   const { openingElement, closingElement } = path.node;
   const tag = t.jsxIdentifier(name);
 
   openingElement.name = tag;
 
-  if(closingElement)
-    closingElement.name = tag;
+  if (closingElement) closingElement.name = tag;
 }
 
-export function hasProp(path: NodePath<JSXElement>, name: string){
-  for(const attr of path.node.openingElement.attributes)
-    if(t.isJSXAttribute(attr) && attr.name.name === name){
+export function hasProp(path: NodePath<JSXElement>, name: string) {
+  for (const attr of path.node.openingElement.attributes)
+    if (t.isJSXAttribute(attr) && attr.name.name === name) {
       const { value } = attr;
 
-      if(t.isJSXExpressionContainer(value) && t.isExpression(value.expression))
+      if (t.isJSXExpressionContainer(value) && t.isExpression(value.expression))
         return value.expression;
 
-      if(t.isExpression(value))
-        return value;
+      if (t.isExpression(value)) return value;
     }
 }
-

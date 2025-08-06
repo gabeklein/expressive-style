@@ -1,6 +1,6 @@
-import { expect, it } from 'vitest';
+import { expect, it } from "vitest";
 
-import { parser } from './adapter';
+import { parser } from "./adapter";
 
 it("will forward props", async () => {
   const output = await parser(`

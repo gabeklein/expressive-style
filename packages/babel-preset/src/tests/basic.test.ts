@@ -21,7 +21,7 @@ it("will pass", async () => {
   expect(output.code).toMatchInlineSnapshot(`
     const Component = () => <div className="hello_tla" />;
   `);
-})
+});
 
 it("will convert named element without styles", async () => {
   const output = await parser(`
@@ -33,7 +33,7 @@ it("will convert named element without styles", async () => {
   expect(output.code).toMatchInlineSnapshot(`
     const Component = () => <div />;
   `);
-})
+});
 
 it("will drop default macros", async () => {
   const sanityCheck = await parser(`
@@ -53,7 +53,7 @@ it("will drop default macros", async () => {
   `);
 
   const parse = parser({
-    macros: [false]
+    macros: [false],
   });
 
   const output = await parse(`
@@ -67,7 +67,7 @@ it("will drop default macros", async () => {
       absolute: fill;
     }
   `);
-})
+});
 
 it("convert camelCase css values to dash-case", async () => {
   const output = await parser(`
@@ -85,4 +85,4 @@ it("convert camelCase css values to dash-case", async () => {
       box-sizing: border-box;
     }
   `);
-})
+});

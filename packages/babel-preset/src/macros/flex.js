@@ -6,26 +6,22 @@ const DIRECTIONS = {
   row: null,
   column: null,
   "row-reverse": null,
-  "column-reverse": null
-}
+  "column-reverse": null,
+};
 
-export function flexAlign(){
+export function flexAlign() {
   const style = {
-    display: "flex"
-  }
+    display: "flex",
+  };
 
-  for(const arg of arguments){
-    if(arg in DIRECTIONS){
+  for (const arg of arguments) {
+    if (arg in DIRECTIONS) {
       style.flexDirection = DIRECTIONS[arg] || arg;
-    }
-    else if(arg == "center"){
-      style.justifyContent = "center"
-      style.alignItems = "center"
-    }
-    else
-      style.justifyContent = arg;
+    } else if (arg == "center") {
+      style.justifyContent = "center";
+      style.alignItems = "center";
+    } else style.justifyContent = arg;
   }
 
   return style;
 }
-

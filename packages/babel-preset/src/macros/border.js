@@ -1,25 +1,20 @@
 import { appendUnit } from "./appendUnit";
 
-function _border(dir){
+function _border(dir) {
   let key = "border";
 
-  if(dir)
-    key += dir[0].toUpperCase() + dir.slice(1);
+  if (dir) key += dir[0].toUpperCase() + dir.slice(1);
 
   return (color, width, style) => {
-    if(color == "none" || color == "transparent")
+    if (color == "none" || color == "transparent")
       return {
-        [key]: color
+        [key]: color,
       };
-  
+
     return {
-      [key]: [
-        color || "black",
-        style || "solid",
-        appendUnit(width || "1")
-      ]
+      [key]: [color || "black", style || "solid", appendUnit(width || "1")],
     };
-  }
+  };
 }
 
 export const border = _border();
@@ -32,5 +27,5 @@ export {
   borderTop as borderT,
   borderLeft as borderL,
   borderRight as borderR,
-  borderBottom as borderB
-}
+  borderBottom as borderB,
+};

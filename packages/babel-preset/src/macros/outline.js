@@ -1,19 +1,19 @@
 export function outline(a, b) {
   if (a == "none")
     return {
-      outline: "none"
+      outline: "none",
     };
 
   if (b == undefined)
     return {
-      outline: `1px dashed ${a || "green"}`
+      outline: `1px dashed ${a || "green"}`,
     };
 
   const outline = Array.from(arguments)
-    .map(x => typeof x == "number" ? `${x}px` : x)
+    .map((x) => (typeof x == "number" ? `${x}px` : x))
     .join(" ");
 
   return {
-    outline
+    outline,
   };
 }

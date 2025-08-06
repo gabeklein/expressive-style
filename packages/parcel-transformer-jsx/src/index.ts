@@ -1,36 +1,35 @@
-import { Transformer } from '@parcel/plugin';
-import { MutableAsset, TransformerResult } from '@parcel/types';
-import { basename } from 'path';
+import { Transformer } from "@parcel/plugin";
+import { MutableAsset, TransformerResult } from "@parcel/types";
+import { basename } from "path";
 
-import { transform } from './transform';
+import { transform } from "./transform";
 
 export default new Transformer({
   async transform({ asset }) {
     const output = [asset as TransformerResult | MutableAsset];
 
-    if (!asset.filePath.endsWith('.jsx'))
-      return output;
+    if (!asset.filePath.endsWith(".jsx")) return output;
 
     const id = asset.filePath;
     const code = await asset.getCode();
     const result = await transform(id, code);
-    
+
     if (result && result.css) {
       const cssFilePath = `${asset.filePath}.css`;
 
       asset.addDependency({
         specifier: cssFilePath,
-        specifierType: 'esm',
+        specifierType: "esm",
       });
 
       result.code += `\nimport './${basename(cssFilePath)}';\n`;
-      
+
       output.push({
-        type: 'css',
+        type: "css",
         content: result.css,
         sideEffects: true,
         uniqueKey: cssFilePath,
-      })
+      });
     }
 
     asset.setCode(result.code);
@@ -39,5 +38,5 @@ export default new Transformer({
     //   asset.setMap(result.map as any);
 
     return output;
-  }
+  },
 });

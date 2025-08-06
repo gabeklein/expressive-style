@@ -1,17 +1,14 @@
 import { appendUnit } from "./appendUnit";
 
 export function nToNUnits(value, unit) {
-  if(value == "fill")
-    value = "100%";
+  if (value == "fill") value = "100%";
 
-  if(value.named){
+  if (value.named) {
     unit = value.named;
-    value = value.inner[0]
+    value = value.inner[0];
   }
 
-  return [
-    appendUnit(value, unit)
-  ];
+  return [appendUnit(value, unit)];
 }
 
 export const gap = nToNUnits;

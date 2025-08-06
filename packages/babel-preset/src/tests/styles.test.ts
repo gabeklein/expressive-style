@@ -1,4 +1,4 @@
-import { expect, it } from 'vitest';
+import { expect, it } from "vitest";
 import { parser } from "./adapter";
 
 it("will apply", async () => {
@@ -304,5 +304,4 @@ it("will handle border correctly", async () => {
       border: dashed var(--border-light) 2px;
     }
   `);
-
-})
+});

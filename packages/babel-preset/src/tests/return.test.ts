@@ -1,4 +1,4 @@
-import { expect, it } from 'vitest';
+import { expect, it } from "vitest";
 import { parser } from "./adapter";
 
 it("will return implicitly", async () => {

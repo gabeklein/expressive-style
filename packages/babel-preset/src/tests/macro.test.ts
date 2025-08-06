@@ -1,4 +1,4 @@
-import { expect, it } from 'vitest';
+import { expect, it } from "vitest";
 import { parser } from "./adapter";
 
 it("will bail on repeat macro", async () => {
@@ -86,11 +86,11 @@ it("will apply outline macro", async () => {
     const Component = () => {
       outline: red;
     }
-  `)
+  `);
 
   expect(output.css).toMatchInlineSnapshot(`
     .Component_13o {
       outline: 1px dashed red;
     }
   `);
-})
+});

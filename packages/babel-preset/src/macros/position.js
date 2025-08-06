@@ -1,54 +1,45 @@
-function absolute(...args){
+function absolute(...args) {
   return position("absolute", ...args);
 }
 
-function fixed(...args){
+function fixed(...args) {
   return position("fixed", ...args);
 }
 
-function relative(){
+function relative() {
   return {
-    position: "relative"
+    position: "relative",
   };
 }
 
-export {
-  absolute,
-  fixed,
-  relative
-};
+export { absolute, fixed, relative };
 
 const INVERSE = {
   top: "bottom",
   left: "right",
   right: "left",
-  bottom: "top"
-}
+  bottom: "top",
+};
 
-function position(kind, a, b = 0, c = b, d){
+function position(kind, a, b = 0, c = b, d) {
   const out = {
     position: kind,
     top: b,
     left: c,
     right: c,
-    bottom: b
+    bottom: b,
   };
 
-  if(a == "fill")
-    return out;
+  if (a == "fill") return out;
 
-  if(typeof a == "string"){
+  if (typeof a == "string") {
     const [k1, k2] = a.split("-");
 
-    if(k2){
-      if(k1 == "fill")
-        delete out[INVERSE[k2]]
+    if (k2) {
+      if (k1 == "fill") delete out[INVERSE[k2]];
+      else for (const dir of [k1, k2]) delete out[INVERSE[dir]];
 
-      else
-        for(const dir of [k1, k2])
-          delete out[INVERSE[dir]]
-
-      return out
+      return out;
     }
   }
 
@@ -71,33 +62,33 @@ function position(kind, a, b = 0, c = b, d){
   let right;
   let bottom;
 
-  switch(arguments.length - 1){
+  switch (arguments.length - 1) {
     case 0:
-      a = 0
+      a = 0;
     case 1:
       top = right = bottom = left = a;
-    break;
+      break;
 
     case 2:
-      top = bottom = a
-      left = right = b
-    break;
+      top = bottom = a;
+      left = right = b;
+      break;
 
     case 3:
-      top = a
-      bottom = c
-      left = right = b
-    break;
+      top = a;
+      bottom = c;
+      left = right = b;
+      break;
 
     case 4:
-      top = a
-      right = b
-      bottom = c
-      left = d
-    break;
+      top = a;
+      right = b;
+      bottom = c;
+      left = d;
+      break;
 
     default:
-      throw new Error("Too many arguments for css 4-way value.")
+      throw new Error("Too many arguments for css 4-way value.");
   }
 
   return {
@@ -105,6 +96,6 @@ function position(kind, a, b = 0, c = b, d){
     top,
     right,
     bottom,
-    left
-  }
+    left,
+  };
 }

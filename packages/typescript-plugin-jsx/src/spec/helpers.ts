@@ -1,6 +1,6 @@
-import ts from 'typescript/lib/tsserverlibrary';
+import ts from "typescript/lib/tsserverlibrary";
 
-import init from '..';
+import init from "..";
 
 /**
  * Creates an in-memory TypeScript LanguageService with the plugin enabled.
@@ -8,7 +8,10 @@ import init from '..';
  * @param fileName The virtual file name (default: 'file.tsx').
  * @returns The diagnostics emitted by TypeScript with the plugin applied.
  */
-export function getDiagnosticsWithPlugin(code: string, fileName = 'file.tsx'): ts.Diagnostic[] {
+export function getDiagnosticsWithPlugin(
+  code: string,
+  fileName = "file.tsx"
+): ts.Diagnostic[] {
   // Create a virtual file system
   const files = { [fileName]: code };
   const compilerOptions: ts.CompilerOptions = {
@@ -21,12 +24,14 @@ export function getDiagnosticsWithPlugin(code: string, fileName = 'file.tsx'): t
   // Host mocks
   const host: ts.LanguageServiceHost = {
     getScriptFileNames: () => Object.keys(files),
-    getScriptVersion: () => '1',
+    getScriptVersion: () => "1",
     getScriptSnapshot: (name) => {
       const text = files[name];
-      return text !== undefined ? ts.ScriptSnapshot.fromString(text) : undefined;
+      return text !== undefined
+        ? ts.ScriptSnapshot.fromString(text)
+        : undefined;
     },
-    getCurrentDirectory: () => '/',
+    getCurrentDirectory: () => "/",
     getCompilationSettings: () => compilerOptions,
     getDefaultLibFileName: (opts) => ts.getDefaultLibFilePath(opts),
     fileExists: (filePath) => files[filePath] !== undefined,
