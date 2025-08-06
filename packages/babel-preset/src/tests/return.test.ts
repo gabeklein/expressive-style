@@ -9,8 +9,8 @@ it("will return implicitly", async () => {
   `);
 
   expect(output.code).toMatchInlineSnapshot(`
-    function Component() {
-      return <div>Hello</div>;
+    function Component(props) {
+      return <div className={props.className}>Hello</div>;
     }
   `);
 });
@@ -22,9 +22,11 @@ it("will optimize arrow expression", async () => {
     }
   `);
 
-  expect(output.code).toMatchInlineSnapshot(
-    `const Component = () => <div>Hello</div>;`
-  );
+  expect(output.code).toMatchInlineSnapshot(`
+    const Component = (props) => (
+      <div className={props.className}>Hello</div>
+    );
+  `);
 });
 
 it("will not optimize with statements", async () => {
@@ -37,9 +39,9 @@ it("will not optimize with statements", async () => {
   `);
 
   expect(output.code).toMatchInlineSnapshot(`
-    const Component = () => {
+    const Component = (props) => {
       const name = 'World';
-      return <div>Hello {name}</div>;
+      return <div className={props.className}>Hello {name}</div>;
     };
   `);
 });
@@ -67,10 +69,11 @@ it("will wrap elements if 'this' is styled", async () => {
     function Component(props) {
       return (
         <div
-          className={classNames(props.className, 'Component_215')}>
-          <div className="inner_tla">
-            <div className="thing_tla">Hello</div>
-          </div>
+          className={classNames(
+            props.className,
+            'inner_tla Component_215'
+          )}>
+          <div className="thing_tla">Hello</div>
         </div>
       );
     }

@@ -88,7 +88,7 @@ it("will forward className to this attribute", async () => {
   expect(output.code).toMatchInlineSnapshot(`
     const Component = (props) => (
       <input
-        className={classNames(props.className, 'Component_16v')}
+        className={classNames(props.className, 'Component_16l')}
       />
     );
   `);
@@ -155,7 +155,11 @@ it("will apply styles by wrapping fragment with this", async () => {
       return (
         <div className={classNames(className, 'Steps_11k')}>
           {steps.map((step, i) => (
-            <Step key={i} index={i} current={currentStep}>
+            <Step
+              key={i}
+              index={i}
+              current={currentStep}
+              className={step.className}>
               {step}
             </Step>
           ))}

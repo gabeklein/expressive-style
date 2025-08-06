@@ -12,9 +12,13 @@ it("will apply", async () => {
     }
   `);
 
-  expect(output.code).toMatchInlineSnapshot(
-    `const Component = () => <div className="div_tla">Hello</div>;`
-  );
+  expect(output.code).toMatchInlineSnapshot(`
+    const Component = (props) => (
+      <div className={classNames(props.className, 'div_tla')}>
+        Hello
+      </div>
+    );
+  `);
 
   expect(output.css).toMatchInlineSnapshot(`
     .div_tla {
@@ -64,8 +68,8 @@ it("will apply to attributes", async () => {
   `);
 
   expect(output.code).toMatchInlineSnapshot(`
-    const Component = () => (
-      <div>
+    const Component = (props) => (
+      <div className={props.className}>
         Hello
         <div className="inner_tla">World</div>
       </div>
@@ -102,9 +106,13 @@ it("will keep existing className", async () => {
     }
   `);
 
-  expect(output.code).toMatchInlineSnapshot(
-    `const Component = () => <div className="foobar div_tla">Hi</div>;`
-  );
+  expect(output.code).toMatchInlineSnapshot(`
+    const Component = (props) => (
+      <div className={classNames(props.className, 'foobar div_tla')}>
+        Hi
+      </div>
+    );
+  `);
 });
 
 it("will apply nested", async () => {
@@ -125,8 +133,8 @@ it("will apply nested", async () => {
   `);
 
   expect(output.code).toMatchInlineSnapshot(`
-    const Component = () => (
-      <div className="container_tla">
+    const Component = (props) => (
+      <div className={classNames(props.className, 'container_tla')}>
         Hello <div className="inner_wj9">World</div>
       </div>
     );
@@ -152,8 +160,8 @@ it("will apply nested to attributes", async () => {
   `);
 
   expect(output.code).toMatchInlineSnapshot(`
-    const Component = () => (
-      <div>
+    const Component = (props) => (
+      <div className={props.className}>
         <div className="item_tla" />
         <div className="item_tla red_jh9" />
       </div>
@@ -283,7 +291,12 @@ it("will use classnames from module", async () => {
 
   expect(output.code).toMatchInlineSnapshot(`
     import css from './styles.module.css';
-    const Component = () => <div className={css.div_tla}>Hello</div>;
+
+    const Component = (props) => (
+      <div className={classNames(props.className, css.div_tla)}>
+        Hello
+      </div>
+    );
   `);
 });
 

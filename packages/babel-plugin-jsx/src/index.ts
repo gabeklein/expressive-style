@@ -38,10 +38,21 @@ function JSX(path: NodePath<JSXElement> | NodePath<JSXFragment>) {
   const scope = new Set(context ? [context] : SCOPE.get(parent));
   const using = new Set<Context>();
 
+  if (parent.isParenthesizedExpression()) parent = parent.parentPath;
+
+  const returned =
+    parent.isArrowFunctionExpression() ||
+    parent.isReturnStatement() ||
+    parent.isExpressionStatement();
+
   SCOPE.set(path, scope);
 
-  if (path.isJSXElement())
-    getNames(path).forEach((attr, name) => {
+  if (path.isJSXElement()) {
+    const name = getNames(path);
+
+    if (returned && !name.has("this")) name.set("this", path);
+
+    name.forEach((attr, name) => {
       let used = false;
 
       //TODO: add flag for this to be enforced by plugin
@@ -73,10 +84,12 @@ function JSX(path: NodePath<JSXElement> | NodePath<JSXFragment>) {
 
       if (used && attr.isJSXAttribute()) attr.remove();
     });
+  }
 
   path.setData(USING_KEY, using);
 
   if (
+    returned === false ||
     context === false ||
     context.define.this !== context ||
     context.props.size === 0 ||
@@ -84,25 +97,15 @@ function JSX(path: NodePath<JSXElement> | NodePath<JSXFragment>) {
   )
     return;
 
-  if (parent.isParenthesizedExpression()) {
-    parent = parent.parentPath;
-  }
+  const [inserted] = path.replaceWith(
+    t.jsxElement(
+      t.jsxOpeningElement(t.jSXIdentifier("this"), []),
+      t.jsxClosingElement(t.jSXIdentifier("this")),
+      path.isJSXFragment() ? path.node.children : [path.node]
+    )
+  );
 
-  if (
-    parent.isArrowFunctionExpression() ||
-    parent.isReturnStatement() ||
-    parent.isExpressionStatement()
-  ) {
-    const [inserted] = path.replaceWith(
-      t.jsxElement(
-        t.jsxOpeningElement(t.jSXIdentifier("this"), []),
-        t.jsxClosingElement(t.jSXIdentifier("this")),
-        path.isJSXFragment() ? path.node.children : [path.node]
-      )
-    );
-
-    inserted.setData(USING_KEY, new Set([context]));
-  }
+  inserted.setData(USING_KEY, new Set([context]));
 }
 
 function Plugin(_compiler: any, options: Options): PluginObj<State> {

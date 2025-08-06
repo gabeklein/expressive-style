@@ -19,7 +19,9 @@ it("will pass", async () => {
   `);
 
   expect(output.code).toMatchInlineSnapshot(`
-    const Component = () => <div className="hello_tla" />;
+    const Component = (props) => (
+      <div className={classNames(props.className, 'hello_tla')} />
+    );
   `);
 });
 
@@ -30,9 +32,7 @@ it("will convert named element without styles", async () => {
     }
   `);
 
-  expect(output.code).toMatchInlineSnapshot(`
-    const Component = () => <div />;
-  `);
+  expect(output.code).toMatchInlineSnapshot(`const Component = (props) => <div className={props.className} />;`);
 });
 
 it("will drop default macros", async () => {

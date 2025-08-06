@@ -81,8 +81,13 @@ it("will apply to selector", async () => {
   `);
 
   expect(output.code).toMatchInlineSnapshot(`
-    const Component = ({ active }) => (
-      <div className={classNames('div_tla', active && 'active_roo')}>
+    const Component = ({ className, active }) => (
+      <div
+        className={classNames(
+          'div_tla',
+          active && 'active_roo',
+          className
+        )}>
         Hello
       </div>
     );
