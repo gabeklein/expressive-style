@@ -1,7 +1,7 @@
-import { NodePath } from '@babel/traverse';
-import { Expression } from '@babel/types';
+import { NodePath } from "@babel/traverse";
+import { Expression } from "@babel/types";
 
-import type { Macro } from './options';
+import type { Macro } from "./options";
 
 const CONTEXT = new WeakMap<NodePath, Context>();
 
@@ -19,39 +19,32 @@ export class Context {
   condition?: Expression | string;
   alternate?: Context;
 
-  static get(from: NodePath){
-    return CONTEXT.get(from)
+  static get(from: NodePath) {
+    return CONTEXT.get(from);
   }
 
-  constructor(
-    path: NodePath,
-    parent?: Context,
-    name?: string){
-
+  constructor(path: NodePath, parent?: Context, name?: string) {
     CONTEXT.set(path, this);
     this.path = path;
 
-    if(!(parent instanceof Context))
-      return;
+    if (!(parent instanceof Context)) return;
 
     this.parent = parent;
     this.uid = name + "_" + hash(parent.uid);
     this.define = Object.create(parent.define);
     this.macros = Object.create(parent.macros);
 
-    do if(parent.condition){
-      parent.children.add(this);
-    }
-    while(parent = parent.parent)
+    do
+      if (parent.condition) {
+        parent.children.add(this);
+      }
+    while ((parent = parent.parent));
   }
 }
 
-export function hash(
-  input: string = String(Math.random()),
-  length = 3){
-
+export function hash(input: string = String(Math.random()), length = 3) {
   let hash = 0;
-  if (input.length === 0) return '';
+  if (input.length === 0) return "";
 
   for (let i = 0; i < input.length; i++) {
     const char = input.charCodeAt(i);

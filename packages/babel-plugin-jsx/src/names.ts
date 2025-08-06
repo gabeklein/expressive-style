@@ -1,4 +1,4 @@
-import { Hub, NodePath } from '@babel/traverse';
+import { Hub, NodePath } from "@babel/traverse";
 import {
   AssignmentExpression,
   Class,
@@ -9,9 +9,9 @@ import {
   ObjectProperty,
   VariableDeclaration,
   VariableDeclarator,
-} from '@babel/types';
+} from "@babel/types";
 
-import t from './types';
+import t from "./types";
 
 export function getNames(path: NodePath<JSXElement>) {
   const names = new Map<string, NodePath>();
@@ -23,21 +23,17 @@ export function getNames(path: NodePath<JSXElement>) {
     tag = tag.get("object");
   }
 
-  if (tag.isJSXIdentifier())
-    names.set(tag.toString(), tag);
+  if (tag.isJSXIdentifier()) names.set(tag.toString(), tag);
 
-  opening.get("attributes").forEach(attr => {
-    if (!attr.isJSXAttribute() || attr.node.value)
-      return;
+  opening.get("attributes").forEach((attr) => {
+    if (!attr.isJSXAttribute() || attr.node.value) return;
 
     let { name } = attr.node.name;
 
-    if (typeof name !== "string")
-      name = name.name;
+    if (typeof name !== "string") name = name.name;
 
     //TODO: add flag for this to be enforced by plugin
-    if(name.startsWith("_"))
-      name = name.slice(1);
+    if (name.startsWith("_")) name = name.slice(1);
 
     names.set(name, attr);
   });
@@ -48,8 +44,8 @@ export function getNames(path: NodePath<JSXElement>) {
 export function getName(path: NodePath): string {
   let encounteredReturn;
 
-  while(path)
-    switch(path.type){
+  while (path)
+    switch (path.type) {
       case "LabeledStatement":
         return (<LabeledStatement>path.node).label.name;
 
@@ -57,7 +53,7 @@ export function getName(path: NodePath): string {
         const { id } = path.node as VariableDeclarator;
         return t.isIdentifier(id)
           ? id.name
-          : (<VariableDeclaration>path.parentPath!.node).kind
+          : (<VariableDeclaration>path.parentPath!.node).kind;
       }
 
       case "AssignmentExpression":
@@ -78,35 +74,32 @@ export function getName(path: NodePath): string {
       }
 
       case "ReturnStatement": {
-        if(encounteredReturn)
-          return "return";
+        if (encounteredReturn) return "return";
 
         encounteredReturn = path;
 
         const ancestry = path.getAncestry();
-        const within = ancestry.find((x)=> x.isFunction()) as NodePath<Function>;
+        const within = ancestry.find((x) =>
+          x.isFunction()
+        ) as NodePath<Function>;
 
         const { node } = within;
 
-        if("id" in node && node.id)
-          return node.id.name;
+        if ("id" in node && node.id) return node.id.name;
 
-        if(t.isObjectMethod(node)){
+        if (t.isObjectMethod(node)) {
           path = within.getAncestry()[2];
           continue;
         }
 
-        if(t.isClassMethod(node)){
-          if(node.key.type !== "Identifier")
-            return "ClassMethod";
+        if (t.isClassMethod(node)) {
+          if (node.key.type !== "Identifier") return "ClassMethod";
 
-          if(node.key.name != "render")
-            return node.key.name;
+          if (node.key.name != "render") return node.key.name;
 
           const owner = within.parentPath.parentPath as NodePath<Class>;
 
-          if(owner.node.id)
-            return owner.node.id.name;
+          if (owner.node.id) return owner.node.id.name;
 
           path = owner.parentPath;
           continue;
@@ -118,11 +111,11 @@ export function getName(path: NodePath): string {
 
       case "ObjectProperty": {
         const { key } = path.node as ObjectProperty;
-        return (
-          t.isIdentifier(key) ? key.name : 
-          t.isStringLiteral(key) ? key.value : 
-          "property"
-        )
+        return t.isIdentifier(key)
+          ? key.name
+          : t.isStringLiteral(key)
+          ? key.value
+          : "property";
       }
 
       default:
@@ -132,19 +125,17 @@ export function getName(path: NodePath): string {
   return "element";
 }
 
-function getLocalFilename(hub: Hub){
+function getLocalFilename(hub: Hub) {
   try {
-    const { basename, dirname, sep: separator } = require('path');
+    const { basename, dirname, sep: separator } = require("path");
 
     const url = (hub as any).file.opts.filename as string;
-    const [ base ] = basename(url).split(".");
-  
-    if(base !== "index")
-      return base;
-  
+    const [base] = basename(url).split(".");
+
+    if (base !== "index") return base;
+
     return dirname(url).split(separator).pop()!;
-  }
-  catch(err){
-    return "File"
+  } catch (err) {
+    return "File";
   }
 }

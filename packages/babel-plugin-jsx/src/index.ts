@@ -1,31 +1,27 @@
-import { PluginObj, PluginPass } from '@babel/core';
-import { NodePath } from '@babel/traverse';
+import { PluginObj, PluginPass } from "@babel/core";
+import { NodePath } from "@babel/traverse";
 
-import { Context, hash } from './context';
-import { getContext, handleLabel } from './label';
-import { getNames } from './names';
-import t from './types';
+import { Context, hash } from "./context";
+import { getContext, handleLabel } from "./label";
+import { getNames } from "./names";
+import t from "./types";
 
-import type { Macro, Options } from './options';
-import type { JSXElement, JSXFragment } from '@babel/types';
+import type { Macro, Options } from "./options";
+import type { JSXElement, JSXFragment } from "@babel/types";
 
 type State = PluginPass & {
   context: Context;
   opts: Options;
-}
+};
 
 declare namespace Plugin {
-  export {
-    Context,
-    Macro,
-    Options,
-  };
+  export { Context, Macro, Options };
 }
 
 const HANDLED = new WeakMap<NodePath, ExitCallback>();
 const USING_KEY = Symbol("expressive context");
 
-function getUsing(path: NodePath){
+function getUsing(path: NodePath) {
   return new Set(path.getData(USING_KEY)) as Set<Context>;
 }
 
@@ -34,49 +30,49 @@ function Plugin(_compiler: any, options: Options): PluginObj<State> {
 
   Object.assign(t, _compiler.types);
 
-  function JSX(path: NodePath<JSXElement> | NodePath<JSXFragment>){
-    if(path.getData(USING_KEY))
-      return;
+  function JSX(path: NodePath<JSXElement> | NodePath<JSXFragment>) {
+    if (path.getData(USING_KEY)) return;
 
     let { node, parentPath: parent } = path;
 
-    if(parent.isExpressionStatement()){
+    if (parent.isExpressionStatement()) {
       const block = parent.parentPath;
 
-      if(block.isBlockStatement()
-      && block.get("body").length == 1
-      && block.parentPath.isArrowFunctionExpression())
+      if (
+        block.isBlockStatement() &&
+        block.get("body").length == 1 &&
+        block.parentPath.isArrowFunctionExpression()
+      )
         block.replaceWith(t.parenthesizedExpression(node));
-      else
-        parent.replaceWith(t.returnStatement(node));
-    
+      else parent.replaceWith(t.returnStatement(node));
+
       path.skip();
       return;
     }
 
-    const context = !parent.isJSXElement() && !parent.isJSXFragment() && getContext(path);
+    const context =
+      !parent.isJSXElement() && !parent.isJSXFragment() && getContext(path);
     const scope = new Set(context ? [context] : SCOPE.get(parent));
     const using = new Set<Context>();
 
     SCOPE.set(path, scope);
 
-    if(path.isJSXElement())
+    if (path.isJSXElement())
       getNames(path).forEach((attr, name) => {
         let used = false;
 
-        for(let { define } of scope){
+        for (let { define } of scope) {
           const apply = [] as Context[];
 
-          for(
-            let mod: Context; 
-            mod = define[name];
-            define = Object.getPrototypeOf(define)){
-
+          for (
+            let mod: Context;
+            (mod = define[name]);
+            define = Object.getPrototypeOf(define)
+          ) {
             apply.push(mod, ...mod.also);
             used = true;
-      
-            if(name == "this")
-              break;
+
+            if (name == "this") break;
           }
 
           apply.reverse().forEach((ctx) => {
@@ -86,24 +82,26 @@ function Plugin(_compiler: any, options: Options): PluginObj<State> {
           });
         }
 
-        if(used && attr.isJSXAttribute())
-          attr.remove();
+        if (used && attr.isJSXAttribute()) attr.remove();
       });
 
-    path.setData(USING_KEY, using)
+    path.setData(USING_KEY, using);
 
-    if(context === false
-    || context.define.this !== context
-    || context.props.size === 0
-    || context.usedBy.size)
+    if (
+      context === false ||
+      context.define.this !== context ||
+      context.props.size === 0 ||
+      context.usedBy.size
+    )
       return;
 
-    if(parent.isParenthesizedExpression())
-      parent = parent.parentPath;
+    if (parent.isParenthesizedExpression()) parent = parent.parentPath;
 
-    if(!parent.isArrowFunctionExpression()
-    && !parent.isReturnStatement()
-    && !parent.isExpressionStatement())
+    if (
+      !parent.isArrowFunctionExpression() &&
+      !parent.isReturnStatement() &&
+      !parent.isExpressionStatement()
+    )
       return;
 
     const [inserted] = path.replaceWith(
@@ -112,73 +110,60 @@ function Plugin(_compiler: any, options: Options): PluginObj<State> {
         t.jsxClosingElement(t.jSXIdentifier("this")),
         path.isJSXElement() ? [path.node] : path.node.children
       )
-    )
+    );
 
     inserted.setData(USING_KEY, new Set([context]));
   }
-  
+
   return {
-    manipulateOptions(_options, parse){
+    manipulateOptions(_options, parse) {
       parse.plugins.push("jsx");
     },
     visitor: {
-      Program(path, state){
+      Program(path, state) {
         const context = new Context(path);
 
         context.uid = hash(state.filename!);
-        context.define = Object.assign({}, ...options.define || []);
-        context.macros = Object.assign({}, ...options.macros || []);
+        context.define = Object.assign({}, ...(options.define || []));
+        context.macros = Object.assign({}, ...(options.macros || []));
       },
       JSXElement: JSX,
       JSXFragment: JSX,
       BlockStatement: {
-        exit
+        exit,
       },
       LabeledStatement: {
-        enter(path){
+        enter(path) {
           const body = path.get("body");
-      
-          if(body.isFor() || body.isWhile())
-            return;
-      
+
+          if (body.isFor() || body.isWhile()) return;
+
           handleLabel(path);
           onExit(path, () => {
-            if(!path.removed)
-              path.remove();
+            if (!path.removed) path.remove();
           });
         },
-        exit
-      }
-    }
-  }
+        exit,
+      },
+    },
+  };
 }
 
 type ExitCallback = (path: NodePath, key: string | number | null) => void;
 
-function onExit(path: NodePath, callback: ExitCallback){
+function onExit(path: NodePath, callback: ExitCallback) {
   HANDLED.set(path, callback);
 }
 
-function exit(path: NodePath){
-  for(const p of path.getAncestry()){
-    if(p.isBlockStatement())
-      continue;
+function exit(path: NodePath) {
+  for (const p of path.getAncestry()) {
+    if (p.isBlockStatement()) continue;
 
     const callback = HANDLED.get(p);
 
-    if(callback)
-      callback(p, p.key);
-    else
-      break;
+    if (callback) callback(p, p.key);
+    else break;
   }
 }
 
-export {
-  Context,
-  getUsing,
-  Macro,
-  onExit,
-  Options,
-  Plugin,
-  State,
-};
+export { Context, getUsing, Macro, onExit, Options, Plugin, State };
