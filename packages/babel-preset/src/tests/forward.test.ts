@@ -155,11 +155,7 @@ it("will apply styles by wrapping fragment with this", async () => {
       return (
         <div className={classNames(className, 'Steps_11k')}>
           {steps.map((step, i) => (
-            <Step
-              key={i}
-              index={i}
-              current={currentStep}
-              className={step.className}>
+            <Step key={i} index={i} current={currentStep}>
               {step}
             </Step>
           ))}

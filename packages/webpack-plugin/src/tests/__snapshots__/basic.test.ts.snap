@@ -99,7 +99,6 @@ var __webpack_exports__ = {};
     element(
       'div',
       {
-        ...props,
         className: classNames(
           props.className,
           MODULE_0__['default'].Component_2hh
