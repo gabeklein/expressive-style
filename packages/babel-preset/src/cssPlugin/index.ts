@@ -48,8 +48,12 @@ export function CSSPlugin(
           styles.set(key, context);
         }
 
-        if (forward)
-          addClassName(path, getComponentProp(path, "className"), getHelper);
+        if (forward){
+          const className = getComponentProp(path, "className", true);
+
+          if(className)
+            addClassName(path, className, getHelper);
+        }
       },
       Program: {
         enter(path, state) {

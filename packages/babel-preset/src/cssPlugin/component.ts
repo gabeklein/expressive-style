@@ -4,7 +4,7 @@ import { Function, Identifier, Node, ObjectProperty } from "@babel/types";
 import t from "../types";
 import { uniqueIdentifier } from "./uniqueIdentifier";
 
-export function getComponentProp(path: NodePath, name: string) {
+export function getComponentProp(path: NodePath, name: string, ignoreExisting = false) {
   const func = path.find((x) => x.isFunction()) as NodePath<Function>;
   let [props] = func.node.params;
 
@@ -15,7 +15,8 @@ export function getComponentProp(path: NodePath, name: string) {
       (x) => t.isObjectProperty(x) && t.isIdentifier(x.key, { name })
     ) as ObjectProperty | undefined;
 
-    if (prop) return prop.value as Identifier;
+    if (prop) 
+      return ignoreExisting ? false : prop.value as Identifier;
 
     const id = t.identifier(name);
 
