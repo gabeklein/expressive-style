@@ -348,7 +348,7 @@ Reference labels with underscore attributes (`_inner`) to apply styles. This cre
 
 ### Property Shorthands (Macros)
 
-Expressive ships with common macros that expand CSS patterns. **All macros are user-definable**—customize or create your own:
+Expressive ships with common macros that expand CSS patterns. **All macros are user-definable** so you can customize or create your own:
 
 ```jsx
 export const Box = () => {
@@ -365,7 +365,7 @@ export const Box = () => {
 };
 ```
 
-**Want your own macros?** Define them in your Babel preset configuration. Macros are just functions that return CSS property objects:
+Define custom macros in your Babel preset configuration; they're just functions which return a CSS property object.
 
 ```js
 // Custom macro example
@@ -408,6 +408,9 @@ Use `$` prefix for theme variables (compiles to `var(--kebab-case)`):
 
 ```jsx
 const Button = () => {
+  // Define a CSS variable downstream
+  $accent: 0x007bff;
+
   background: $accent;
   color: $textPrimary;
 
@@ -422,6 +425,7 @@ const Button = () => {
 Compiles to CSS custom properties:
 ```css
 .Button_xyz {
+  --accent: #007bff;
   background: var(--accent);
   color: var(--text-primary);
 }
