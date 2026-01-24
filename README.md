@@ -93,18 +93,31 @@ export const Card = ({ featured, children }) => {
 - Underscore attributes (`_header`, `_button`) apply labeled styles—reuse them infinitely
 - Conditionals use native `if` statements
 - Zero runtime overhead—everything extracts to CSS
-- It's all perfectly-valid JS, no custom syntax or DSL. 
+- It's all perfectly-valid JS, no custom syntax or DSL.
+
+<br/>
+
+<h2 id="how-it-works-section">How It Works</h2>
+
+Expressive JSX reinterprets existing JavaScript syntax to extract CSS intent:
+
+- **JavaScript labels** (you know, those things from `for` loops?) become style scopes
+- **Bare property assignments** inside components become CSS properties
+- **Underscore attributes** (`_label`) on JSX elements apply those styles
+- At build time, a Babel plugin extracts this metadata and generates context-appropriate stylesheets
+- Components render with generated `className` attributes—zero runtime overhead
+
+It's not a custom DSL or new syntax. It's taking JavaScript features that exist but are rarely used, and giving them new purpose at build time.
 
 <br/>
 
 ## Table of Contents
 
+- [How It Works](#how-it-works-section)
 - [Compare that to...](#problem-section)
 - [Key Features](#features-section)
 - [Installation](#install-section)
 - [Comparison with Alternatives](#comparison-section)
-- [How It Works](#how-it-works-section)
-- [Real-World Example](#example-section)
 - [TypeScript Support](#typescript-section)
 - [Glossary](#glossary-section)
 
@@ -746,38 +759,6 @@ const Card = () => (
 </td>
 </tr>
 </table>
-
-<br/>
-<h1 id="how-it-works-section">How It Works</h1>
-
-1. **Parse**: Babel plugin detects labeled statements in JSX files
-2. **Transform**: Labels become CSS class definitions, styles are extracted
-3. **Extract**: CSS is written to virtual modules or separate files
-4. **Apply**: Component renders with generated class names
-
-```jsx
-// Input
-const Button = () => {
-  color: 'white';
-  background: $accent;
-
-  return <button>Click</button>;
-};
-
-// Output (simplified)
-const Button = (props) => (
-  <button className={classNames(props.className, 'Button_a3f')}>
-    Click
-  </button>
-);
-
-// CSS
-.Button_a3f {
-  color: white;
-  background: var(--accent);
-}
-```
-
 
 <br/>
 <h1 id="learn-more-section">Learn More</h1>
