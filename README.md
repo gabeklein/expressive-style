@@ -26,6 +26,18 @@
 
 <br/>
 
+## Table of Contents
+
+- [How It Works](#how-it-works-section)
+- [Compare that to...](#problem-section)
+- [Key Features](#features-section)
+- [Installation](#install-section)
+- [Comparison with Alternatives](#comparison-section)
+- [TypeScript Support](#typescript-section)
+- [Glossary](#glossary-section)
+
+<br/>
+
 ## Quick Look
 
 Here's what Expressive JSX looks like in practice:
@@ -110,35 +122,30 @@ Expressive JSX reinterprets existing JavaScript syntax to extract CSS intent:
 It's not a custom DSL or new syntax. It's taking JavaScript features that exist but are rarely used, and giving them new purpose at build time.
 
 <br/>
-
-## Table of Contents
-
-- [How It Works](#how-it-works-section)
-- [Compare that to...](#problem-section)
-- [Key Features](#features-section)
-- [Installation](#install-section)
-- [Comparison with Alternatives](#comparison-section)
-- [TypeScript Support](#typescript-section)
-- [Glossary](#glossary-section)
-
-<br/>
 <h1 id="problem-section">Compare that to...</h1>
 
 Modern React components mix styling approaches, creating friction. Each approach has significant drawbacks:
 
 <br />
 
-**Styled-components** add runtime overhead and wrapper components:
+**Tailwind** forces you to memorize abstractions and creates redundant markup:
 ```jsx
-const Button = styled.button`
-  background: ${props => props.primary ? '#007bff' : '#6c757d'};
-  border-radius: 8px;
-  padding: 0.7rem 1.4rem;
+const Button = ({ primary, children }) => (
+  <button className={`rounded-lg px-6 py-3 transition-all hover:brightness-110 ${
+    primary ? 'bg-blue-600' : 'bg-gray-600'
+  }`}>
+    {children}
+  </button>
+);
 
-  &:hover {
-    filter: brightness(1.1);
-  }
-`;
+// Every similar button repeats the same classes
+const SecondaryButton = ({ secondary, children }) => (
+  <button className={`rounded-lg px-6 py-3 transition-all hover:brightness-110 ${
+    secondary ? 'bg-purple-600' : 'bg-gray-600'
+  }`}>
+    {children}
+  </button>
+);
 ```
 
 <br />
@@ -169,24 +176,17 @@ const Button = ({ primary, children }) => (
 
 <br />
 
-**Tailwind** forces you to memorize abstractions and creates redundant markup:
+**Styled-components** add runtime overhead and wrapper components:
 ```jsx
-const Button = ({ primary, children }) => (
-  <button className={`rounded-lg px-6 py-3 transition-all hover:brightness-110 ${
-    primary ? 'bg-blue-600' : 'bg-gray-600'
-  }`}>
-    {children}
-  </button>
-);
+const Button = styled.button`
+  background: ${props => props.primary ? '#007bff' : '#6c757d'};
+  border-radius: 8px;
+  padding: 0.7rem 1.4rem;
 
-// Every similar button repeats the same classes
-const SecondaryButton = ({ secondary, children }) => (
-  <button className={`rounded-lg px-6 py-3 transition-all hover:brightness-110 ${
-    secondary ? 'bg-purple-600' : 'bg-gray-600'
-  }`}>
-    {children}
-  </button>
-);
+  &:hover {
+    filter: brightness(1.1);
+  }
+`;
 ```
 
 <br />
@@ -618,8 +618,6 @@ export const Table = ({ children }) => {
 
 Choose your build tool and follow the installation steps below.
 
-<br/>
-
 ### Vite
 
 ```bash
@@ -772,8 +770,6 @@ const Card = () => (
 
 Quick reference guide to Expressive JSX concepts and terminology.
 
-<br/>
-
 ### Self-Styling
 Styles defined at the top of a component function (before any labels) that automatically apply to the outermost returned element(s). No need to reference them explicitly—they just work.
 
@@ -786,8 +782,6 @@ const Card = () => {
   return <div>Content</div>;
 };
 ```
-
-<br/>
 
 ### Labels
 Named blocks that create scoped style contexts. Labels are referenced using underscore attributes (`_labelName`) on JSX elements.
@@ -803,12 +797,8 @@ const Component = () => {
 };
 ```
 
-<br/>
-
 ### Underscore Attributes
 The syntax used to apply labeled styles to elements: `<div _labelName />`. The underscore prefix tells Expressive to apply that label's styles. The attribute is removed in the final output.
-
-<br/>
 
 ### Macros
 Functions that expand shorthand syntax into full CSS properties. **All macros are library or user-defined**—you have complete control to create your own design system. Expressive ships with common macros like `absolute`, `size`, `radius`, `margin`, `padding`, `shadow`, `border`, and `flexAlign`, but you can define custom ones in your Babel configuration.
@@ -836,15 +826,11 @@ export function customMacro(arg) {
 }
 ```
 
-<br/>
-
 ### Contexts
 Internal structures that represent different scopes where styles can be defined:
 - **Component context**: The top-level function scope
 - **Label context**: Created by `labelName: { ... }`
 - **Conditional context**: Created by `if (condition) { ... }`
-
-<br/>
 
 ### Conditional Styling
 Using `if` statements to apply styles based on props or create CSS selectors:
@@ -866,15 +852,11 @@ if ('.active') {
 }
 ```
 
-<br/>
-
 ### Auto-Unit Conversion
 Automatic conversion of numeric values to CSS units:
 - Integers → `px`: `20` becomes `"20px"`
 - Decimals → `em`: `1.5` becomes `"1.5em"`
 - Zero → `"0"` (no unit needed)
-
-<br/>
 
 ### CamelCase Value Identifiers
 You can use camelCase identifiers as values, which are automatically converted to kebab-case strings:
@@ -889,8 +871,6 @@ borderRadius: round;       // → border-radius: "999px" (special keyword)
 
 This provides cleaner syntax without quote marks for common CSS values.
 
-<br/>
-
 ### Hex Colors
 Numeric hex color notation using `0x` prefix instead of `#`:
 
@@ -898,8 +878,6 @@ Numeric hex color notation using `0x` prefix instead of `#`:
 color: 0xff0000;        // → color: #ff0000
 background: 0xfff8;     // → background: rgba(255, 255, 255, 0.533) (with alpha)
 ```
-
-<br/>
 
 ### CSS Variables
 Using `$` prefix to reference CSS custom properties. CamelCase is automatically converted to kebab-case:
@@ -909,8 +887,6 @@ background: $primaryColor;     // → background: var(--primary-color)
 border: $accentBorder;         // → border: var(--accent-border)
 ```
 
-<br/>
-
 ### Multi-Value Properties
 Using comma syntax for properties that accept multiple values:
 
@@ -919,12 +895,8 @@ padding: 10, 20;              // → padding: 10px 20px
 margin: 5, 10, 15, 20;        // → margin: 5px 10px 15px 20px
 ```
 
-<br/>
-
 ### Build-Time Transformation
 The entire process happens during the build—no runtime JavaScript is needed for styling. The Babel plugin transforms labeled statements into CSS, extracts them to separate files, and replaces them with className attributes.
-
-<br/>
 
 ### Virtual CSS Modules
 In Vite, CSS is injected via virtual modules (prefixed with `\0virtual:css:*`) that are automatically imported into your components. This enables hot module replacement (HMR) during development.
