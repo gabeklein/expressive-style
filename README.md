@@ -1,10 +1,31 @@
-# Expressive JSX
+<br/>
 
-**CSS-in-JS, but it's just JSX.**
+<p align="center">
+  <img height="90" src="website/repl/public/Logo.svg" alt="Expressive Logo"/>
+  <h1 align="center">
+    Expressive JSX
+  </h1>
+</p>
 
-Expressive extends JSX with inline CSS that feels natural to write and produces real stylesheets at build time. No runtime, no styled-components wrapper hell, no tagged templates—just labels and properties in your component functions.
+<h4 align="center">
+  CSS-in-JS, but it's just JSX
+</h4>
 
-## The Problem
+<p align="center">
+  <a href="https://www.npmjs.com/package/@expressive/babel-preset"><img alt="NPM" src="https://badge.fury.io/js/%40expressive%2Fbabel-preset.svg"></a>
+  <a href="https://join.slack.com/t/expressivejs/shared_invite/zt-s2j5cdhz-gffKn3bTATMbXf~iq4pvHg" alt="Join Slack">
+    <img src="https://img.shields.io/badge/Slack-Come%20say%20hi!-blueviolet" />
+  </a>
+</p>
+
+<p align="center">
+  Write CSS directly in JSX component functions using labels and properties.<br/>
+  Zero runtime overhead—styles are extracted to real stylesheets at build time.<br/>
+  No wrapper components, no tagged templates, just natural JavaScript syntax.<br/>
+</p>
+
+<br/>
+<h1 id="problem-section">The Problem</h1>
 
 Modern React components mix styling approaches, creating friction:
 
@@ -36,7 +57,8 @@ const Button = ({ primary, children }) => (
 - Inline styles don't support pseudo-selectors or media queries
 - All approaches separate styling logic from component logic
 
-## The Expressive Way
+<br/>
+<h1 id="solution-section">The Expressive Way</h1>
 
 Write CSS directly in your component function body using JavaScript labels:
 
@@ -77,7 +99,8 @@ export const Button = ({ primary, children }) => (
 }
 ```
 
-## Key Features
+<br/>
+<h1 id="features-section">Key Features</h1>
 
 ### 1. Self-Styling Components
 
@@ -362,7 +385,12 @@ export const Table = ({ children }) => {
 };
 ```
 
-## Installation
+<br/>
+<h1 id="install-section">Installation</h1>
+
+Choose your build tool and follow the installation steps below.
+
+<br/>
 
 ### Vite
 
@@ -378,10 +406,7 @@ import react from '@vitejs/plugin-react';
 export default {
   plugins: [
     jsx(),
-    react({
-      jsxImportSource: '@expressive/react',
-      jsxRuntime: 'automatic'
-    })
+    react()
   ]
 };
 ```
@@ -424,7 +449,8 @@ module.exports = {
 - **Parcel**: `@expressive/parcel-transformer-jsx`
 - **Rollup**: `@expressive/rollup-plugin-jsx`
 
-## Comparison with Alternatives
+<br/>
+<h1 id="comparison-section">Comparison with Alternatives</h1>
 
 | Feature | Expressive | Styled Components | Emotion | CSS Modules | Inline Styles |
 |---------|-----------|-------------------|---------|-------------|---------------|
@@ -437,7 +463,8 @@ module.exports = {
 | **Build-time extraction** | ✅ | ⚠️ | ⚠️ | ✅ | ❌ |
 | **Learning curve** | Low | Medium | Medium | Low | None |
 
-## How It Works
+<br/>
+<h1 id="how-it-works-section">How It Works</h1>
 
 1. **Parse**: Babel plugin detects labeled statements in JSX files
 2. **Transform**: Labels become CSS class definitions, styles are extracted
@@ -467,14 +494,13 @@ const Button = (props) => (
 }
 ```
 
-## Real-World Example
+<br/>
+<h1 id="example-section">Real-World Example</h1>
 
 Here's a complete modal component from a production app:
 
 ```jsx
-import { FullScreen } from './FullScreen';
-
-export const Modal = FullScreen.as(({ className, children }) => {
+export const Modal = ({ className, children }) => {
   FullScreen: {
     position: 'fixed';
     top: 0;
@@ -505,12 +531,13 @@ export const Modal = FullScreen.as(({ className, children }) => {
       {children}
     </div>
   );
-});
+}
 ```
 
 **Clean, readable, and fully featured.**
 
-## TypeScript Support
+<br/>
+<h1 id="typescript-section">TypeScript Support</h1>
 
 Install the TypeScript plugin for IDE autocomplete:
 
@@ -529,22 +556,154 @@ npm install --save-dev @expressive/typescript-plugin-jsx
 }
 ```
 
-## Contributing
-
-This is a monorepo using Lerna. To get started:
-
-```bash
-npm install
-npm run build
-npm test
-```
-
-## License
-
-MIT
-
-## Learn More
+<br/>
+<h1 id="learn-more-section">Learn More</h1>
 
 - [Documentation](https://expressive.dev) (coming soon)
 - [Examples](./examples)
 - [GitHub](https://github.com/gabeklein/expressive-dsl)
+
+<br/>
+<h1 id="glossary-section">Glossary</h1>
+
+Quick reference guide to Expressive JSX concepts and terminology.
+
+<br/>
+
+### Self-Styling
+Styles defined at the top of a component function (before any labels) that automatically apply to the outermost returned element(s). No need to reference them explicitly—they just work.
+
+```jsx
+const Card = () => {
+  // These styles apply to the root <div>
+  padding: 20;
+  background: 'white';
+
+  return <div>Content</div>;
+};
+```
+
+<br/>
+
+### Labels
+Named blocks that create scoped style contexts. Labels are referenced using underscore attributes (`_labelName`) on JSX elements.
+
+```jsx
+const Component = () => {
+  header: {
+    fontSize: 24;
+    fontWeight: 'bold';
+  }
+
+  return <div _header>Title</div>;
+};
+```
+
+<br/>
+
+### Underscore Attributes
+The syntax used to apply labeled styles to elements: `<div _labelName />`. The underscore prefix tells Expressive to apply that label's styles. The attribute is removed in the final output.
+
+<br/>
+
+### Macros
+Built-in functions that expand shorthand syntax into full CSS properties. Examples include `absolute`, `size`, `radius`, `margin`, `padding`, `shadow`, `border`, and `flexAlign`.
+
+```jsx
+// Macro input
+size: 100, 200;
+radius: 'round';
+absolute: fill;
+
+// Expands to CSS
+width: 100px;
+height: 200px;
+border-radius: 999px;
+position: absolute;
+top: 0; right: 0; bottom: 0; left: 0;
+```
+
+<br/>
+
+### Contexts
+Internal structures that represent different scopes where styles can be defined:
+- **Component context**: The top-level function scope
+- **Label context**: Created by `labelName: { ... }`
+- **Conditional context**: Created by `if (condition) { ... }`
+
+<br/>
+
+### Conditional Styling
+Using `if` statements to apply styles based on props or create CSS selectors:
+
+```jsx
+// Prop-based conditional
+if (disabled) {
+  opacity: 0.4;
+}
+
+// Pseudo-selector
+if (':hover') {
+  background: 'blue';
+}
+
+// Class selector
+if ('.active') {
+  fontWeight: 'bold';
+}
+```
+
+<br/>
+
+### Auto-Unit Conversion
+Automatic conversion of numeric values to CSS units:
+- Integers → `px`: `20` becomes `"20px"`
+- Decimals → `em`: `1.5` becomes `"1.5em"`
+- Zero → `"0"` (no unit needed)
+
+<br/>
+
+### Hex Colors
+Numeric hex color notation using `0x` prefix instead of `#`:
+
+```jsx
+color: 0xff0000;        // → color: #ff0000
+background: 0xfff8;     // → background: rgba(255, 255, 255, 0.533) (with alpha)
+```
+
+<br/>
+
+### CSS Variables
+Using `$` prefix to reference CSS custom properties. CamelCase is automatically converted to kebab-case:
+
+```jsx
+background: $primaryColor;     // → background: var(--primary-color)
+border: $accentBorder;         // → border: var(--accent-border)
+```
+
+<br/>
+
+### Multi-Value Properties
+Using comma syntax for properties that accept multiple values:
+
+```jsx
+padding: 10, 20;              // → padding: 10px 20px
+margin: 5, 10, 15, 20;        // → margin: 5px 10px 15px 20px
+```
+
+<br/>
+
+### Build-Time Transformation
+The entire process happens during the build—no runtime JavaScript is needed for styling. The Babel plugin transforms labeled statements into CSS, extracts them to separate files, and replaces them with className attributes.
+
+<br/>
+
+### Virtual CSS Modules
+In Vite, CSS is injected via virtual modules (prefixed with `\0virtual:css:*`) that are automatically imported into your components. This enables hot module replacement (HMR) during development.
+
+<br/>
+<br/>
+
+## License
+
+MIT
