@@ -99,13 +99,7 @@ export const Card = ({ featured, children }) => {
 .button_d4e:hover { background: #0056b3; }
 ```
 
-**Key points:**
-- Styles live directly in your component logic
-- No wrapper components, no separate CSS files
-- Underscore attributes (`_header`, `_button`) apply labeled styles—reuse them infinitely
-- Conditionals use native `if` statements
-- Zero runtime overhead—everything extracts to CSS
-- It's all perfectly-valid JS, no custom syntax or DSL.
+Styles live directly in your component logic with zero runtime overhead. Underscore attributes (`_header`, `_button`) apply labeled styles, conditionals use native `if` statements, and it's all valid JavaScript.
 
 <br/>
 
@@ -124,11 +118,7 @@ It's not a custom DSL or new syntax. It's taking JavaScript features that exist 
 <br/>
 <h1 id="problem-section">Compare that to...</h1>
 
-Modern React components mix styling approaches, creating friction. Each approach has significant drawbacks:
-
-<br />
-
-**Tailwind** forces you to memorize abstractions and creates redundant markup:
+**Tailwind** requires memorizing utility classes and encourages class repetition:
 ```jsx
 const Button = ({ primary, children }) => (
   <button className={`rounded-lg px-6 py-3 transition-all hover:brightness-110 ${
@@ -137,18 +127,7 @@ const Button = ({ primary, children }) => (
     {children}
   </button>
 );
-
-// Every similar button repeats the same classes
-const SecondaryButton = ({ secondary, children }) => (
-  <button className={`rounded-lg px-6 py-3 transition-all hover:brightness-110 ${
-    secondary ? 'bg-purple-600' : 'bg-gray-600'
-  }`}>
-    {children}
-  </button>
-);
 ```
-
-<br />
 
 **CSS Modules** require context switching between files:
 ```jsx
@@ -160,21 +139,6 @@ const Button = ({ primary, children }) => (
   </button>
 );
 ```
-```css
-/* Button.module.css */
-.button {
-  border-radius: 8px;
-  padding: 0.7rem 1.4rem;
-}
-.button:hover {
-  filter: brightness(1.1);
-}
-.primary {
-  background: #007bff;
-}
-```
-
-<br />
 
 **Styled-components** add runtime overhead and wrapper components:
 ```jsx
@@ -182,29 +146,15 @@ const Button = styled.button`
   background: ${props => props.primary ? '#007bff' : '#6c757d'};
   border-radius: 8px;
   padding: 0.7rem 1.4rem;
-
-  &:hover {
-    filter: brightness(1.1);
-  }
 `;
 ```
 
-<br />
-
-**Problems with traditional approaches:**
-- Styled-components add runtime overhead and wrapper components
-- CSS Modules require context switching between files
-- Tailwind requires memorizing utility class names (not WYSIWYG)
-- Tailwind encourages copy-pasting redundant class strings
-- Inline styles don't support pseudo-selectors or media queries
-- All approaches separate styling logic from component logic
+Expressive eliminates these drawbacks: no runtime, no separate files, no memorization, no wrapper components.
 
 <br/>
 <h1 id="features-section">Key Features</h1>
 
 ### Self-Styling Components
-
-Style the component itself before the return statement:
 
 <table>
 <tr>
@@ -235,7 +185,6 @@ const Card = ({ children }) => (
 );
 ```
 ```css
-/* Card.module.css */
 .card {
   background: white;
   border-radius: 10px;
@@ -249,14 +198,11 @@ const Card = ({ children }) => (
 
 ### Conditional Styles with `if` Statements
 
-Clean, readable conditionals vs className manipulation:
-
 <table>
 <tr>
 <td width="50%">
 
-<h3>Expressive</h3>
-
+**Expressive**
 ```jsx
 const Button = ({ disabled }) => {
   cursor: pointer;
@@ -271,11 +217,9 @@ const Button = ({ disabled }) => {
 ```
 
 </td>
-<td width="50%" rowspan="2">
+<td width="50%">
 
-
-<h3>CSS Modules</h3>
-
+**CSS Modules**
 ```jsx
 import styles from './Button.module.css';
 
@@ -291,33 +235,8 @@ const Button = ({ disabled }) => (
 );
 ```
 ```css
-/* Button.module.css */
-.button {
-  cursor: pointer;
-}
-.disabled {
-  opacity: 0.4;
-  cursor: not-allowed;
-}
-```
-
-</td>
-</tr>
-<tr>
-<td width="50%">
-
-<h3>Tailwind</h3>
-
-```jsx
-const Button = ({ disabled }) => (
-  <button className={
-    disabled
-      ? 'cursor-not-allowed opacity-40'
-      : 'cursor-pointer'
-  }>
-    Click me
-  </button>
-);
+.button { cursor: pointer; }
+.disabled { opacity: 0.4; cursor: not-allowed; }
 ```
 
 </td>
@@ -348,7 +267,7 @@ export const Link = (props) => {
 
 ### Nested Selectors with Labels
 
-Create scoped child styles using labeled blocks. This solves Tailwind's redundancy problem:
+Define styles once and reuse them infinitely. This avoids Tailwind's repetitive class strings:
 
 <table>
 <tr>
@@ -356,20 +275,16 @@ Create scoped child styles using labeled blocks. This solves Tailwind's redundan
 
 **Expressive**
 ```jsx
-const Dashboard = ({ stats }) => {
+const Dashboard = () => {
   display: flex;
   gap: 20;
-  padding: 20;
 
-  // Define card styles once
   card: {
     background: white;
     padding: 24;
     radius: 12;
     shadow: 0xeee;
-    flexGrow: 1;
 
-    // Nesting selectors keeps things clear
     label: {
       fontSize: 0.875;
       color: 0x666;
@@ -379,26 +294,18 @@ const Dashboard = ({ stats }) => {
     value: {
       fontSize: 2;
       fontWeight: bold;
-      marginTop: 8;
     }
   }
 
   return (
     <div>
-      {/* Reuse label styles across multiple cards */}
       <div _card>
         <div _label>Revenue</div>
         <div _value>$45,231</div>
       </div>
-
       <div _card>
         <div _label>Users</div>
         <div _value>1,429</div>
-      </div>
-
-      <div _card>
-        <div _label>Orders</div>
-        <div _value>234</div>
       </div>
     </div>
   );
@@ -410,33 +317,23 @@ const Dashboard = ({ stats }) => {
 
 **Tailwind** (repetitive classes)
 ```jsx
-const Dashboard = ({ stats }) => (
-  <div className="flex gap-5 p-5">
-    {/* Same classes repeated for each card */}
-    <div className="bg-white p-6 rounded-xl shadow-sm flex-grow">
+const Dashboard = () => (
+  <div className="flex gap-5">
+    <div className="bg-white p-6 rounded-xl shadow-sm">
       <div className="text-sm text-gray-600 uppercase">
         Revenue
       </div>
-      <div className="text-3xl font-bold mt-2">
+      <div className="text-3xl font-bold">
         $45,231
       </div>
     </div>
 
-    <div className="bg-white p-6 rounded-xl shadow-sm flex-grow">
+    <div className="bg-white p-6 rounded-xl shadow-sm">
       <div className="text-sm text-gray-600 uppercase">
         Users
       </div>
-      <div className="text-3xl font-bold mt-2">
+      <div className="text-3xl font-bold">
         1,429
-      </div>
-    </div>
-
-    <div className="bg-white p-6 rounded-xl shadow-sm flex-grow">
-      <div className="text-sm text-gray-600 uppercase">
-        Orders
-      </div>
-      <div className="text-3xl font-bold mt-2">
-        234
       </div>
     </div>
   </div>
@@ -447,47 +344,22 @@ const Dashboard = ({ stats }) => (
 </tr>
 </table>
 
-**Note:** Reference labels with underscore attributes (`_inner`) to apply styles. This creates semantic, reusable style "slots" without the verbosity of Tailwind's repeated utility classes.
+Reference labels with underscore attributes (`_inner`) to apply styles. This creates semantic, reusable style "slots" without the verbosity of Tailwind's repeated utility classes.
 
 ### Property Shorthands (Macros)
 
-**All macros are library or user-defined**—including the built-in ones. You have full agency to create your own design system.
-
-Expressive ships with common macros that expand CSS patterns:
+Expressive ships with common macros that expand CSS patterns. **All macros are user-definable**—customize or create your own:
 
 ```jsx
 export const Box = () => {
-  // Positioning
   absolute: fill;              // → position: absolute; top: 0; right: 0; bottom: 0; left: 0;
-  absolute: 'top-left';        // → position: absolute; top: 0; left: 0;
-
-  // Sizing
   size: 100;                   // → width: 100px; height: 100px;
-  size: 50, 100;               // → width: 50px; height: 100px;
-
-  // Border radius
-  radius: 8;                   // → border-radius: 8px;
   radius: 'round';             // → border-radius: 999px;
-
-  // Margins & Padding (multi-value)
   margin: 10, 20;              // → margin: 10px 20px;
-  padding: 5, 10, 15, 20;      // → padding: 5px 10px 15px 20px;
-
-  // Directional shortcuts
   marginV: 20;                 // → margin-top: 20px; margin-bottom: 20px;
-  paddingH: 15;                // → padding-left: 15px; padding-right: 15px;
-
-  // Shadows
   shadow: 0xccc;               // → box-shadow: #ccc 0 0 10px;
-  shadow: 0x000, 10, 5, 2;     // → box-shadow: #000 10px 5px 2px;
-
-  // Borders
-  border: 0xddd;               // → border: 1px solid #ddd;
   border: 0xddd, 2;            // → border: 2px solid #ddd;
-
-  // Flex alignment
   flexAlign: 'center';         // → display: flex; justify-content: center; align-items: center;
-  flexAlign: 'center', 'down'; // → display: flex; justify-content: center; flex-direction: column;
 
   return <div />;
 };
@@ -513,33 +385,6 @@ const Card = () => {
 };
 ```
 
-### React Native Support (Coming Soon)
-
-Expressive will soon support React Native, making cross-platform styling simpler:
-
-```jsx
-// Works on both Web and Native
-const Button = ({ primary }) => {
-  paddingH: 20;
-  paddingV: 10;
-  borderRadius: 8;
-
-  if (primary) {
-    backgroundColor: 0x007bff;
-  }
-
-  return <Pressable>
-    <Text>Click me</Text>
-  </Pressable>;
-};
-```
-
-**Advantages for React Native:**
-- No StyleSheet.create boilerplate
-- Conditional styles without array spreading
-- Shared style definitions between platforms
-- Type-safe styling without manual TypeScript definitions
-
 ### Smart Value Handling
 
 Numbers and hex colors are automatically processed:
@@ -559,12 +404,11 @@ const Component = () => {
 
 ### CSS Variables
 
-Use `$` prefix for theme variables:
+Use `$` prefix for theme variables (compiles to `var(--kebab-case)`):
 
 ```jsx
 const Button = () => {
   background: $accent;
-  border: $border;
   color: $textPrimary;
 
   if (':hover') {
@@ -579,41 +423,8 @@ Compiles to CSS custom properties:
 ```css
 .Button_xyz {
   background: var(--accent);
-  border: var(--border);
   color: var(--text-primary);
 }
-```
-
-### Multi-level Nesting
-
-Labels can nest indefinitely for complex component structures:
-
-```jsx
-export const Table = ({ children }) => {
-  outer: {
-    radius: 8;
-    border: 0xeee;
-    overflow: 'hidden';
-  }
-
-  inner: {
-    height: 'fill';
-    overflow: 'auto';
-  }
-
-  table: {
-    borderCollapse: 'collapse';
-    minWidth: 'fill';
-  }
-
-  return (
-    <div _outer>
-      <div _inner>
-        <table>{children}</table>
-      </div>
-    </div>
-  );
-};
 ```
 
 <br/>
@@ -715,51 +526,6 @@ npm install --save-dev @expressive/typescript-plugin-jsx
 | **Portable (no context switching)** | ✅ | ✅ | ✅ | ✅ | ❌ | ✅ |
 | **Learning curve** | Low | Medium | Medium | Medium | Low | None |
 
-### Why Expressive vs Tailwind?
-
-While Tailwind is popular, it has key limitations:
-
-1. **Memorization required**: You must learn utility class names (`px-4`, `rounded-lg`, `bg-blue-500`) instead of writing standard CSS
-2. **Class repetition**: Similar elements require copy-pasting the same class strings
-3. **Not portable**: Moving a component means moving its class list, which isn't self-contained
-4. **Harder to read**: `className="flex items-center justify-between p-4 bg-white rounded-lg shadow-md"` vs readable CSS properties
-
-**Expressive gives you Tailwind's colocation without the abstractions:**
-
-<table>
-<tr>
-<td width="50%">
-
-**Expressive** (WYSIWYG)
-```jsx
-const Card = () => {
-  display: flex;
-  alignItems: center;
-  justifyContent: spaceBetween;
-  padding: 16;
-  background: white;
-  borderRadius: 8;
-  boxShadow: '0 2px 4px rgba(0,0,0,0.1)';
-
-  return <div>Content</div>;
-};
-```
-
-</td>
-<td width="50%">
-
-**Tailwind** (memorization)
-```jsx
-const Card = () => (
-  <div className="flex items-center justify-between p-4 bg-white rounded-lg shadow-md">
-    Content
-  </div>
-);
-```
-
-</td>
-</tr>
-</table>
 
 <br/>
 <h1 id="learn-more-section">Learn More</h1>
