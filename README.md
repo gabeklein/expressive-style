@@ -25,12 +25,98 @@
 </p>
 
 <br/>
-<h1 id="problem-section">The Problem</h1>
 
-Modern React components mix styling approaches, creating friction:
+## Quick Look
+
+Here's what Expressive JSX looks like in practice:
 
 ```jsx
-// Styled-components: wrapper components everywhere
+export const Card = ({ featured, children }) => {
+  // Self-styling - these properties apply to the root element
+  background: white;
+  padding: 24;
+  radius: 12;
+  shadow: 0xeee;
+
+  // Conditional styling based on props and/or state
+  if (featured) {
+    border: 0x007bff, 2;
+  }
+
+  // Labeled blocks create reusable style scopes
+  header: {
+    fontSize: 1.5;
+    fontWeight: 'bold';
+    marginBottom: 16;
+  }
+
+  button: {
+    padding: 8, 16;
+    radius: 6;
+    background: 0x007bff;
+    color: white;
+
+    // Pseudo-selectors as string conditionals
+    if (':hover') {
+      background: 0x0056b3;
+    }
+
+    left: {
+      // $variables stand-in for CSS variables
+      background: $buttonLight;
+    }
+  }
+
+  return (
+    <div>
+      <h2 _header>{children}</h2>
+      {/* Apply the same styles to multiple elements with underscore attributes */}
+      <button _button _left>Learn More</button>
+      <button _button>Share</button>
+    </div>
+  );
+};
+```
+
+**Compiles to real CSS at build time:**
+```css
+.Card_a3f { background: white; padding: 24px; border-radius: 12px; box-shadow: #eee 0 0 10px; }
+.featured_x9k { border: 2px solid #007bff; }
+.header_b2c { font-size: 1.5em; font-weight: bold; margin-bottom: 16px; }
+.button_d4e { padding: 8px 16px; border-radius: 6px; background: #007bff; color: white; }
+.button_d4e:hover { background: #0056b3; }
+```
+
+**Key points:**
+- Styles live directly in your component logic
+- No wrapper components, no separate CSS files
+- Underscore attributes (`_header`, `_button`) apply labeled styles—reuse them infinitely
+- Conditionals use native `if` statements
+- Zero runtime overhead—everything extracts to CSS
+- It's all perfectly-valid JS, no custom syntax or DSL. 
+
+<br/>
+
+## Table of Contents
+
+- [Compare that to...](#problem-section)
+- [Key Features](#features-section)
+- [Installation](#install-section)
+- [Comparison with Alternatives](#comparison-section)
+- [How It Works](#how-it-works-section)
+- [Real-World Example](#example-section)
+- [TypeScript Support](#typescript-section)
+- [Glossary](#glossary-section)
+
+<br/>
+<h1 id="problem-section">Compare that to...</h1>
+
+Modern React components mix styling approaches, creating friction. Each approach has significant drawbacks:
+
+<br />
+
+**Styled-components** add runtime overhead and wrapper components:
+```jsx
 const Button = styled.button`
   background: ${props => props.primary ? '#007bff' : '#6c757d'};
   border-radius: 8px;
@@ -40,8 +126,12 @@ const Button = styled.button`
     filter: brightness(1.1);
   }
 `;
+```
 
-// Or CSS Modules: external files, generated class names
+<br />
+
+**CSS Modules** require context switching between files:
+```jsx
 import styles from './Button.module.css';
 
 const Button = ({ primary, children }) => (
@@ -50,54 +140,51 @@ const Button = ({ primary, children }) => (
   </button>
 );
 ```
-
-**Problems:**
-- Styled-components add runtime overhead and wrapper components
-- CSS Modules require context switching between files
-- Inline styles don't support pseudo-selectors or media queries
-- All approaches separate styling logic from component logic
-
-<br/>
-<h1 id="solution-section">The Expressive Way</h1>
-
-Write CSS directly in your component function body using JavaScript labels:
-
-```jsx
-export const Button = ({ primary, children }) => {
-  background: primary ? '#007bff' : '#6c757d';
-  borderRadius: 8;
-  padding: 0.7, 1.4;
-
-  if (':hover') {
-    filter: 'brightness(1.1)';
-  }
-
-  return <button>{children}</button>;
-};
+```css
+/* Button.module.css */
+.button {
+  border-radius: 8px;
+  padding: 0.7rem 1.4rem;
+}
+.button:hover {
+  filter: brightness(1.1);
+}
+.primary {
+  background: #007bff;
+}
 ```
 
-**Compiles to:**
+<br />
+
+**Tailwind** forces you to memorize abstractions and creates redundant markup:
 ```jsx
-export const Button = ({ primary, children }) => (
-  <button className={classNames('Button_a3f', primary && 'primary_x9k')}>
+const Button = ({ primary, children }) => (
+  <button className={`rounded-lg px-6 py-3 transition-all hover:brightness-110 ${
+    primary ? 'bg-blue-600' : 'bg-gray-600'
+  }`}>
+    {children}
+  </button>
+);
+
+// Every similar button repeats the same classes
+const SecondaryButton = ({ secondary, children }) => (
+  <button className={`rounded-lg px-6 py-3 transition-all hover:brightness-110 ${
+    secondary ? 'bg-purple-600' : 'bg-gray-600'
+  }`}>
     {children}
   </button>
 );
 ```
 
-**Generates CSS:**
-```css
-.Button_a3f {
-  border-radius: 8px;
-  padding: 0.7rem 1.4rem;
-}
-.primary_x9k {
-  background: #007bff;
-}
-.Button_a3f:hover {
-  filter: brightness(1.1);
-}
-```
+<br />
+
+**Problems with traditional approaches:**
+- Styled-components add runtime overhead and wrapper components
+- CSS Modules require context switching between files
+- Tailwind requires memorizing utility class names (not WYSIWYG)
+- Tailwind encourages copy-pasting redundant class strings
+- Inline styles don't support pseudo-selectors or media queries
+- All approaches separate styling logic from component logic
 
 <br/>
 <h1 id="features-section">Key Features</h1>
@@ -108,10 +195,26 @@ Style the component itself before the return statement:
 
 <table>
 <tr>
-<td>
+<td width="50%">
 
-**Traditional**
+**Expressive**
 ```jsx
+const Card = ({ children }) => {
+  background: white;
+  borderRadius: 10;
+  padding: 30;
+
+  return <div>{children}</div>;
+};
+```
+
+</td>
+<td width="50%">
+
+**CSS Modules**
+```jsx
+import styles from './Card.module.css';
+
 const Card = ({ children }) => (
   <div className={styles.card}>
     {children}
@@ -128,31 +231,38 @@ const Card = ({ children }) => (
 ```
 
 </td>
-<td>
-
-**Expressive**
-```jsx
-const Card = ({ children }) => {
-  background: white;
-  borderRadius: 10;
-  padding: 30;
-
-  return <div>{children}</div>;
-};
-```
-
-</td>
 </tr>
 </table>
 
 ### 2. Conditional Styles with `if` Statements
 
+Clean, readable conditionals vs className manipulation:
+
 <table>
 <tr>
-<td>
+<td width="50%">
 
-**Traditional**
+**Expressive**
 ```jsx
+const Button = ({ disabled }) => {
+  cursor: pointer;
+
+  if (disabled) {
+    opacity: 0.4;
+    cursor: notAllowed;
+  }
+
+  return <button>Click me</button>;
+};
+```
+
+</td>
+<td width="50%">
+
+**CSS Modules**
+```jsx
+import styles from './Button.module.css';
+
 const Button = ({ disabled }) => (
   <button
     className={classNames(
@@ -164,27 +274,35 @@ const Button = ({ disabled }) => (
   </button>
 );
 ```
+```css
+/* Button.module.css */
+.button {
+  cursor: pointer;
+}
+.disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+```
 
-</td>
-<td>
-
-**Expressive**
+**Tailwind**
 ```jsx
-const Button = ({ disabled }) => {
-  cursor: 'pointer';
-
-  if (disabled) {
-    opacity: 0.4;
-    cursor: 'not-allowed';
-  }
-
-  return <button>Click me</button>;
-};
+const Button = ({ disabled }) => (
+  <button className={
+    disabled
+      ? 'cursor-not-allowed opacity-40'
+      : 'cursor-pointer'
+  }>
+    Click me
+  </button>
+);
 ```
 
 </td>
 </tr>
 </table>
+
+**Note:** You can use camelCase identifiers as values (like `pointer` and `notAllowed`), which are automatically converted to kebab-case (`pointer` → `"pointer"`, `notAllowed` → `"not-allowed"`).
 
 ### 3. Pseudo-Selectors as String Conditionals
 
@@ -208,45 +326,20 @@ export const Link = (props) => {
 
 ### 4. Nested Selectors with Labels
 
-Create scoped child styles using labeled blocks:
+Create scoped child styles using labeled blocks. This solves Tailwind's redundancy problem:
 
 <table>
 <tr>
-<td>
-
-**Traditional**
-```jsx
-const Modal = ({ children }) => (
-  <div className={styles.modal}>
-    <div className={styles.inner}>
-      {children}
-    </div>
-  </div>
-);
-```
-```css
-.modal {
-  background: rgba(0,0,0,0.5);
-  position: fixed;
-}
-.inner {
-  background: white;
-  padding: 30px;
-  border-radius: 10px;
-}
-```
-
-</td>
-<td>
+<td width="50%">
 
 **Expressive**
 ```jsx
 const Modal = ({ children }) => {
   background: 0x0008;
-  position: 'fixed';
+  position: fixed;
 
   inner: {
-    background: 'white';
+    background: white;
     padding: 30;
     radius: 10;
   }
@@ -261,15 +354,75 @@ const Modal = ({ children }) => {
 };
 ```
 
+**Multiple elements can reuse the same label:**
+```jsx
+return (
+  <div>
+    <div _inner>Section 1</div>
+    <div _inner>Section 2</div>
+    <div _inner>Section 3</div>
+  </div>
+);
+```
+
+</td>
+<td width="50%">
+
+**CSS Modules**
+```jsx
+import styles from './Modal.module.css';
+
+const Modal = ({ children }) => (
+  <div className={styles.modal}>
+    <div className={styles.inner}>
+      {children}
+    </div>
+  </div>
+);
+```
+```css
+/* Modal.module.css */
+.modal {
+  background: rgba(0,0,0,0.5);
+  position: fixed;
+}
+.inner {
+  background: white;
+  padding: 30px;
+  border-radius: 10px;
+}
+```
+
+**Tailwind** (repetitive classes)
+```jsx
+const Modal = ({ children }) => (
+  <div className="fixed bg-black/50">
+    <div className="bg-white p-8 rounded-lg">
+      {children}
+    </div>
+  </div>
+);
+
+// Every similar element repeats classes:
+<div className="bg-white p-8 rounded-lg">
+  Section 1
+</div>
+<div className="bg-white p-8 rounded-lg">
+  Section 2
+</div>
+```
+
 </td>
 </tr>
 </table>
 
-**Note:** Reference labels with underscore attributes (`_inner`) to apply styles.
+**Note:** Reference labels with underscore attributes (`_inner`) to apply styles. This creates semantic, reusable style "slots" without the verbosity of Tailwind's repeated utility classes.
 
 ### 5. Property Shorthands (Macros)
 
-Expressive includes built-in macros that expand common CSS patterns:
+**All macros are library or user-defined**—including the built-in ones. You have full agency to create your own design system.
+
+Expressive ships with common macros that expand CSS patterns:
 
 ```jsx
 export const Box = () => {
@@ -309,7 +462,54 @@ export const Box = () => {
 };
 ```
 
-### 6. Smart Value Handling
+**Want your own macros?** Define them in your Babel preset configuration. Macros are just functions that return CSS property objects:
+
+```js
+// Custom macro example
+export function elevation(level) {
+  const shadows = {
+    1: '0 1px 3px rgba(0,0,0,0.12)',
+    2: '0 3px 6px rgba(0,0,0,0.16)',
+    3: '0 10px 20px rgba(0,0,0,0.19)',
+  };
+  return { boxShadow: shadows[level] };
+}
+
+// Usage in component
+const Card = () => {
+  elevation: 2;  // → box-shadow: 0 3px 6px rgba(0,0,0,0.16)
+  return <div />;
+};
+```
+
+### 6. React Native Support (Coming Soon)
+
+Expressive will soon support React Native, making cross-platform styling simpler:
+
+```jsx
+// Works on both Web and Native
+const Button = ({ primary }) => {
+  paddingH: 20;
+  paddingV: 10;
+  borderRadius: 8;
+
+  if (primary) {
+    backgroundColor: 0x007bff;
+  }
+
+  return <Pressable>
+    <Text>Click me</Text>
+  </Pressable>;
+};
+```
+
+**Advantages for React Native:**
+- No StyleSheet.create boilerplate
+- Conditional styles without array spreading
+- Shared style definitions between platforms
+- Type-safe styling without manual TypeScript definitions
+
+### 7. Smart Value Handling
 
 Numbers and hex colors are automatically processed:
 
@@ -319,14 +519,14 @@ const Component = () => {
   padding: 20;            // → padding: 20px     (integers → px)
   color: 0x007bff;        // → color: #007bff    (hex numbers)
   background: 0xfff8;     // → background: rgba(255, 255, 255, 0.533)  (hex with alpha)
-  width: 'fill';          // → width: 100%       (keyword)
-  borderRadius: 'round';  // → border-radius: 999px
+  width: fill;            // → width: 100%       (keyword, camelCase → kebab-case)
+  borderRadius: round;    // → border-radius: 999px (camelCase identifier)
 
   return <div />;
 };
 ```
 
-### 7. CSS Variables
+### 8. CSS Variables
 
 Use `$` prefix for theme variables:
 
@@ -353,7 +553,7 @@ Compiles to CSS custom properties:
 }
 ```
 
-### 8. Multi-level Nesting
+### 9. Multi-level Nesting
 
 Labels can nest indefinitely for complex component structures:
 
@@ -452,16 +652,65 @@ module.exports = {
 <br/>
 <h1 id="comparison-section">Comparison with Alternatives</h1>
 
-| Feature | Expressive | Styled Components | Emotion | CSS Modules | Inline Styles |
-|---------|-----------|-------------------|---------|-------------|---------------|
-| **No runtime** | ✅ | ❌ | ❌ | ✅ | ✅ |
-| **Pseudo-selectors** | ✅ | ✅ | ✅ | ✅ | ❌ |
-| **Dynamic styles** | ✅ | ✅ | ✅ | ⚠️ | ✅ |
-| **No wrapper components** | ✅ | ❌ | ❌ | ✅ | ✅ |
-| **Type safety** | ✅ | ⚠️ | ⚠️ | ❌ | ✅ |
-| **Collocated styles** | ✅ | ✅ | ✅ | ❌ | ✅ |
-| **Build-time extraction** | ✅ | ⚠️ | ⚠️ | ✅ | ❌ |
-| **Learning curve** | Low | Medium | Medium | Low | None |
+| Feature | Expressive | Tailwind | Styled Components | Emotion | CSS Modules | Inline Styles |
+|---------|-----------|----------|-------------------|---------|-------------|---------------|
+| **No runtime** | ✅ | ✅ | ❌ | ❌ | ✅ | ✅ |
+| **Pseudo-selectors** | ✅ | ✅ | ✅ | ✅ | ✅ | ❌ |
+| **Dynamic styles** | ✅ | ✅ | ✅ | ✅ | ⚠️ | ✅ |
+| **No wrapper components** | ✅ | ✅ | ❌ | ❌ | ✅ | ✅ |
+| **Type safety** | ✅ | ⚠️ | ⚠️ | ⚠️ | ❌ | ✅ |
+| **Collocated styles** | ✅ | ✅ | ✅ | ✅ | ❌ | ✅ |
+| **WYSIWYG (no memorization)** | ✅ | ❌ | ✅ | ✅ | ✅ | ✅ |
+| **Reusable style definitions** | ✅ | ⚠️ | ✅ | ✅ | ✅ | ❌ |
+| **Build-time extraction** | ✅ | ✅ | ⚠️ | ⚠️ | ✅ | ❌ |
+| **Portable (no context switching)** | ✅ | ✅ | ✅ | ✅ | ❌ | ✅ |
+| **Learning curve** | Low | Medium | Medium | Medium | Low | None |
+
+### Why Expressive vs Tailwind?
+
+While Tailwind is popular, it has key limitations:
+
+1. **Memorization required**: You must learn utility class names (`px-4`, `rounded-lg`, `bg-blue-500`) instead of writing standard CSS
+2. **Class repetition**: Similar elements require copy-pasting the same class strings
+3. **Not portable**: Moving a component means moving its class list, which isn't self-contained
+4. **Harder to read**: `className="flex items-center justify-between p-4 bg-white rounded-lg shadow-md"` vs readable CSS properties
+
+**Expressive gives you Tailwind's colocation without the abstractions:**
+
+<table>
+<tr>
+<td width="50%">
+
+**Expressive** (WYSIWYG)
+```jsx
+const Card = () => {
+  display: flex;
+  alignItems: center;
+  justifyContent: spaceBetween;
+  padding: 16;
+  background: white;
+  borderRadius: 8;
+  boxShadow: '0 2px 4px rgba(0,0,0,0.1)';
+
+  return <div>Content</div>;
+};
+```
+
+</td>
+<td width="50%">
+
+**Tailwind** (memorization)
+```jsx
+const Card = () => (
+  <div className="flex items-center justify-between p-4 bg-white rounded-lg shadow-md">
+    Content
+  </div>
+);
+```
+
+</td>
+</tr>
+</table>
 
 <br/>
 <h1 id="how-it-works-section">How It Works</h1>
@@ -607,12 +856,12 @@ The syntax used to apply labeled styles to elements: `<div _labelName />`. The u
 <br/>
 
 ### Macros
-Built-in functions that expand shorthand syntax into full CSS properties. Examples include `absolute`, `size`, `radius`, `margin`, `padding`, `shadow`, `border`, and `flexAlign`.
+Functions that expand shorthand syntax into full CSS properties. **All macros are library or user-defined**—you have complete control to create your own design system. Expressive ships with common macros like `absolute`, `size`, `radius`, `margin`, `padding`, `shadow`, `border`, and `flexAlign`, but you can define custom ones in your Babel configuration.
 
 ```jsx
 // Macro input
 size: 100, 200;
-radius: 'round';
+radius: round;
 absolute: fill;
 
 // Expands to CSS
@@ -621,6 +870,15 @@ height: 200px;
 border-radius: 999px;
 position: absolute;
 top: 0; right: 0; bottom: 0; left: 0;
+```
+
+To create your own macro, define a function that returns CSS property objects:
+
+```js
+// In babel preset config
+export function customMacro(arg) {
+  return { customProperty: processedValue };
+}
 ```
 
 <br/>
@@ -660,6 +918,21 @@ Automatic conversion of numeric values to CSS units:
 - Integers → `px`: `20` becomes `"20px"`
 - Decimals → `em`: `1.5` becomes `"1.5em"`
 - Zero → `"0"` (no unit needed)
+
+<br/>
+
+### CamelCase Value Identifiers
+You can use camelCase identifiers as values, which are automatically converted to kebab-case strings:
+
+```jsx
+cursor: pointer;           // → cursor: "pointer"
+cursor: notAllowed;        // → cursor: "not-allowed"
+textDecoration: underline; // → text-decoration: "underline"
+width: fill;               // → width: "100%" (special keyword)
+borderRadius: round;       // → border-radius: "999px" (special keyword)
+```
+
+This provides cleaner syntax without quote marks for common CSS values.
 
 <br/>
 
