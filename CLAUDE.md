@@ -105,10 +105,10 @@ Labels can:
 - Nest infinitely: `outer: { inner: { deep: { ... } } }`
 - Apply to element tags: `div: { color: 'red' }`
 
-**Special label: `this`**
-- Auto-created for component functions
-- References the component's root styles
-- `<this>` renders root element with component className
+**Top-level (self) styles:**
+- Styles defined before any labels automatically apply to outermost returned element(s)
+- Internally represented by a `this` context (auto-created for component functions)
+- Users don't write `this` label or `<this>` tag - it's automatically applied
 
 **Source:** `packages/babel-plugin-jsx/src/label.ts`
 
@@ -359,7 +359,7 @@ expect(output.css).toMatchInlineSnapshot(`...`);
 1. **Label order matters**: Labels are processed in order, later definitions can override
 2. **camelCase → kebab-case**: All property names converted automatically
 3. **Underscore attributes are removed**: `_inner` doesn't appear in final HTML
-4. **`this` is special**: Can't be used as regular label name
+4. **Top-level styles auto-apply**: Styles before any labels automatically apply to outermost returned elements
 5. **Comma syntax for multi-values**: `padding: 10, 20` not `padding: [10, 20]`
 6. **Hex colors need `0x` prefix**: `0xff0000` not `#ff0000`
 7. **Conditionals in if test**: String literals create selectors, expressions create conditional classes
