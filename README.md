@@ -58,7 +58,7 @@ export const Card = ({ featured, children }) => {
   // Labeled blocks create reusable style scopes
   header: {
     fontSize: 1.5;
-    fontWeight: 'bold';
+    fontWeight: bold;
     marginBottom: 16;
   }
 
@@ -116,8 +116,8 @@ Expressive JSX reinterprets existing JavaScript syntax to extract CSS intent:
 - **JavaScript labels** (you know, those things from `for` loops?) become style scopes
 - **Bare property assignments** inside components become CSS properties
 - **Underscore attributes** (`_label`) on JSX elements apply those styles
-- At build time, a Babel plugin extracts this metadata and generates context-appropriate stylesheets
-- Components render with generated `className` attributes—zero runtime overhead
+- At build time, a Babel plugin extracts this metadata to generate stylesheets
+- Components render with generated `className` attributes - zero runtime overhead!
 
 It's not a custom DSL or new syntax. It's taking JavaScript features that exist but are rarely used, and giving them new purpose at build time.
 
@@ -255,7 +255,8 @@ Clean, readable conditionals vs className manipulation:
 <tr>
 <td width="50%">
 
-### **Expressive**
+<h3>Expressive</h3>
+
 ```jsx
 const Button = ({ disabled }) => {
   cursor: pointer;
@@ -272,7 +273,9 @@ const Button = ({ disabled }) => {
 </td>
 <td width="50%" rowspan="2">
 
-### **CSS Modules**
+
+<h3>CSS Modules</h3>
+
 ```jsx
 import styles from './Button.module.css';
 
@@ -303,7 +306,8 @@ const Button = ({ disabled }) => (
 <tr>
 <td width="50%">
 
-### **Tailwind**
+<h3>Tailwind</h3>
+
 ```jsx
 const Button = ({ disabled }) => (
   <button className={
@@ -366,7 +370,6 @@ const Dashboard = ({ stats }) => {
     flexGrow: 1;
 
     // Nesting selectors keeps things clear
-    // Only _label and _value inside of _card get these styles
     label: {
       fontSize: 0.875;
       color: 0x666;
