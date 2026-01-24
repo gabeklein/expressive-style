@@ -189,7 +189,7 @@ const SecondaryButton = ({ secondary, children }) => (
 <br/>
 <h1 id="features-section">Key Features</h1>
 
-### 1. Self-Styling Components
+### Self-Styling Components
 
 Style the component itself before the return statement:
 
@@ -234,7 +234,7 @@ const Card = ({ children }) => (
 </tr>
 </table>
 
-### 2. Conditional Styles with `if` Statements
+### Conditional Styles with `if` Statements
 
 Clean, readable conditionals vs className manipulation:
 
@@ -242,7 +242,7 @@ Clean, readable conditionals vs className manipulation:
 <tr>
 <td width="50%">
 
-**Expressive**
+### **Expressive**
 ```jsx
 const Button = ({ disabled }) => {
   cursor: pointer;
@@ -257,9 +257,9 @@ const Button = ({ disabled }) => {
 ```
 
 </td>
-<td width="50%">
+<td width="50%" rowspan="2">
 
-**CSS Modules**
+### **CSS Modules**
 ```jsx
 import styles from './Button.module.css';
 
@@ -285,7 +285,12 @@ const Button = ({ disabled }) => (
 }
 ```
 
-**Tailwind**
+</td>
+</tr>
+<tr>
+<td width="50%">
+
+### **Tailwind**
 ```jsx
 const Button = ({ disabled }) => (
   <button className={
@@ -304,7 +309,7 @@ const Button = ({ disabled }) => (
 
 **Note:** You can use camelCase identifiers as values (like `pointer` and `notAllowed`), which are automatically converted to kebab-case (`pointer` → `"pointer"`, `notAllowed` → `"not-allowed"`).
 
-### 3. Pseudo-Selectors as String Conditionals
+### Pseudo-Selectors as String Conditionals
 
 ```jsx
 export const Link = (props) => {
@@ -324,7 +329,7 @@ export const Link = (props) => {
 };
 ```
 
-### 4. Nested Selectors with Labels
+### Nested Selectors with Labels
 
 Create scoped child styles using labeled blocks. This solves Tailwind's redundancy problem:
 
@@ -334,82 +339,92 @@ Create scoped child styles using labeled blocks. This solves Tailwind's redundan
 
 **Expressive**
 ```jsx
-const Modal = ({ children }) => {
-  background: 0x0008;
-  position: fixed;
+const Dashboard = ({ stats }) => {
+  display: flex;
+  gap: 20;
+  padding: 20;
 
-  inner: {
+  // Define card styles once
+  card: {
     background: white;
-    padding: 30;
-    radius: 10;
+    padding: 24;
+    radius: 12;
+    shadow: 0xeee;
+    flexGrow: 1;
+
+    // Nesting selectors keeps things clear
+    // Only _label and _value inside of _card get these styles
+    label: {
+      fontSize: 0.875;
+      color: 0x666;
+      textTransform: uppercase;
+    }
+
+    value: {
+      fontSize: 2;
+      fontWeight: bold;
+      marginTop: 8;
+    }
   }
 
   return (
     <div>
-      <div _inner>
-        {children}
+      {/* Reuse label styles across multiple cards */}
+      <div _card>
+        <div _label>Revenue</div>
+        <div _value>$45,231</div>
+      </div>
+
+      <div _card>
+        <div _label>Users</div>
+        <div _value>1,429</div>
+      </div>
+
+      <div _card>
+        <div _label>Orders</div>
+        <div _value>234</div>
       </div>
     </div>
   );
 };
 ```
 
-**Multiple elements can reuse the same label:**
-```jsx
-return (
-  <div>
-    <div _inner>Section 1</div>
-    <div _inner>Section 2</div>
-    <div _inner>Section 3</div>
-  </div>
-);
-```
-
 </td>
 <td width="50%">
 
-**CSS Modules**
-```jsx
-import styles from './Modal.module.css';
-
-const Modal = ({ children }) => (
-  <div className={styles.modal}>
-    <div className={styles.inner}>
-      {children}
-    </div>
-  </div>
-);
-```
-```css
-/* Modal.module.css */
-.modal {
-  background: rgba(0,0,0,0.5);
-  position: fixed;
-}
-.inner {
-  background: white;
-  padding: 30px;
-  border-radius: 10px;
-}
-```
-
 **Tailwind** (repetitive classes)
 ```jsx
-const Modal = ({ children }) => (
-  <div className="fixed bg-black/50">
-    <div className="bg-white p-8 rounded-lg">
-      {children}
+const Dashboard = ({ stats }) => (
+  <div className="flex gap-5 p-5">
+    {/* Same classes repeated for each card */}
+    <div className="bg-white p-6 rounded-xl shadow-sm flex-grow">
+      <div className="text-sm text-gray-600 uppercase">
+        Revenue
+      </div>
+      <div className="text-3xl font-bold mt-2">
+        $45,231
+      </div>
+    </div>
+
+    <div className="bg-white p-6 rounded-xl shadow-sm flex-grow">
+      <div className="text-sm text-gray-600 uppercase">
+        Users
+      </div>
+      <div className="text-3xl font-bold mt-2">
+        1,429
+      </div>
+    </div>
+
+    <div className="bg-white p-6 rounded-xl shadow-sm flex-grow">
+      <div className="text-sm text-gray-600 uppercase">
+        Orders
+      </div>
+      <div className="text-3xl font-bold mt-2">
+        234
+      </div>
     </div>
   </div>
 );
-
-// Every similar element repeats classes:
-<div className="bg-white p-8 rounded-lg">
-  Section 1
-</div>
-<div className="bg-white p-8 rounded-lg">
-  Section 2
-</div>
 ```
 
 </td>
@@ -418,7 +433,7 @@ const Modal = ({ children }) => (
 
 **Note:** Reference labels with underscore attributes (`_inner`) to apply styles. This creates semantic, reusable style "slots" without the verbosity of Tailwind's repeated utility classes.
 
-### 5. Property Shorthands (Macros)
+### Property Shorthands (Macros)
 
 **All macros are library or user-defined**—including the built-in ones. You have full agency to create your own design system.
 
@@ -482,7 +497,7 @@ const Card = () => {
 };
 ```
 
-### 6. React Native Support (Coming Soon)
+### React Native Support (Coming Soon)
 
 Expressive will soon support React Native, making cross-platform styling simpler:
 
@@ -509,7 +524,7 @@ const Button = ({ primary }) => {
 - Shared style definitions between platforms
 - Type-safe styling without manual TypeScript definitions
 
-### 7. Smart Value Handling
+### Smart Value Handling
 
 Numbers and hex colors are automatically processed:
 
@@ -526,7 +541,7 @@ const Component = () => {
 };
 ```
 
-### 8. CSS Variables
+### CSS Variables
 
 Use `$` prefix for theme variables:
 
@@ -553,7 +568,7 @@ Compiles to CSS custom properties:
 }
 ```
 
-### 9. Multi-level Nesting
+### Multi-level Nesting
 
 Labels can nest indefinitely for complex component structures:
 
@@ -641,6 +656,26 @@ module.exports = {
     new ExpressivePlugin()
   ]
 };
+```
+
+<br/>
+<h2 id="typescript-section">TypeScript Support</h2>
+
+Install the TypeScript plugin for IDE autocomplete:
+
+```bash
+npm install --save-dev @expressive/typescript-plugin-jsx
+```
+
+```json
+// tsconfig.json
+{
+  "compilerOptions": {
+    "plugins": [
+      { "name": "@expressive/typescript-plugin-jsx" }
+    ]
+  }
+}
 ```
 
 ### Other Build Tools
@@ -743,67 +778,6 @@ const Button = (props) => (
 }
 ```
 
-<br/>
-<h1 id="example-section">Real-World Example</h1>
-
-Here's a complete modal component from a production app:
-
-```jsx
-export const Modal = ({ className, children }) => {
-  FullScreen: {
-    position: 'fixed';
-    top: 0;
-    left: 0;
-    width: '100vw';
-    height: '100vh';
-    background: 0xfff3;
-    display: 'flex';
-    justifyContent: 'center';
-    alignItems: 'center';
-    zIndex: 1000;
-  }
-
-  inner: {
-    padding: 30, 50, 50;
-    maxHeight: 'calc(100vh - 150px)';
-    animation: 'fadeInUp 0.3s ease-out forwards';
-    background: 'white';
-    shadow: 0xccc;
-    borderRadius: 10;
-    position: 'relative';
-    overflow: 'hidden';
-    overflowY: 'auto';
-  }
-
-  return (
-    <div _inner className={className}>
-      {children}
-    </div>
-  );
-}
-```
-
-**Clean, readable, and fully featured.**
-
-<br/>
-<h1 id="typescript-section">TypeScript Support</h1>
-
-Install the TypeScript plugin for IDE autocomplete:
-
-```bash
-npm install --save-dev @expressive/typescript-plugin-jsx
-```
-
-```json
-// tsconfig.json
-{
-  "compilerOptions": {
-    "plugins": [
-      { "name": "@expressive/typescript-plugin-jsx" }
-    ]
-  }
-}
-```
 
 <br/>
 <h1 id="learn-more-section">Learn More</h1>
