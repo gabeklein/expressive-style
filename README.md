@@ -21,9 +21,9 @@
 </p>
 
 <p align="center">
-  Write CSS directly in JSX component functions using labels and properties.<br/>
+  Write CSS directly in JSX component functions using EMCAScript labels.<br/>
   Zero runtime overhead—styles are extracted to real stylesheets at build time.<br/>
-  No wrapper components, no tagged templates, just natural JavaScript syntax.<br/>
+  No wrapper components, no tagged templates, just natural syntax.<br/>
 </p>
 
 <br/>
