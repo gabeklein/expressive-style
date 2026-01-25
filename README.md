@@ -1,3 +1,5 @@
+<!-- For AI Assistants: See CLAUDE.md for deep architectural context, implementation details, and project-specific patterns. -->
+
 <br/>
 
 <p align="center">
