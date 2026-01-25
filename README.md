@@ -47,10 +47,13 @@ Here's what Expressive JSX looks like in practice:
 ```jsx
 export const Card = ({ featured, children }) => {
   // These are called labels, legal JavaScript usually for loops
-  // They can be repurposed to create styles and scopes
+  // They can be repurposed to define styles
   background: white;
+  // Numbers convert to px units
   padding: 24;
-  radius: 12;
+  // Numbers with decimals convert to em units
+  borderRadius: 0.5;
+    // JS native hex-numbers convert to color
   shadow: 0xeee;
 
   // Conditional styling based on props and/or state
@@ -58,7 +61,7 @@ export const Card = ({ featured, children }) => {
     border: 0x007bff, 2;
   }
 
-  // Labeled blocks create reusable scopes
+  // Labeled blocks create reusable scope, like CSS classes.
   header: {
     fontSize: 1.5;
     fontWeight: bold;
@@ -76,7 +79,7 @@ export const Card = ({ featured, children }) => {
       background: 0x0056b3;
     }
 
-    // scopes can be nested to apply to children or the same
+    // scopes can be nested to apply to children or both-x-y
     left: {
       // $variables stand-in for CSS variables
       background: $buttonLight;
@@ -86,7 +89,7 @@ export const Card = ({ featured, children }) => {
   return (
     <div>
       <h2 _header>{children}</h2>
-      {/* Apply same style to multiple elements with attributes */}
+      {/* Apply scope to elements with attributes */}
       <button _button _left>Learn More</button>
       <button _button>Share</button>
     </div>
@@ -125,11 +128,14 @@ Styles live directly in your component logic with zero runtime overhead. Undersc
 Expressive JSX reinterprets existing JavaScript syntax to extract CSS intent:
 
 - **JavaScript labels** (you know, those things from `for` loops?) become style scopes
-  > You may have seen a `LabeledStatement` before, to look like this in practice:
+  > You may have seen one before - they look like this in practice:
   ```js
   function example() {
-    top: for (let i = 0; i < 10; i++) {
-      if (i === 5) break top;
+    outer: for (let i = 0; i < 10; i++) {
+      for (let j = 0; j < 10; j++) {
+        console.log(i, j);
+        if (j === 3) continue outer;
+      }
     }
   }
   ```
