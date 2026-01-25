@@ -29,11 +29,11 @@
 ## Table of Contents
 
 - [How It Works](#how-it-works-section)
-- [Compare that to...](#problem-section)
+- [Compare it to...](#problem-section)
 - [Key Features](#features-section)
 - [Installation](#install-section)
-- [Comparison with Alternatives](#comparison-section)
 - [TypeScript Support](#typescript-section)
+- [Feature Parity](#comparison-section)
 - [Glossary](#glossary-section)
 
 <br/>
@@ -44,7 +44,8 @@ Here's what Expressive JSX looks like in practice:
 
 ```jsx
 export const Card = ({ featured, children }) => {
-  // Self-styling - these properties apply to the root element
+  // These are called labels, legal JavaScript usually for loops
+  // They can be repurposed to create styles and scopes
   background: white;
   padding: 24;
   radius: 12;
@@ -55,7 +56,7 @@ export const Card = ({ featured, children }) => {
     border: 0x007bff, 2;
   }
 
-  // Labeled blocks create reusable style scopes
+  // Labeled blocks create reusable scopes
   header: {
     fontSize: 1.5;
     fontWeight: bold;
@@ -73,6 +74,7 @@ export const Card = ({ featured, children }) => {
       background: 0x0056b3;
     }
 
+    // scopes can be nested to apply to children or the same
     left: {
       // $variables stand-in for CSS variables
       background: $buttonLight;
@@ -82,7 +84,7 @@ export const Card = ({ featured, children }) => {
   return (
     <div>
       <h2 _header>{children}</h2>
-      {/* Apply the same styles to multiple elements with underscore attributes */}
+      {/* Apply same style to multiple elements with attributes */}
       <button _button _left>Learn More</button>
       <button _button>Share</button>
     </div>
@@ -90,7 +92,20 @@ export const Card = ({ featured, children }) => {
 };
 ```
 
-**Compiles to real CSS at build time:**
+**Compiles to JSX with class names:**
+```jsx
+export const Card = ({ featured, children }) => {
+  return (
+    <div className={`Card_a3f ${featured ? 'featured_x9k' : ''}`}>
+      <h2 className="header_b2c">{children}</h2>
+      <button className="button_d4e left_f1g">Learn More</button>
+      <button className="button_d4e">Share</button>
+    </div>
+  );
+};
+```
+
+**And corresponding CSS:**
 ```css
 .Card_a3f { background: white; padding: 24px; border-radius: 12px; box-shadow: #eee 0 0 10px; }
 .featured_x9k { border: 2px solid #007bff; }
@@ -99,7 +114,7 @@ export const Card = ({ featured, children }) => {
 .button_d4e:hover { background: #0056b3; }
 ```
 
-Styles live directly in your component logic with zero runtime overhead. Underscore attributes (`_header`, `_button`) apply labeled styles, conditionals use native `if` statements, and it's all valid JavaScript.
+Styles live directly in your component logic with zero runtime overhead. Underscore attributes (`_header`, `_button`) apply labeled styles, conditionals use native `if` statements, and it's all valid upcycled JavaScript!
 
 <br/>
 
@@ -108,12 +123,20 @@ Styles live directly in your component logic with zero runtime overhead. Undersc
 Expressive JSX reinterprets existing JavaScript syntax to extract CSS intent:
 
 - **JavaScript labels** (you know, those things from `for` loops?) become style scopes
-- **Bare property assignments** inside components become CSS properties
+  > You may have seen a `LabeledStatement` before, to look like this in practice:
+  ```js
+  function example() {
+    top: for (let i = 0; i < 10; i++) {
+      if (i === 5) break top;
+    }
+  }
+  ```
+- **Bare Identifiers** inside components become CSS properties
 - **Underscore attributes** (`_label`) on JSX elements apply those styles
-- At build time, a Babel plugin extracts this metadata to generate stylesheets
-- Components render with generated `className` attributes - zero runtime overhead!
+- At build time, a Babel plugin extracts this as metadata to generate stylesheets
+- Components render with generated `className` - zero runtime needed!
 
-It's not a custom DSL or new syntax. It's taking JavaScript features that exist but are rarely used, and giving them new purpose at build time.
+It's not a custom DSL or new syntax. It's taking JavaScript features that exist but are rarely used, and giving them new meaning at build time.
 
 <br/>
 <h1 id="problem-section">Compare that to...</h1>
@@ -514,10 +537,11 @@ npm install --save-dev @expressive/typescript-plugin-jsx
 - **Rollup**: `@expressive/rollup-plugin-jsx`
 
 <br/>
-<h1 id="comparison-section">Comparison with Alternatives</h1>
+<h1 id="comparison-section">Feature Parity</h1>
 
 | Feature | Expressive | Tailwind | Styled Components | Emotion | CSS Modules | Inline Styles |
 |---------|-----------|----------|-------------------|---------|-------------|---------------|
+| **Learning curve** | Low | Medium | Medium | Medium | Low | None |
 | **No runtime** | ✅ | ✅ | ❌ | ❌ | ✅ | ✅ |
 | **Pseudo-selectors** | ✅ | ✅ | ✅ | ✅ | ✅ | ❌ |
 | **Dynamic styles** | ✅ | ✅ | ✅ | ✅ | ⚠️ | ✅ |
@@ -528,7 +552,6 @@ npm install --save-dev @expressive/typescript-plugin-jsx
 | **Reusable style definitions** | ✅ | ⚠️ | ✅ | ✅ | ✅ | ❌ |
 | **Build-time extraction** | ✅ | ✅ | ⚠️ | ⚠️ | ✅ | ❌ |
 | **Portable (no context switching)** | ✅ | ✅ | ✅ | ✅ | ❌ | ✅ |
-| **Learning curve** | Low | Medium | Medium | Medium | Low | None |
 
 
 <br/>
