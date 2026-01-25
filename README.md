@@ -47,7 +47,7 @@ Here's what Expressive JSX looks like in practice:
 ```jsx
 export const Card = ({ featured, children }) => {
   // These are called labels, legal JavaScript usually for loops
-  // They can be repurposed to define styles
+  // They can be repurposed to define styles within a component
   background: white;  
   padding: 24;        // Numbers convert to px units
   borderRadius: 0.5;  // Decimals convert to em units
@@ -114,6 +114,7 @@ export const Card = ({ featured, children }) => {
 .header_b2c { font-size: 1.5em; font-weight: bold; margin-bottom: 16px; }
 .button_d4e { padding: 8px 16px; border-radius: 6px; background: #007bff; color: white; }
 .button_d4e:hover { background: #0056b3; }
+.left_f1g { background: var(--button-light); }
 ```
 
 Styles live directly in your component logic with zero runtime overhead. Underscore attributes (`_header`, `_button`) apply labeled styles, conditionals use native `if` statements, and it's all valid upcycled JavaScript!
@@ -131,7 +132,7 @@ Expressive JSX reinterprets existing JavaScript syntax to extract CSS intent:
     outer: for (let i = 0; i < 10; i++) {
       for (let j = 0; j < 10; j++) {
         console.log(i, j);
-        if (j === 3) continue outer;
+        if (i * j > 50) continue outer;
       }
     }
   }
