@@ -48,13 +48,10 @@ Here's what Expressive JSX looks like in practice:
 export const Card = ({ featured, children }) => {
   // These are called labels, legal JavaScript usually for loops
   // They can be repurposed to define styles
-  background: white;
-  // Numbers convert to px units
-  padding: 24;
-  // Numbers with decimals convert to em units
-  borderRadius: 0.5;
-    // JS native hex-numbers convert to color
-  shadow: 0xeee;
+  background: white;  
+  padding: 24;        // Numbers convert to px units
+  borderRadius: 0.5;  // Decimals convert to em units
+  boxShadow: 0xeee;   // Hexidecimals convert to color
 
   // Conditional styling based on props and/or state
   if (featured) {
@@ -70,7 +67,7 @@ export const Card = ({ featured, children }) => {
 
   button: {
     padding: 8, 16;
-    radius: 6;
+    borderRadius: 6;
     background: 0x007bff;
     color: white;
 
