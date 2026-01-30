@@ -23,7 +23,7 @@ function isParenthesized(node: t.Expression) {
 
 export function parseArgument(
   element: NodePath<t.ExpressionStatement>,
-  childKey?: keyof t.Expression
+  childKey?: keyof t.Expression,
 ) {
   const exp = element.get("expression").node;
   const args = parseExpression(exp, childKey);
@@ -31,7 +31,10 @@ export function parseArgument(
   return Array.isArray(args) ? args : [args];
 }
 
-function parseExpression<T extends t.Expression>(element: T, childKey?: keyof T): any {
+function parseExpression<T extends t.Expression>(
+  element: T,
+  childKey?: keyof T,
+): any {
   if (childKey) element = element[childKey] as unknown as T;
 
   if (isParenthesized(element)) return element;
@@ -132,7 +135,6 @@ function parseNumericLiteral(number: t.NumericLiteral, negative: boolean) {
 
   if (negative) throw Oops.HexNoNegative(number, rawValue);
 
-  
   raw = raw.substring(2);
 
   if (raw.length == 1) raw = "000" + raw;
