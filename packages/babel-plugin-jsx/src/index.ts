@@ -1,13 +1,12 @@
 import { PluginObj, PluginPass } from "@babel/core";
 import { NodePath } from "@babel/traverse";
+import * as t from "@babel/types";
 
 import { Context, hash } from "./context";
 import { getContext, handleLabel } from "./label";
 import { getNames } from "./names";
-import t from "./types";
 
 import type { Macro, Options } from "./options";
-import type { JSXElement, JSXFragment } from "@babel/types";
 
 type State = PluginPass & {
   context: Context;
@@ -32,7 +31,7 @@ const SCOPE = new WeakMap<NodePath, Set<Context>>();
  * The function must have a name with a capital letter to be considered a component.
  */
 function isReturnedByComponent(
-  path: NodePath<JSXElement> | NodePath<JSXFragment>
+  path: NodePath<t.JSXElement> | NodePath<t.JSXFragment>
 ) {
   let parent = path.parentPath;
 
@@ -69,7 +68,7 @@ function isReturnedByComponent(
   return false;
 }
 
-function JSX(path: NodePath<JSXElement> | NodePath<JSXFragment>) {
+function JSX(path: NodePath<t.JSXElement> | NodePath<t.JSXFragment>) {
   if (path.getData(USING_KEY)) return;
 
   let { parentPath: parent } = path;
@@ -77,11 +76,11 @@ function JSX(path: NodePath<JSXElement> | NodePath<JSXFragment>) {
   if (fixImplicitReturn(path)) return;
 
   const context =
-    !parent.isJSXElement() && !parent.isJSXFragment() && getContext(path);
-  const scope = new Set(context ? [context] : SCOPE.get(parent));
+    !parent!.isJSXElement() && !parent!.isJSXFragment() && getContext(path);
+  const scope = new Set(context ? [context] : SCOPE.get(parent!));
   const using = new Set<Context>();
 
-  if (parent.isParenthesizedExpression()) parent = parent.parentPath;
+  if (parent!.isParenthesizedExpression()) parent = parent!.parentPath;
 
   const returned = isReturnedByComponent(path);
 
@@ -149,8 +148,6 @@ function JSX(path: NodePath<JSXElement> | NodePath<JSXFragment>) {
 }
 
 function Plugin(_compiler: any, options: Options): PluginObj<State> {
-  Object.assign(t, _compiler.types);
-
   return {
     manipulateOptions(_options, parse) {
       parse.plugins.push("jsx");
@@ -185,10 +182,10 @@ function Plugin(_compiler: any, options: Options): PluginObj<State> {
   };
 }
 
-function fixImplicitReturn(path: NodePath<JSXElement> | NodePath<JSXFragment>) {
+function fixImplicitReturn(path: NodePath<t.JSXElement> | NodePath<t.JSXFragment>) {
   let { node, parentPath: parent } = path;
 
-  if (!parent.isExpressionStatement()) return;
+  if (!parent!.isExpressionStatement()) return;
 
   const block = parent.parentPath;
 

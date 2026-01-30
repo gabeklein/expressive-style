@@ -1,20 +1,6 @@
 import { NodePath } from "@babel/traverse";
-import {
-  ArrowFunctionExpression,
-  BinaryExpression,
-  BooleanLiteral,
-  CallExpression,
-  Expression,
-  ExpressionStatement,
-  Identifier,
-  NumericLiteral,
-  SequenceExpression,
-  StringLiteral,
-  TemplateLiteral,
-  UnaryExpression,
-} from "@babel/types";
+import * as t from "@babel/types";
 
-import t from "./types";
 import { ParseErrors } from "./errors";
 
 const Oops = ParseErrors({
@@ -30,73 +16,67 @@ const Oops = ParseErrors({
   ElseNotSupported: "An else statement in an if modifier is not yet supported",
 });
 
+function isParenthesized(node: t.Expression) {
+  const { extra } = node as any;
+  return extra ? extra.parenthesized === true : false;
+}
+
+
 export function parseArgument(
-  element: NodePath<ExpressionStatement>,
-  childKey?: keyof Expression
+  element: NodePath<t.ExpressionStatement>,
+  childKey?: keyof t.Expression
 ) {
   const exp = element.get("expression").node;
-  const args = parse.Expression(exp, childKey);
+  const args = parseExpression(exp, childKey);
 
   return Array.isArray(args) ? args : [args];
 }
 
-const parse = {
-  Expression<T extends Expression>(element: T, childKey?: keyof T): any {
-    if (childKey) element = element[childKey] as unknown as T;
+function parseExpression<T extends t.Expression>(element: T, childKey?: keyof T): any {
+  if (childKey) element = element[childKey] as unknown as T;
 
-    if (t.isParenthesized(element)) return element;
+  if (isParenthesized(element)) return element;
 
-    if (element.type in this) return (this as any)[element.type](element);
+  if (t.isIdentifier(element)) {
+    return camelToDash(element.name);
+  }
 
-    throw Oops.UnknownArgument(element);
-  },
-  Identifier(node: Identifier) {
-    return camelToDash(node.name);
-  },
-  BooleanLiteral(bool: BooleanLiteral) {
-    return bool.value;
-  },
-  StringLiteral(e: StringLiteral) {
-    if (e.value === "") return '""';
+  if (t.isBooleanLiteral(element)) {
+    return element.value;
+  }
 
-    return e.value;
-  },
-  NullLiteral() {
+  if (t.isStringLiteral(element)) {
+    if (element.value === "") return '""';
+    return element.value;
+  }
+
+  if (t.isNullLiteral(element)) {
     return null;
-  },
-  TemplateLiteral(temp: TemplateLiteral) {
-    if (temp.quasis.length == 1) return temp.quasis[0].value.raw;
+  }
 
-    return temp;
-  },
-  NumericLiteral(number: NumericLiteral, negative?: boolean) {
-    let {
-      extra: { rawValue, raw },
-    } = number as any;
+  if (t.isTemplateLiteral(element)) {
+    if (element.quasis.length == 1) return element.quasis[0].value.raw;
+    return element;
+  }
 
-    if (t.isParenthesized(number) || !/^0x/.test(raw)) {
-      if (raw.indexOf(".") > 0) return negative ? "-" + raw : raw;
+  if (t.isNumericLiteral(element)) {
+    return parseNumericLiteral(element, false);
+  }
 
-      return negative ? -rawValue : rawValue;
-    }
-
-    if (negative) throw Oops.HexNoNegative(number, rawValue);
-
-    return HEXColor(raw);
-  },
-  UnaryExpression(e: UnaryExpression) {
-    const { argument, operator } = e;
+  if (t.isUnaryExpression(element)) {
+    const { argument, operator } = element;
 
     if (operator == "-" && t.isNumericLiteral(argument))
-      return this.NumericLiteral(argument, true);
+      return parseNumericLiteral(argument, true);
 
     if (operator == "!" && t.isIdentifier(argument, { name: "important" }))
       return "!important";
 
-    throw Oops.UnaryUseless(e);
-  },
-  BinaryExpression(binary: BinaryExpression) {
-    const { left, right, operator } = binary;
+    throw Oops.UnaryUseless(element);
+  }
+
+  if (t.isBinaryExpression(element)) {
+    const { left, right, operator } = element;
 
     if (
       operator == "-" &&
@@ -107,25 +87,27 @@ const parse = {
 
     return [
       operator,
-      this.Expression(binary, "left"),
-      this.Expression(binary, "right"),
+      parseExpression(element, "left"),
+      parseExpression(element, "right"),
     ];
-  },
-  SequenceExpression(sequence: SequenceExpression) {
-    return sequence.expressions.map((x) => this.Expression(x));
-  },
-  CallExpression(e: CallExpression) {
-    const callee = e.callee;
+  }
+
+  if (t.isSequenceExpression(element)) {
+    return element.expressions.map((x) => parseExpression(x));
+  }
+
+  if (t.isCallExpression(element)) {
+    const callee = element.callee;
     const args = [] as string[];
 
     if (callee.type !== "Identifier") throw Oops.MustBeIdentifier(callee);
 
-    for (const item of e.arguments) {
+    for (const item of element.arguments) {
       if (t.isSpreadElement(item)) throw Oops.ArgumentSpread(item);
 
       if (!t.isExpression(item)) throw Oops.UnknownArgument(item);
 
-      args.push(this.Expression(item));
+      args.push(parseExpression(item));
     }
 
     const { name } = callee;
@@ -133,11 +115,30 @@ const parse = {
     if (CSS_UNITS.has(name)) return args.map((x) => String(x) + name).join(" ");
 
     return callee.name + `(${args.join(", ")})`;
-  },
-  ArrowFunctionExpression(e: ArrowFunctionExpression): never {
-    throw Oops.ArrowNotImplemented(e);
-  },
-};
+  }
+
+  if (t.isArrowFunctionExpression(element)) {
+    throw Oops.ArrowNotImplemented(element);
+  }
+
+  throw Oops.UnknownArgument(element);
+}
+
+function parseNumericLiteral(number: t.NumericLiteral, negative: boolean) {
+  let {
+    extra: { rawValue, raw },
+  } = number as any;
+
+  if (isParenthesized(number) || !/^0x/.test(raw)) {
+    if (raw.indexOf(".") > 0) return negative ? "-" + raw : raw;
+
+    return negative ? -rawValue : rawValue;
+  }
+
+  if (negative) throw Oops.HexNoNegative(number, rawValue);
+
+  return HEXColor(raw);
+}
 
 const CSS_UNITS = new Set([
   "ch",

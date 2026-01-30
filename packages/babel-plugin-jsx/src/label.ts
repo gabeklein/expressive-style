@@ -1,14 +1,13 @@
 import { NodePath } from "@babel/traverse";
-import { Function, IfStatement, LabeledStatement } from "@babel/types";
+import * as t from "@babel/types";
 
 import { onExit } from ".";
 import { parseArgument } from "./arguments";
 import { Context, hash } from "./context";
 import { parseError } from "./errors";
 import { getName } from "./names";
-import t from "./types";
 
-export function handleLabel(path: NodePath<LabeledStatement>) {
+export function handleLabel(path: NodePath<t.LabeledStatement>) {
   const context = getContext(path);
   const body = path.get("body");
   let { name } = path.node.label;
@@ -100,7 +99,7 @@ export function getContext(path: NodePath): Context {
   throw new Error("Context not found");
 }
 
-function createFunctionContext(path: NodePath<Function>) {
+function createFunctionContext(path: NodePath<t.Function>) {
   const name = getName(path);
   const context = getContext(path);
   const component = new Context(path, context, name);
@@ -126,7 +125,7 @@ function createFunctionContext(path: NodePath<Function>) {
   return component;
 }
 
-function createIfContext(path: NodePath<IfStatement>) {
+function createIfContext(path: NodePath<t.IfStatement>) {
   const test = path.node.test;
   const name = t.isIdentifier(test)
     ? test.name

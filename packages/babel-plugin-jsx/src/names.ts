@@ -1,15 +1,7 @@
 import { Hub, NodePath } from "@babel/traverse";
-import {
-  AssignmentExpression,
-  Class,
-  Function,
-  JSXElement,
-  VariableDeclaration,
-} from "@babel/types";
+import * as t from "@babel/types";
 
-import t from "./types";
-
-export function getNames(path: NodePath<JSXElement>) {
+export function getNames(path: NodePath<t.JSXElement>) {
   const names = new Map<string, NodePath>();
   const opening = path.get("openingElement");
   let tag = opening.get("name");
@@ -44,11 +36,11 @@ export function getName(path: NodePath): string {
 
     if(path.isVariableDeclarator()) {
       const { id } = path.node;
-      return t.isIdentifier(id) ? id.name : (path.parent as VariableDeclaration).kind;
+      return t.isIdentifier(id) ? id.name : (path.parent as t.VariableDeclaration).kind;
     }
 
     if(path.isAssignmentExpression() || path.isAssignmentPattern()) {
-      const { left } = path.node as AssignmentExpression;
+      const { left } = path.node as t.AssignmentExpression;
       return t.isIdentifier(left) ? left.name : "assignment";
     }
 
@@ -84,7 +76,7 @@ export function getName(path: NodePath): string {
       const ancestry = path.getAncestry();
       const within = ancestry.find((x) =>
         x.isFunction()
-      ) as NodePath<Function>;
+      ) as NodePath<t.Function>;
 
       const { node } = within;
 
@@ -100,15 +92,15 @@ export function getName(path: NodePath): string {
 
         if (node.key.name != "render") return node.key.name;
 
-        const owner = within.parentPath.parentPath as NodePath<Class>;
+        const owner = within.parentPath.parentPath as NodePath<t.Class>;
 
         if (owner.node.id) return owner.node.id.name;
 
-        path = owner.parentPath;
+        path = owner.parentPath!;
         continue;
       }
 
-      path = within.parentPath;
+      path = within.parentPath!
       continue;
     }
 
