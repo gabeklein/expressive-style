@@ -50,9 +50,7 @@ class ExpressiveJSXPlugin {
                   post({ metadata }) {
                     const { css } = metadata as any;
 
-                    if (!css) return;
-
-                    virtual.writeModule(cssModule, css);
+                    if (css) virtual.writeModule(cssModule, css);
                   },
                 },
               ],
