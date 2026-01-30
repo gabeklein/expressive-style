@@ -1,28 +1,25 @@
 import { Node, NodePath } from "@babel/traverse";
 
-type FlatValue = string | number | boolean | null;
 type ParseError = <T extends Node>(
   node: NodePath<T> | T,
-  ...args: FlatValue[]
+  ...args: (string | number | boolean | null)[]
 ) => Error;
 
-export interface BabelFile extends File {
-  buildCodeFrameError<TError extends Error>(
-    node: Node,
-    msg: string,
-    Error?: new (msg: string) => TError
-  ): TError;
-}
-
 export const Status = {
-  currentFile: undefined as unknown as BabelFile,
+  currentFile: undefined as unknown as File & {
+    buildCodeFrameError<TError extends Error>(
+      node: Node,
+      msg: string,
+      Error?: new (msg: string) => TError
+    ): TError;
+  },
 };
 
 export function ParseErrors<O extends Record<string, string>>(register: O) {
   const Errors = {} as Record<string, ParseError>;
 
   for (const error in register) {
-    const message = [] as FlatValue[];
+    const message = [] as (string | number | boolean | null)[];
 
     for (const segment of register[error].split(/\{(?=\d+\})/)) {
       const ammend = /(\d+)\}(.*)/.exec(segment);

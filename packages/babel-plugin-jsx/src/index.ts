@@ -3,6 +3,7 @@ import { NodePath } from "@babel/traverse";
 import * as t from "@babel/types";
 
 import { Context, hash } from "./context";
+import { Status } from "./errors";
 import { getContext, handleLabel } from "./label";
 import { getNames } from "./names";
 
@@ -156,6 +157,7 @@ function Plugin(_compiler: any, options: Options): PluginObj<State> {
       Program(path, state) {
         const context = new Context(path);
 
+        Status.currentFile = state.file as any;
         context.uid = hash(state.filename!);
         context.define = Object.assign({}, ...(options.define || []));
         context.macros = Object.assign({}, ...(options.macros || []));
