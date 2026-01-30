@@ -4,7 +4,6 @@ import * as t from "@babel/types";
 import { onExit } from ".";
 import { parseArgument } from "./arguments";
 import { Context, hash } from "./context";
-import { parseError } from "./errors";
 import { getName } from "./names";
 
 export function handleLabel(path: NodePath<t.LabeledStatement>) {
@@ -18,9 +17,9 @@ export function handleLabel(path: NodePath<t.LabeledStatement>) {
   }
 
   if (!body.isExpressionStatement())
-    throw parseError(body, "Not an expression", name);
+    throw modifyError(body, "Not an expression", name);
 
-  if (!context) throw parseError(body, "Missing context", name);
+  if (!context) throw modifyError(body, "Missing context", name);
 
   const args = parseArgument(body);
 
@@ -63,7 +62,7 @@ export function handleLabel(path: NodePath<t.LabeledStatement>) {
       }
     }
   } catch (err: unknown) {
-    throw parseError(body, err, name);
+    throw modifyError(body, err, name);
   }
 }
 
@@ -116,9 +115,9 @@ function createFunctionContext(path: NodePath<t.Function>) {
             t.jsxOpeningElement(t.jsxIdentifier("this"), [], true),
             null,
             [],
-            true
-          )
-        )
+            true,
+          ),
+        ),
       );
   });
 
@@ -150,4 +149,26 @@ function createIfContext(path: NodePath<t.IfStatement>) {
   });
 
   return inner;
+}
+
+function modifyError(path: NodePath, err: unknown, modifierName: string) {
+  if (err instanceof Error) {
+    // Build error with Babel integration for source location
+    const error = path.hub.buildError(
+      path.node,
+      `Modifier "${modifierName}" failed: ${err.message}`,
+    );
+
+    // Trim stack frames after the parse call to hide internal steps
+    const stackLines = err.stack!.split("\n    at ");
+    const parseIndex = stackLines.findIndex((line) => /^parse/.test(line));
+    error.stack = stackLines.slice(0, parseIndex + 1).join("\n    at ");
+
+    return error;
+  }
+
+  return path.hub.buildError(
+    path.node,
+    `Modifier "${modifierName}" failed: ${err}`,
+  );
 }
