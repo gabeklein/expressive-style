@@ -19,6 +19,7 @@
   "devDependencies": {
     "@expressive/webpack-plugin": "^0.3.2",
     "@svgr/webpack": "^8.1.0",
+    "@types/react": "^18.2.37",
     "typescript": "^5.2.2"
   }
 }
