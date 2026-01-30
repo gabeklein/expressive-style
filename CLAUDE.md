@@ -123,9 +123,7 @@ Labels can:
 
 **Self-Styling (Top-level styles):**
 - Styles defined at the top of a component function (before any labels) automatically apply to the outermost returned element(s)
-- This is called "self-styling" in the docs
-- Internally represented by a `this` context (auto-created for component functions)
-- Users don't write `this` label or `<this>` tag - it's automatically applied
+- Internally represented by a "this" context named after component function
 
 **Source:** `packages/babel-plugin-jsx/src/label.ts`
 
