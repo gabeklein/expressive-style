@@ -12,42 +12,22 @@ expect.addSnapshotSerializer({
 
 export type Output = { code: string };
 
-const defaultParser = createParser();
+export async function parser(source: string) {
+  const testName = expect.getState().currentTestName!;
+  const filename = testName.replace(/ >.+/, "");
+  const result = await transformAsync(source, {
+    filename,
+    cwd: "/",
+    plugins: [[Plugin, {}]],
+  });
 
-function parser(code: string): Promise<Output>;
-function parser(options: any): (code: string) => Promise<Output>;
-function parser(argument?: any | string) {
-  return typeof argument === "string"
-    ? defaultParser(argument)
-    : createParser(argument);
-}
+  if (!result) throw new Error("No result from babel transform");
 
-function createParser(options?: any) {
-  return async function parse(source: string) {
-    const testName = expect.getState().currentTestName!;
-    const filename = testName.replace(/ >.+/, "");
-    const result = await transformAsync(source, {
-      filename,
-      cwd: "/",
-      plugins: [[Plugin, options]],
-    });
-
-    if (!result) throw new Error("No result from babel transform");
-
-    let code = format(result.code!, {
-      singleQuote: true,
-      trailingComma: "none",
-      jsxBracketSameLine: true,
-      printWidth: 65,
-      parser: "babel",
-    });
-
-    code = code.replace(/\n$/gm, "");
-
-    return <Output>{
-      code,
-    };
-  };
-}
-
-export { parser };
+  return format(result.code!, {
+    singleQuote: true,
+    trailingComma: "none",
+    jsxBracketSameLine: true,
+    printWidth: 65,
+    parser: "babel",
+  }).replace(/\n$/gm, "");
+};
