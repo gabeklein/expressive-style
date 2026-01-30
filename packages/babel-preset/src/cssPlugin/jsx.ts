@@ -1,8 +1,8 @@
 import { NodePath } from "@babel/traverse";
+import * as t from "@babel/types";
 import { Expression, Identifier, JSXElement } from "@babel/types";
 import { Plugin } from "@expressive/babel-plugin-jsx";
 
-import t from "../types";
 import { isStandard } from "./tags";
 
 /** TODO: Move to a default handler included with macros. */

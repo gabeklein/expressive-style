@@ -1,9 +1,9 @@
 import { NodePath, PluginObj, template } from "@babel/core";
+import * as t from "@babel/types";
 import { ExpressionStatement, Function, Identifier } from "@babel/types";
 import { Context, getUsing } from "@expressive/babel-plugin-jsx";
 
 import { Preset, State } from "..";
-import t from "../types";
 import { getComponentProp } from "./component";
 import { addClassName, fixTagName, getClassName } from "./jsx";
 import { uniqueIdentifier } from "./uniqueIdentifier";

@@ -9,7 +9,6 @@ import { Plugin, Context, Macro } from "@expressive/babel-plugin-jsx";
 
 import { CSSPlugin } from "./cssPlugin";
 import * as DefaultMacros from "./macros";
-import t from "./types";
 
 export interface Options {
   cssModule?: string;
@@ -45,8 +44,6 @@ export function Preset(
   options: Preset.Options = {} as any
 ): any {
   const { macros = [] } = options;
-
-  Object.assign(t, _compiler.types);
 
   if (!macros.some((x) => x === false)) macros.push(DefaultMacros);
 

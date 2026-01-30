@@ -1,6 +1,5 @@
+import * as t from "@babel/types";
 import { BinaryExpression, Expression, UnaryExpression } from "@babel/types";
-
-import t from ".";
 
 const ASSERT_OP = new Set([
   "in",

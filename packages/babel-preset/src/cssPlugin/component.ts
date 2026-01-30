@@ -1,7 +1,7 @@
 import { NodePath } from "@babel/traverse";
+import * as t from "@babel/types";
 import { Function, Identifier, Node, ObjectProperty } from "@babel/types";
 
-import t from "../types";
 import { uniqueIdentifier } from "./uniqueIdentifier";
 
 export function getComponentProp(path: NodePath, name: string, ignoreExisting = false) {

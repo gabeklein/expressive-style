@@ -1,3 +1,4 @@
+import * as t from "@babel/types";
 import {
   Expression,
   JSXAttribute,
@@ -10,8 +11,6 @@ import {
   JSXSpreadChild,
   JSXText,
 } from "@babel/types";
-
-import t from ".";
 
 type JSXReference = JSXIdentifier | JSXMemberExpression;
 

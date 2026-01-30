@@ -1,3 +1,4 @@
+import * as t from "@babel/types";
 import {
   BlockStatement,
   BooleanLiteral,
@@ -13,8 +14,6 @@ import {
   StringLiteral,
   ThisExpression,
 } from "@babel/types";
-
-import t from ".";
 
 export type FlatValue = string | number | boolean | null;
 
