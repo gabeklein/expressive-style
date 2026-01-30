@@ -21,7 +21,6 @@ function isParenthesized(node: t.Expression) {
   return extra ? extra.parenthesized === true : false;
 }
 
-
 export function parseArgument(
   element: NodePath<t.ExpressionStatement>,
   childKey?: keyof t.Expression
@@ -38,7 +37,7 @@ function parseExpression<T extends t.Expression>(element: T, childKey?: keyof T)
   if (isParenthesized(element)) return element;
 
   if (t.isIdentifier(element)) {
-    return camelToDash(element.name);
+    return element.name.replace(/([A-Z]+)/g, "-$1").toLowerCase();
   }
 
   if (t.isBooleanLiteral(element)) {
@@ -110,10 +109,6 @@ function parseExpression<T extends t.Expression>(element: T, childKey?: keyof T)
       args.push(parseExpression(item));
     }
 
-    const { name } = callee;
-
-    if (CSS_UNITS.has(name)) return args.map((x) => String(x) + name).join(" ");
-
     return callee.name + `(${args.join(", ")})`;
   }
 
@@ -137,27 +132,7 @@ function parseNumericLiteral(number: t.NumericLiteral, negative: boolean) {
 
   if (negative) throw Oops.HexNoNegative(number, rawValue);
 
-  return HEXColor(raw);
-}
-
-const CSS_UNITS = new Set([
-  "ch",
-  "cm",
-  "em",
-  "ex",
-  "in",
-  "mm",
-  "pc",
-  "pt",
-  "px",
-  "rem",
-  "vh",
-  "vmax",
-  "vmin",
-  "vw",
-]);
-
-function HEXColor(raw: string) {
+  
   raw = raw.substring(2);
 
   if (raw.length == 1) raw = "000" + raw;
@@ -168,7 +143,7 @@ function HEXColor(raw: string) {
 
     if (raw.length == 4)
       // Convert shorthand: 'ABC' => 'AABBCC' => 0xAABBCC
-      decimal = Array.from(raw).map((x) => parseInt(x + x, 16));
+      decimal = Array.from(raw as string).map((x) => parseInt(x + x, 16));
     else
       for (let i = 0; i < 4; i++)
         decimal.push(parseInt(raw.slice(i * 2, i * 2 + 2), 16));
@@ -180,8 +155,4 @@ function HEXColor(raw: string) {
   }
 
   return "#" + raw;
-}
-
-function camelToDash(x: string) {
-  return x.replace(/([A-Z]+)/g, "-$1").toLowerCase();
 }

@@ -1,7 +1,21 @@
+import { PluginPass } from "@babel/core";
 import { NodePath } from "@babel/traverse";
 import { Expression } from "@babel/types";
 
-import type { Macro } from "./options";
+export type Macro = (
+  this: Context,
+  ...args: any[]
+) => Record<string, any> | void;
+
+export interface Options {
+  macros?: Record<string, Macro>[];
+  define?: Record<string, Context>[];
+}
+
+export type BabelState = PluginPass & {
+  context: Context;
+  opts: Options;
+};
 
 const CONTEXT = new WeakMap<NodePath, Context>();
 

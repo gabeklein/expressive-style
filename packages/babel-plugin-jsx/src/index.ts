@@ -6,7 +6,7 @@ import { Context, hash } from "./context";
 import { getContext, handleLabel } from "./label";
 import { getNames } from "./names";
 
-import type { Macro, Options } from "./options";
+import type { Macro, Options } from "./context";
 
 type State = PluginPass & {
   context: Context;
