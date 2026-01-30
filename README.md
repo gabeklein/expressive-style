@@ -109,7 +109,7 @@ export const Card = ({ featured, children }) => {
 
 **And corresponding CSS:**
 ```css
-.Card_a3f { background: white; padding: 24px; border-radius: 12px; box-shadow: #eee 0 0 10px; }
+.Card_a3f { background: white; padding: 24px; border-radius: 0.5em; box-shadow: #eee 0 0 10px; }
 .featured_x9k { border: 2px solid #007bff; }
 .header_b2c { font-size: 1.5em; font-weight: bold; margin-bottom: 16px; }
 .button_d4e { padding: 8px 16px; border-radius: 6px; background: #007bff; color: white; }
