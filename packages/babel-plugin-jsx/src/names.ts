@@ -121,7 +121,7 @@ export function getName(path: NodePath): string {
         : "property";
     }
 
-    return "element";
+    break;
   }
 
   return "element";
