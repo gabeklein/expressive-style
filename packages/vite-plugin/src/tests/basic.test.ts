@@ -14,18 +14,18 @@ it("will do", async () => {
   `);
 
   expect(files).toMatchInlineSnapshot(`
-    /** assets/index-WTvIwzMV.css **/
-    .Hello_2cs {
+    /** assets/index-BWs382js.css **/
+    .Hello_28b {
       color: red;
     }
 
-    /** assets/index-MxyeXaCG.js **/
+    /** assets/index-yaol3pMC.js **/
     import "vite/modulepreload-polyfill";
     const l = (...e) => e.filter(Boolean).join(" "),
-      s = e => React.createElement("div", {
-        className: l(e.className, "Hello_2cs")
+      a = e => React.createElement("div", {
+        className: l(e.className, "Hello_28b")
       }, "Hello!");
-    s();
+    a();
   `);
 });
 
@@ -47,20 +47,20 @@ it("will import polyfill", async () => {
   `);
 
   expect(files).toMatchInlineSnapshot(`
-    /** assets/index-_9M7wfUX.css **/
-    .Hello_2cs {
+    /** assets/index-CKL8FInG.css **/
+    .Hello_28b {
       color: red;
     }
     .also_i3c {
       background: #00f;
     }
 
-    /** assets/index-Bix2u0kR.js **/
+    /** assets/index-B0dIcfjh.js **/
     import "vite/modulepreload-polyfill";
     const l = (...e) => e.filter(Boolean).join(" "),
-      s = e => React.createElement("div", {
-        className: l(e.className, "Hello_2cs also_i3c")
+      a = e => React.createElement("div", {
+        className: l(e.className, "Hello_28b also_i3c")
       }, "Hello!");
-    s();
+    a();
   `);
 });

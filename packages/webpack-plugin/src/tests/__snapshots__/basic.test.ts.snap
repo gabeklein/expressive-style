@@ -9,7 +9,7 @@ var __webpack_modules__ = {
   ) => {
     __webpack_require__.r(__webpack_exports__);
     __webpack_require__.d(__webpack_exports__, {
-      Component_2hh: () => Component_2hh,
+      Component_22n: () => Component_22n,
       default: () => __WEBPACK_DEFAULT_EXPORT__
     });
     var MODULE_0__ = __webpack_require__(
@@ -21,12 +21,12 @@ var __webpack_modules__ = {
     var ___CSS_LOADER_EXPORT___ = MODULE_1___default()(MODULE_0___default());
     ___CSS_LOADER_EXPORT___.push([
       module.id,
-      \`.zdREuaVG0Se1YyiQXzPg {
+      \`.PPTbq9fXbfvZDZN_SA6r {
   color: red;
 }\`,
       ''
     ]);
-    var Component_2hh = \`zdREuaVG0Se1YyiQXzPg\`;
+    var Component_22n = \`PPTbq9fXbfvZDZN_SA6r\`;
     const __WEBPACK_DEFAULT_EXPORT__ = ___CSS_LOADER_EXPORT___;
   },
   'css-loader/dist/runtime/api.js': (module) => {
@@ -101,7 +101,7 @@ var __webpack_exports__ = {};
       {
         className: classNames(
           props.className,
-          MODULE_0__['default'].Component_2hh
+          MODULE_0__['default'].Component_22n
         )
       },
       element('h1', null, 'Hello World'),
