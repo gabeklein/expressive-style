@@ -7,16 +7,18 @@ it("will forward className", async () => {
     const Component = () => {
       color: blue;
 
-      <this />
+      return <div />
     }
   `);
 
   expect(output.code).toMatchInlineSnapshot(`
-    const Component = (props) => (
-      <div
-        className={classNames(props.className, 'Component_240')}
-      />
-    );
+    const Component = (props) => {
+      return (
+        <div
+          className={classNames(props.className, 'Component_240')}
+        />
+      );
+    };
   `);
 });
 
@@ -25,17 +27,19 @@ it("will forward from existing props", async () => {
     const Component = (props) => {
       color: blue;
 
-      <this something={props.something} />
+      return <div something={props.something} />
     }
   `);
 
   expect(output.code).toMatchInlineSnapshot(`
-    const Component = (props) => (
-      <div
-        something={props.something}
-        className={classNames(props.className, 'Component_2a2')}
-      />
-    );
+    const Component = (props) => {
+      return (
+        <div
+          something={props.something}
+          className={classNames(props.className, 'Component_2a2')}
+        />
+      );
+    };
   `);
 });
 
@@ -44,36 +48,32 @@ it("will forward from destructured props", async () => {
     const Component = ({ something }) => {
       color: blue;
 
-      <this something={something} />
+      return <div something={something} />
     }
   `);
 
   expect(output.code).toMatchInlineSnapshot(`
-    const Component = ({ className, something }) => (
-      <div
-        something={something}
-        className={classNames(className, 'Component_18f')}
-      />
-    );
+    const Component = ({ className, something }) => {
+      return (
+        <div
+          something={something}
+          className={classNames(className, 'Component_18f')}
+        />
+      );
+    };
   `);
 });
 
-it("will return this if no JSX", async () => {
-  const output = await parser(`
-    const Component = () => {
-      color: red;
-      width: "16px";
-      background: "blue";
-    }
-  `);
-
-  expect(output.code).toMatchInlineSnapshot(`
-    const Component = (props) => (
-      <div
-        className={classNames(props.className, 'Component_2jp')}
-      />
-    );
-  `);
+it("should throw error when no JSX return", async () => {
+  await expect(async () => {
+    await parser(`
+      const Component = () => {
+        color: red;
+        width: "16px";
+        background: "blue";
+      }
+    `);
+  }).rejects.toThrow();
 });
 
 it("will forward className to this attribute", async () => {
@@ -81,31 +81,33 @@ it("will forward className to this attribute", async () => {
     const Component = () => {
       color: blue;
 
-      <input this />
+      return <input />
     }
   `);
 
   expect(output.code).toMatchInlineSnapshot(`
-    const Component = (props) => (
-      <input
-        className={classNames(props.className, 'Component_16l')}
-      />
-    );
+    const Component = (props) => {
+      return (
+        <input
+          className={classNames(props.className, 'Component_16l')}
+        />
+      );
+    };
   `);
 });
 
 it("will forward props with no styles", async () => {
   const output = await parser(`
     export const Row = () => {
-      <this />
+      return <div />
     }
   `);
 
   expect(output.code).toMatchInlineSnapshot(
     `
-    export const Row = (props) => (
-      <div className={props.className} />
-    );
+    export const Row = (props) => {
+      return <div className={props.className} />;
+    };
   `
   );
 });
@@ -115,20 +117,24 @@ it("will apply styles by wrapping fragment", async () => {
     export const Row = () => {
       color: red;
     
-      <>
-        <span>Something</span>
-        <span>Something</span>
-      </>
+      return (
+        <>
+          <span>Something</span>
+          <span>Something</span>
+        </>
+      )
     }
   `);
 
   expect(output.code).toMatchInlineSnapshot(`
-    export const Row = (props) => (
-      <div className={classNames(props.className, 'Row_2gs')}>
-        <span>Something</span>
-        <span>Something</span>
-      </div>
-    );
+    export const Row = (props) => {
+      return (
+        <div className={classNames(props.className, 'Row_2gs')}>
+          <span>Something</span>
+          <span>Something</span>
+        </div>
+      );
+    };
   `);
 });
 

@@ -7,16 +7,19 @@ it("will apply to this", async () => {
       if(active)
         color: red;
       
-      <this>Hello</this>
+      return <div>Hello</div>
     }
   `);
 
   expect(output.code).toMatchInlineSnapshot(`
-    const Component = ({ className, active }) => (
-      <div className={classNames(className, active && 'active_tla')}>
-        Hello
-      </div>
-    );
+    const Component = ({ className, active }) => {
+      return (
+        <div
+          className={classNames(className, active && 'active_tla')}>
+          Hello
+        </div>
+      );
+    };
   `);
 
   expect(output.css).toMatchInlineSnapshot(`
@@ -36,21 +39,23 @@ it("will apply else", async () => {
       else
         color: blue;
       
-      <this>Hello</this>
+      return <div>Hello</div>
     }
   `);
 
   expect(output.code).toMatchInlineSnapshot(`
-    const Component = ({ className, active }) => (
-      <div
-        className={classNames(
-          'Component_2a2',
-          active ? 'active_tla' : 'else_tla',
-          className
-        )}>
-        Hello
-      </div>
-    );
+    const Component = ({ className, active }) => {
+      return (
+        <div
+          className={classNames(
+            'Component_2a2',
+            active ? 'active_tla' : 'else_tla',
+            className
+          )}>
+          Hello
+        </div>
+      );
+    };
   `);
 
   expect(output.css).toMatchInlineSnapshot(`
@@ -76,21 +81,23 @@ it("will apply to selector", async () => {
           color: red;
       }
       
-      <div>Hello</div>
+      return <div>Hello</div>
     }
   `);
 
   expect(output.code).toMatchInlineSnapshot(`
-    const Component = ({ className, active }) => (
-      <div
-        className={classNames(
-          'div_tla',
-          active && 'active_roo',
-          className
-        )}>
-        Hello
-      </div>
-    );
+    const Component = ({ className, active }) => {
+      return (
+        <div
+          className={classNames(
+            'div_tla',
+            active && 'active_roo',
+            className
+          )}>
+          Hello
+        </div>
+      );
+    };
   `);
 });
 
@@ -102,18 +109,23 @@ it("will apply to child selector", async () => {
           color: red;
         }
 
-      <this>
-        <div>Hello</div>
-      </this>
+      return (
+        <div>
+          <div>Hello</div>
+        </div>
+      )
     }
   `);
 
   expect(output.code).toMatchInlineSnapshot(`
-    const Component = ({ className, active }) => (
-      <div className={classNames(className, active && 'active_tla')}>
-        <div className="div_xt4">Hello</div>
-      </div>
-    );
+    const Component = ({ className, active }) => {
+      return (
+        <div
+          className={classNames(className, active && 'active_tla')}>
+          <div className="div_xt4">Hello</div>
+        </div>
+      );
+    };
   `);
 
   expect(output.css).toMatchInlineSnapshot(`
@@ -130,7 +142,7 @@ it.skip("will apply without brackets", async () => {
       div: if(active)
         color: red;
       
-      <div>Hello</div>
+      return <div>Hello</div>
     }
   `);
 
@@ -154,11 +166,11 @@ it.skip("will recycle child classnames", async () => {
           color: blue;
         }
     
-      <this>
+      return (
         <div>
           Hello World
         </div>
-      </this>
+      )
     }
   `);
 

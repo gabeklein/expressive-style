@@ -74,7 +74,8 @@ function JSX(path: NodePath<t.JSXElement> | NodePath<t.JSXFragment>) {
 
   let { parentPath: parent } = path;
 
-  if (fixImplicitReturn(path)) return;
+  if (parent.isExpressionStatement() && parent.parentPath.isBlock())
+    throw path.buildCodeFrameError("Using JSX as an implicit return is no longer supported.");
 
   const context =
     !parent!.isJSXElement() && !parent!.isJSXFragment() && getContext(path);
@@ -182,25 +183,6 @@ function Plugin(_compiler: any, options: Options): PluginObj<State> {
       },
     },
   };
-}
-
-function fixImplicitReturn(path: NodePath<t.JSXElement> | NodePath<t.JSXFragment>) {
-  let { node, parentPath: parent } = path;
-
-  if (!parent!.isExpressionStatement()) return;
-
-  const block = parent.parentPath;
-
-  if (
-    block.isBlockStatement() &&
-    block.get("body").length == 1 &&
-    block.parentPath.isArrowFunctionExpression()
-  )
-    block.replaceWith(t.parenthesizedExpression(node));
-  else parent.replaceWith(t.returnStatement(node));
-
-  path.skip();
-  return true;
 }
 
 type ExitCallback = (path: NodePath, key: string | number | null) => void;

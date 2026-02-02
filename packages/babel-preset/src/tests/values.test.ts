@@ -5,6 +5,8 @@ it("will convert camelCase properties to dash", async () => {
   const output = await parser(`
     const Component = () => {
       boxSizing: border-box;
+
+      return <div />
     }
   `);
 
@@ -19,6 +21,8 @@ it("will convert numbers to px", async () => {
   const output = await parser(`
     const Component = () => {
       fontSize: 12;
+
+      return <div />
     }
   `);
 
@@ -33,6 +37,8 @@ it("will convert decimal to em", async () => {
   const output = await parser(`
     const Component = () => {
       fontSize: 1.5;
+
+      return <div />
     }
   `);
 
@@ -48,13 +54,17 @@ it("will convert $-prefixed properties to css variables", async () => {
     const Component = () => {
       $colorPrimary: blue;
 
-      something: {
+      inner: {
         color: $colorPrimary;
       }
 
-      <something>
-        Hello
-      </something>
+      return (
+        <div>
+          <inner>
+            Hello
+          </inner>
+        </div>
+      )
     }
   `);
 
@@ -62,7 +72,7 @@ it("will convert $-prefixed properties to css variables", async () => {
     .Component_27z {
       --color-primary: blue;
     }
-    .something_tla {
+    .inner_tla {
       color: var(--color-primary);
     }
   `);

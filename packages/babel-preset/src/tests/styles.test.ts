@@ -8,16 +8,18 @@ it("will apply", async () => {
         color: blue;
       }
     
-      <div>Hello</div>
+      return <div>Hello</div>
     }
   `);
 
   expect(output.code).toMatchInlineSnapshot(`
-    const Component = (props) => (
-      <div className={classNames(props.className, 'div_tla')}>
-        Hello
-      </div>
-    );
+    const Component = (props) => {
+      return (
+        <div className={classNames(props.className, 'div_tla')}>
+          Hello
+        </div>
+      );
+    };
   `);
 
   expect(output.css).toMatchInlineSnapshot(`
@@ -32,18 +34,23 @@ it("will apply to this", async () => {
     const Component = () => {
       color: red;
     
-      <this>
-        Hello World
-      </this>
+      return (
+        <div>
+          Hello World
+        </div>
+      )
     }
   `);
 
   expect(output.code).toMatchInlineSnapshot(`
-    const Component = (props) => (
-      <div className={classNames(props.className, 'Component_26k')}>
-        Hello World
-      </div>
-    );
+    const Component = (props) => {
+      return (
+        <div
+          className={classNames(props.className, 'Component_26k')}>
+          Hello World
+        </div>
+      );
+    };
   `);
 
   expect(output.css).toMatchInlineSnapshot(`
@@ -60,20 +67,24 @@ it("will apply to attributes", async () => {
         color: red;
       }
 
-      <div>
-        Hello
-        <div inner>World</div>
-      </div>
+      return (
+        <div>
+          Hello
+          <div _inner>World</div>
+        </div>
+      )
     }
   `);
 
   expect(output.code).toMatchInlineSnapshot(`
-    const Component = (props) => (
-      <div className={props.className}>
-        Hello
-        <div className="inner_tla">World</div>
-      </div>
-    );
+    const Component = (props) => {
+      return (
+        <div className={props.className}>
+          Hello
+          <div className="inner_tla">World</div>
+        </div>
+      );
+    };
   `);
 });
 
@@ -81,17 +92,19 @@ it("will apply to attribute this", async () => {
   const output = await parser(`
     const RedInput = () => {
       color: red;
-    
-      <input this />
+
+      return <input />
     }
   `);
 
   expect(output.code).toMatchInlineSnapshot(`
-    const RedInput = (props) => (
-      <input
-        className={classNames(props.className, 'RedInput_245')}
-      />
-    );
+    const RedInput = (props) => {
+      return (
+        <input
+          className={classNames(props.className, 'RedInput_245')}
+        />
+      );
+    };
   `);
 });
 
@@ -102,16 +115,19 @@ it("will keep existing className", async () => {
         color: blue;
       }
     
-      <div className="foobar">Hi</div>
+      return <div className="foobar">Hi</div>
     }
   `);
 
   expect(output.code).toMatchInlineSnapshot(`
-    const Component = (props) => (
-      <div className={classNames(props.className, 'foobar div_tla')}>
-        Hi
-      </div>
-    );
+    const Component = (props) => {
+      return (
+        <div
+          className={classNames(props.className, 'foobar div_tla')}>
+          Hi
+        </div>
+      );
+    };
   `);
 });
 
@@ -126,18 +142,23 @@ it("will apply nested", async () => {
         }
       }
     
-      <container>
-        Hello <inner>World</inner>
-      </container>
+      return (
+        <div _container>
+          Hello <div _inner>World</div>
+        </div>
+      )
     }
   `);
 
   expect(output.code).toMatchInlineSnapshot(`
-    const Component = (props) => (
-      <div className={classNames(props.className, 'container_tla')}>
-        Hello <div className="inner_wj9">World</div>
-      </div>
-    );
+    const Component = (props) => {
+      return (
+        <div
+          className={classNames(props.className, 'container_tla')}>
+          Hello <div className="inner_wj9">World</div>
+        </div>
+      );
+    };
   `);
 });
 
@@ -152,42 +173,50 @@ it("will apply nested to attributes", async () => {
         }
       }
     
-      <div>
-        <item />
-        <item red />
-      </div>
+      return (
+        <div>
+          <div _item />
+          <div _item _red />
+        </div>
+      )
     }
   `);
 
   expect(output.code).toMatchInlineSnapshot(`
-    const Component = (props) => (
-      <div className={props.className}>
-        <div className="item_tla" />
-        <div className="item_tla red_jh9" />
-      </div>
-    );
+    const Component = (props) => {
+      return (
+        <div className={props.className}>
+          <div className="item_tla" />
+          <div className="item_tla red_jh9" />
+        </div>
+      );
+    };
   `);
 });
 
 it("will apply to jsx in conditional statement", async () => {
   const output = await parser(`
     const Component = () => {
-      div: {
+      hi: {
         color: blue;
       }
     
-      <this>
-        {true && <div>Hello</div>}
-      </this>
+      return (
+        <div>
+          {true && <div _hi>Hello</div>}
+        </div>
+      )
     }
   `);
 
   expect(output.code).toMatchInlineSnapshot(`
-    const Component = (props) => (
-      <div className={props.className}>
-        {true && <div className="div_tla">Hello</div>}
-      </div>
-    );
+    const Component = (props) => {
+      return (
+        <div className={props.className}>
+          {true && <div className="hi_tla">Hello</div>}
+        </div>
+      );
+    };
   `);
 });
 
@@ -203,7 +232,7 @@ it("will export styles in order", async () => {
         color: purple;
       }
     
-      div: {
+      outer: {
         color: red;
     
         something: {
@@ -211,9 +240,13 @@ it("will export styles in order", async () => {
         }
       }
     
-      <this>
-        <div something />
-      </this>
+      return (
+        <div>
+          <div _outer>
+            <div _something />
+          </div>
+        </div>
+      )
     }
   `);
 
@@ -224,13 +257,13 @@ it("will export styles in order", async () => {
     .active_tla {
       color: yellow;
     }
-    .div_tla {
+    .outer_tla {
       color: red;
     }
     .something_tla {
       color: purple;
     }
-    .something_roo {
+    .something_upu {
       color: green;
     }
   `);
@@ -243,9 +276,7 @@ it("will prioritize capitalized styles", async () => {
         color: blue;
       }
     
-      <this>
-        <Something />
-      </this>
+      return <Something />
     }
     
     const Something = () => {
@@ -255,16 +286,17 @@ it("will prioritize capitalized styles", async () => {
         color: red;
       }
       
-      <this something>
-        Something
-      </this>
+      return (
+        <div>
+          <div _something>
+            Something
+          </div>
+        </div>
+      )
     }
   `);
 
   expect(output.css).toMatchInlineSnapshot(`
-    .Something_15e {
-      color: purple;
-    }
     .something_jsf {
       color: red;
     }
@@ -285,18 +317,20 @@ it("will use classnames from module", async () => {
         color: blue;
       }
     
-      <div>Hello</div>
+      return <div>Hello</div>
     }
   `);
 
   expect(output.code).toMatchInlineSnapshot(`
     import css from './styles.module.css';
 
-    const Component = (props) => (
-      <div className={classNames(props.className, css.div_tla)}>
-        Hello
-      </div>
-    );
+    const Component = (props) => {
+      return (
+        <div className={classNames(props.className, css.div_tla)}>
+          Hello
+        </div>
+      );
+    };
   `);
 });
 
@@ -305,7 +339,7 @@ it("will handle border correctly", async () => {
     const Component = () => {
       border: dashed, 2, $borderLight;
     
-      <this>Hello</this>
+      return <div>Hello</div>;
     }
   `);
 

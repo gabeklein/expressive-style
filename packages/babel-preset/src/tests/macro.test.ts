@@ -15,6 +15,8 @@ it("will bail on repeat macro", async () => {
   const output = await parse(`
     const Component = () => {
       foo: "bar";
+
+      return <div />
     }
   `);
 
@@ -30,6 +32,8 @@ it("will convert native hex color", async () => {
     const Component = () => {
       color: 0xff0000;
       background: 0x00ff0022;
+
+      return <div />
     }
   `);
 
@@ -45,15 +49,19 @@ it("will apply complex style", async () => {
   const output = await parser(`
     const Component = () => {
       transform: translateX(10), rotate(90), scale(2);
+
+      return <div />
     }
   `);
 
   expect(output.code).toMatchInlineSnapshot(`
-    const Component = (props) => (
-      <div
-        className={classNames(props.className, 'Component_2du')}
-      />
-    );
+    const Component = (props) => {
+      return (
+        <div
+          className={classNames(props.className, 'Component_2du')}
+        />
+      );
+    };
   `);
 
   expect(output.css).toMatchInlineSnapshot(`
@@ -67,6 +75,8 @@ it("will apply absolute", async () => {
   const output = await parser(`
     const Component = () => {
       absolute: fill-bottom;
+
+      return <div />
     }
   `);
 
@@ -84,6 +94,8 @@ it("will apply outline macro", async () => {
   const output = await parser(`
     const Component = () => {
       outline: red;
+
+      return <div />
     }
   `);
 

@@ -7,16 +7,19 @@ it("will apply hover pseudo class", async () => {
       if(':hover')
         color: red;
 
-      <this>Hello</this>
+      return <div>Hello</div>
     }
   `);
 
   expect(output.code).toMatchInlineSnapshot(`
-    const Component = (props) => (
-      <div className={classNames(props.className, 'Component_2bb')}>
-        Hello
-      </div>
-    );
+    const Component = (props) => {
+      return (
+        <div
+          className={classNames(props.className, 'Component_2bb')}>
+          Hello
+        </div>
+      );
+    };
   `);
 
   expect(output.css).toMatchInlineSnapshot(`
@@ -42,18 +45,23 @@ it("will apply hover pseudo class with nested", async () => {
           color: green
       }
     
-      <this>
-        Hello
-      </this>
+      return (
+        <div>
+          Hello
+        </div>
+      )
     }
   `);
 
   expect(output.code).toMatchInlineSnapshot(`
-    const Component = (props) => (
-      <div className={classNames(props.className, 'Component_2id')}>
-        Hello
-      </div>
-    );
+    const Component = (props) => {
+      return (
+        <div
+          className={classNames(props.className, 'Component_2id')}>
+          Hello
+        </div>
+      );
+    };
   `);
 
   expect(output.css).toMatchInlineSnapshot(`

@@ -1,31 +1,27 @@
 import { expect, it } from "vitest";
 import { parser } from "./adapter";
 
-it("will return implicitly", async () => {
-  const output = await parser(`
-    function Component(){
-      <div>Hello</div>
-    }
-  `);
-
-  expect(output.code).toMatchInlineSnapshot(`
-    function Component(props) {
-      return <div className={props.className}>Hello</div>;
-    }
-  `);
+it("should throw error for implicit JSX return", async () => {
+  await expect(async () => {
+    await parser(`
+      function Component(){
+        <div>Hello</div>
+      }
+    `);
+  }).rejects.toThrow();
 });
 
 it("will optimize arrow expression", async () => {
   const output = await parser(`
     const Component = () => {
-      <div>Hello</div>
+      return <div>Hello</div>
     }
   `);
 
   expect(output.code).toMatchInlineSnapshot(`
-    const Component = (props) => (
-      <div className={props.className}>Hello</div>
-    );
+    const Component = (props) => {
+      return <div className={props.className}>Hello</div>;
+    };
   `);
 });
 
@@ -34,7 +30,7 @@ it("will not optimize with statements", async () => {
     const Component = () => {
       const name = "World";
 
-      <div>Hello {name}</div>
+      return <div>Hello {name}</div>
     }
   `);
 
@@ -46,7 +42,7 @@ it("will not optimize with statements", async () => {
   `);
 });
 
-it("will wrap elements if 'this' is styled", async () => {
+it("will combine if 'this' is styled", async () => {
   const output = await parser(`
     function Component(){
       color: red;
@@ -59,9 +55,11 @@ it("will wrap elements if 'this' is styled", async () => {
         fontStyle: italic;
       }
 
-      <inner>
-        <thing>Hello</thing>
-      </inner>
+      return (
+        <div _inner>
+          <div _thing>Hello</div>
+        </div>
+      )
     }
   `);
 
@@ -71,7 +69,7 @@ it("will wrap elements if 'this' is styled", async () => {
         <div
           className={classNames(
             props.className,
-            'inner_tla Component_215'
+            'inner_tla Component_2cj'
           )}>
           <div className="thing_tla">Hello</div>
         </div>
@@ -80,7 +78,7 @@ it("will wrap elements if 'this' is styled", async () => {
   `);
 
   expect(output.css).toMatchInlineSnapshot(`
-    .Component_215 {
+    .Component_2cj {
       color: red;
     }
     .inner_tla {
@@ -107,7 +105,7 @@ it.skip("will not race normal jsx plugin", async () => {
       color: red;
       fontSize: 2.0;
     
-      <this>Hello World!</this>
+      return <div>Hello World!</div>
     }
   `);
 

@@ -8,7 +8,7 @@ it("will pass", async () => {
         color: red;
       }
 
-      <hello />
+      return <hello />
     }
   `);
 
@@ -19,26 +19,31 @@ it("will pass", async () => {
   `);
 
   expect(output.code).toMatchInlineSnapshot(`
-    const Component = (props) => (
-      <div className={classNames(props.className, 'hello_tla')} />
-    );
+    const Component = (props) => {
+      return (
+        <div className={classNames(props.className, 'hello_tla')} />
+      );
+    };
   `);
 });
 
-it("will convert named element without styles", async () => {
-  const output = await parser(`
-    const Component = () => {
-      <hello />
-    }
-  `);
-
-  expect(output.code).toMatchInlineSnapshot(`const Component = (props) => <div className={props.className} />;`);
+// deprecated test - jsx implicit return is no longer supported
+it("should throw error for implicit JSX return", async () => {
+  await expect(async () => {
+    await parser(`
+      const Component = () => {
+        <hello />
+      }
+    `);
+  }).rejects.toThrow();
 });
 
 it("will drop default macros", async () => {
   const sanityCheck = await parser(`
     const Component = () => {
       absolute: fill;
+
+      return <div />
     }
   `);
 
@@ -59,6 +64,8 @@ it("will drop default macros", async () => {
   const output = await parse(`
     const Component = () => {
       absolute: fill;
+
+      return <div />
     }
   `);
 
@@ -76,7 +83,7 @@ it("convert camelCase css values to dash-case", async () => {
         boxSizing: border-box;
       }
 
-      <hello />
+      return <hello />
     }
   `);
 

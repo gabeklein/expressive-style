@@ -6,10 +6,12 @@ it("will output with css module", async () => {
     const Component = () => {
       color: red;
 
-      <this>
-        <h1>Hello World</h1>
-        This is a test.
-      </this>
+      return (
+        <div>
+          <h1>Hello World</h1>
+          This is a test.
+        </div>
+      )
     }
   `);
 

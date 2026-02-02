@@ -3,11 +3,11 @@ import { expect, it } from "vitest";
 import { bundle } from "./adapter";
 
 it("will do", async () => {
-  const files = await bundle(`  
+  const files = await bundle(`
     export const Hello = () => {
       color: red;
-      
-      <this>Hello!</this>
+
+      return <div>Hello!</div>
     };
 
     Hello();
@@ -30,17 +30,19 @@ it("will do", async () => {
 });
 
 it("will import polyfill", async () => {
-  const files = await bundle(`  
+  const files = await bundle(`
     export const Hello = () => {
       color: red;
 
       also: {
         background: blue;
       }
-      
-      <this also>
-        Hello!
-      </this>
+
+      return (
+        <div _also>
+          Hello!
+        </div>
+      )
     };
 
     Hello();
@@ -55,11 +57,11 @@ it("will import polyfill", async () => {
       background: #00f;
     }
 
-    /** assets/index-B0dIcfjh.js **/
+    /** assets/index-DSp-f72N.js **/
     import "vite/modulepreload-polyfill";
     const l = (...e) => e.filter(Boolean).join(" "),
       a = e => React.createElement("div", {
-        className: l(e.className, "Hello_28b also_i3c")
+        className: l(e.className, "also_i3c Hello_28b")
       }, "Hello!");
     a();
   `);
