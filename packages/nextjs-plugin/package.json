@@ -1,0 +1,47 @@
+{
+  "name": "@expressive/nextjs-plugin",
+  "version": "0.3.2",
+  "description": "Next.js plugin for Expressive JSX",
+  "repository": "https://github.com/gabeklein/expressive-dsl",
+  "author": {
+    "name": "Gabe Klein",
+    "email": "gabe@expressive.dev",
+    "url": "https://github.com/gabeklein"
+  },
+  "scripts": {
+    "build": "tsup src/index.ts --dts",
+    "prebuild": "rm -rf ./dist",
+    "prepublish": "npm run build"
+  },
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  },
+  "keywords": [
+    "nextjs",
+    "next",
+    "expressive",
+    "jsx",
+    "css-in-js"
+  ],
+  "main": "index.js",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "index.js",
+    "dist"
+  ],
+  "dependencies": {
+    "@expressive/babel-preset": "workspace:*",
+    "@expressive/webpack-plugin": "workspace:*"
+  },
+  "peerDependencies": {
+    "next": ">=13.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.3.1",
+    "prettier": "^2.8.8",
+    "tsup": "^8.0.1",
+    "typescript": "^5.2.2"
+  }
+}

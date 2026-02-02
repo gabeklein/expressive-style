@@ -499,6 +499,8 @@ module.exports = withExpressive({
 });
 ```
 
+> **Note:** Currently supports Webpack builds only. Turbopack support coming soon.
+
 ### Webpack
 
 ```bash
