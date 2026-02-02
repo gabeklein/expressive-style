@@ -1,6 +1,5 @@
 import Logo from "./logo.svg";
 
-/** @type {React.FC} */
 export const SiteLogo = () => {
   fontWeight: bold;
   fontFamily: "Rubik";
@@ -14,8 +13,10 @@ export const SiteLogo = () => {
     color: 0x8150ce;
   }
 
-  <this>
-    <Logo />
-    <text>Expressive JSX</text>
-  </this>
-}
+  return (
+    <div>
+      <Logo />
+      <text>Expressive JSX</text>
+    </div>
+  );
+};
