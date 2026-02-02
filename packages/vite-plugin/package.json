@@ -32,7 +32,7 @@
   ],
   "dependencies": {
     "@babel/core": "^7.22.20",
-    "@expressive/babel-preset": "^0.3.2"
+    "@expressive/babel-preset": "workspace:*"
   },
   "devDependencies": {
     "@types/babel__core": "^7.20.2",

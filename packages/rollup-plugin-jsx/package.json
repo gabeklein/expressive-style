@@ -14,7 +14,7 @@
     "@babel/parser": "^7.27.2",
     "@babel/traverse": "^7.27.1",
     "@babel/types": "^7.27.1",
-    "@expressive/babel-preset": "^0.3.2",
+    "@expressive/babel-preset": "workspace:*",
     "@rollup/pluginutils": "^5.1.4",
     "rollup": "^4.40.2"
   },

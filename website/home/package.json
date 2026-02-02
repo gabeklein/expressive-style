@@ -9,7 +9,7 @@
     "vite-tsconfig-paths": "^4.2.1"
   },
   "devDependencies": {
-    "@expressive/vite-plugin": "^0.3.2",
+    "@expressive/vite-plugin": "workspace:*",
     "@types/react": "^18.2.37",
     "@types/react-dom": "^18.2.15",
     "@vitejs/plugin-react": "^4.1.1",

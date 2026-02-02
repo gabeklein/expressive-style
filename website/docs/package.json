@@ -17,7 +17,7 @@
     "react-dom": "^18.2.0"
   },
   "devDependencies": {
-    "@expressive/webpack-plugin": "^0.3.2",
+    "@expressive/webpack-plugin": "workspace:*",
     "@svgr/webpack": "^8.1.0",
     "@types/react": "^18.2.37",
     "typescript": "^5.2.2"
