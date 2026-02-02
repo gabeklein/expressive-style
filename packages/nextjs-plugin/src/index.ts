@@ -1,6 +1,5 @@
 import type { NextConfig } from "next";
-import ExpressiveJSXPlugin from "@expressive/webpack-plugin";
-import type { Options } from "@expressive/babel-preset";
+import ExpressiveJSXPlugin, { Options } from "@expressive/webpack-plugin";
 
 export interface ExpressiveNextPluginOptions extends Options {
   // Additional Next.js-specific options can go here

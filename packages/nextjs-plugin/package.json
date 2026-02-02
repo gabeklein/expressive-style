@@ -32,7 +32,6 @@
     "dist"
   ],
   "dependencies": {
-    "@expressive/babel-preset": "workspace:*",
     "@expressive/webpack-plugin": "workspace:*"
   },
   "peerDependencies": {
