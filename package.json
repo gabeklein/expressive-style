@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "build": "lerna run build --stream",
-    "repl": "npm --prefix website/repl run dev",
+    "repl": "npm --prefix docs/repl run dev",
     "test": "vitest --no-watch",
     "clean": "find . -name 'node_modules' -type d -prune -exec rm -rf '{}' +",
     "push": "npx lerna publish --conventional-commits"

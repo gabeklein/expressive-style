@@ -6,7 +6,7 @@
       "type": "chrome",
       "request": "launch",
       "url": "http://localhost:5173/",
-      "webRoot": "${workspaceFolder}/website/repl"
+      "webRoot": "${workspaceFolder}/docs/repl"
     },
     {
       "name": "Debug Preset",
@@ -48,7 +48,7 @@
       "name": "Launch Vite",
       "type": "node",
       "request": "launch",
-      "cwd": "${workspaceFolder}/website/home",
+      "cwd": "${workspaceFolder}/docs/home",
       "program": "node_modules/vite/bin/vite.js",
       "args": ["--config", "vite.config.ts"],
       "runtimeExecutable": "tsx",
