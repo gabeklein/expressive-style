@@ -161,23 +161,23 @@ importers:
   packages/babel-plugin-jsx:
     dependencies:
       '@babel/core':
-        specifier: ^7.22.5
+        specifier: ^7.29.0
         version: 7.29.0
+      '@babel/traverse':
+        specifier: ^7.29.0
+        version: 7.29.0
+      '@babel/types':
+        specifier: 7.29.0
+        version: 7.29.0
+    devDependencies:
       '@babel/plugin-transform-react-jsx':
         specifier: ^7.23.4
         version: 7.28.6(@babel/core@7.29.0)
-      '@babel/traverse':
-        specifier: ^7.22.5
-        version: 7.29.0
-      '@babel/types':
-        specifier: 7.22.5
-        version: 7.22.5
-    devDependencies:
       '@types/babel__core':
-        specifier: ^7.20.2
+        specifier: ^7.20.5
         version: 7.20.5
       '@types/babel__traverse':
-        specifier: ^7.20.2
+        specifier: ^7.28.0
         version: 7.28.0
       prettier:
         specifier: ^3.4.2
@@ -192,14 +192,14 @@ importers:
   packages/babel-preset:
     dependencies:
       '@babel/core':
-        specifier: ^7.22.5
+        specifier: ^7.29.0
         version: 7.29.0
       '@babel/traverse':
-        specifier: ^7.22.5
+        specifier: ^7.29.0
         version: 7.29.0
       '@babel/types':
-        specifier: 7.22.5
-        version: 7.22.5
+        specifier: ^7.29.0
+        version: 7.29.0
       '@expressive/babel-plugin-jsx':
         specifier: workspace:*
         version: link:../babel-plugin-jsx
@@ -211,10 +211,10 @@ importers:
         version: 2.0.2
     devDependencies:
       '@types/babel__core':
-        specifier: ^7.20.2
+        specifier: ^7.20.5
         version: 7.20.5
       '@types/babel__traverse':
-        specifier: ^7.20.2
+        specifier: ^7.28.0
         version: 7.28.0
       '@types/node':
         specifier: ^20.3.1
@@ -1000,10 +1000,6 @@ packages:
 
   '@babel/traverse@7.29.0':
     resolution: {integrity: sha512-4HPiQr0X7+waHfyXPZpWPfWL/J7dcN1mx9gL6WdQVMbPnF3+ZhSMs8tCxN7oHddJE9fhNE7+lxdnlyemKfJRuA==}
-    engines: {node: '>=6.9.0'}
-
-  '@babel/types@7.22.5':
-    resolution: {integrity: sha512-zo3MIHGOkPOfoRXitsgHLjEXmlDaD/5KU1Uzuc9GNiZPhSqVxVRtxuPaSBZDsYZ9qV88AjtMtWW7ww98loJ9KA==}
     engines: {node: '>=6.9.0'}
 
   '@babel/types@7.29.0':
@@ -6743,10 +6739,6 @@ packages:
     resolution: {integrity: sha512-voyz6MApa1rQGUxT3E+BK7/ROe8itEx7vD8/HEvt4xwXucvQ5G5oeEiHkmHZJuBO21RpOf+YYm9MOivj709jow==}
     engines: {node: '>=14.14'}
 
-  to-fast-properties@2.0.0:
-    resolution: {integrity: sha512-/OaKK0xYrs3DmxRYqL/yDc+FxFUVYhDlXMhRmv3z915w2HF1tnN1omB354j8VUGO/hbRzyD6Y3sA7v7GS/ceog==}
-    engines: {node: '>=4'}
-
   to-regex-range@5.0.1:
     resolution: {integrity: sha512-65P7iz6X5yEr1cwcgvQxbbIw7Uk3gOy5dIdtZ4rDveLqhrdJP+Li/Hx6tyK0NEb+2GCyneCMJiGqrADCSNk8sQ==}
     engines: {node: '>=8.0'}
@@ -8087,12 +8079,6 @@ snapshots:
       debug: 4.4.3
     transitivePeerDependencies:
       - supports-color
-
-  '@babel/types@7.22.5':
-    dependencies:
-      '@babel/helper-string-parser': 7.27.1
-      '@babel/helper-validator-identifier': 7.28.5
-      to-fast-properties: 2.0.0
 
   '@babel/types@7.29.0':
     dependencies:
@@ -14652,8 +14638,6 @@ snapshots:
       clipboardy: 4.0.0
 
   tmp@0.2.5: {}
-
-  to-fast-properties@2.0.0: {}
 
   to-regex-range@5.0.1:
     dependencies:

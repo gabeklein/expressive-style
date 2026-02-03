@@ -38,14 +38,14 @@
     "preversion": "npm run build"
   },
   "dependencies": {
-    "@babel/core": "^7.22.5",
-    "@babel/plugin-transform-react-jsx": "^7.23.4",
-    "@babel/traverse": "^7.22.5",
-    "@babel/types": "7.22.5"
+    "@babel/core": "^7.29.0",
+    "@babel/traverse": "^7.29.0",
+    "@babel/types": "7.29.0"
   },
   "devDependencies": {
-    "@types/babel__core": "^7.20.2",
-    "@types/babel__traverse": "^7.20.2",
+    "@babel/plugin-transform-react-jsx": "^7.23.4",
+    "@types/babel__core": "^7.20.5",
+    "@types/babel__traverse": "^7.28.0",
     "prettier": "^3.4.2",
     "tsx": "^4.19.2",
     "vitest": "^2.1.8"
