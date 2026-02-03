@@ -5,7 +5,6 @@ import * as t from "@babel/types";
 import { Context, hash } from "./context";
 import { Status } from "./errors";
 import { getContext, handleLabel } from "./label";
-import { getNames } from "./names";
 
 import type { Macro, Options } from "./context";
 
@@ -89,11 +88,31 @@ function JSX(path: NodePath<t.JSXElement> | NodePath<t.JSXFragment>) {
   SCOPE.set(path, scope);
 
   if (path.isJSXElement()) {
-    const name = getNames(path);
+    const names = new Map<string, NodePath>();
+    const opening = path.get("openingElement");
+    let tag = opening.get("name");
 
-    if (returned && !name.has("this")) name.set("this", path);
+    while (tag.isJSXMemberExpression()) {
+      names.set(tag.get("property").toString(), tag);
+      tag = tag.get("object");
+    }
 
-    name.forEach((attr, name) => {
+    if (tag.isJSXIdentifier()) names.set(tag.toString(), tag);
+
+    opening.get("attributes").forEach((attr) => {
+      if (!attr.isJSXAttribute() || attr.node.value) return;
+
+      let { name } = attr.node.name;
+
+      if (typeof name !== "string") name = name.name;
+
+      names.set(name, attr);
+    });
+
+
+    if (returned && !names.has("this")) names.set("this", path);
+
+    names.forEach((attr, name) => {
       let used = false;
 
       //TODO: add flag for this to be enforced by plugin

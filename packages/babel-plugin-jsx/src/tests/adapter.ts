@@ -23,11 +23,13 @@ export async function parser(source: string) {
 
   if (!result) throw new Error("No result from babel transform");
 
-  return format(result.code!, {
+  const formatted = await format(result.code!, {
     singleQuote: true,
     trailingComma: "none",
     jsxBracketSameLine: true,
     printWidth: 65,
     parser: "babel",
-  }).replace(/\n$/gm, "");
+  });
+
+  return formatted.replace(/\n$/gm, "");
 };
