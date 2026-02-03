@@ -34,7 +34,6 @@
     "@babel/core": "^7.29.0",
     "@babel/traverse": "^7.29.0",
     "@babel/types": "^7.29.0",
-    "@expressive/babel-plugin-jsx": "workspace:*",
     "chroma-js": "^2.0.3",
     "easing-coordinates": "^2.0.2"
   },

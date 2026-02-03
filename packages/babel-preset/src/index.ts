@@ -5,8 +5,8 @@ import {
   PluginPass,
   types as t,
 } from "@babel/core";
-import { Plugin } from "@expressive/babel-plugin-jsx";
 
+import { Plugin } from "./jsxPlugin";
 import { CSSPlugin } from "./cssPlugin";
 import * as DefaultMacros from "./macros";
 

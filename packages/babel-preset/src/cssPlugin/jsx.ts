@@ -1,6 +1,6 @@
 import { NodePath, types as t } from "@babel/core";
-import { type Plugin } from "@expressive/babel-plugin-jsx";
 
+import { type Context } from "../jsxPlugin";
 import { isStandard } from "./tags";
 
 /** TODO: Move to a default handler included with macros. */
@@ -16,7 +16,7 @@ export function fixTagName(path: any) {
 }
 
 export function getClassName(
-  context: Plugin.Context,
+  context: Context,
   module?: t.Expression
 ): t.Expression | undefined {
   if (!context.props.size && !context.children.size) return;

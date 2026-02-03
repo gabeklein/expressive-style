@@ -1,4 +1,4 @@
-import { Context } from "@expressive/babel-plugin-jsx";
+import { Context } from "../jsxPlugin";
 
 export function toStylesheet(contexts: Iterable<Context>) {
   return Array.from(contexts)
