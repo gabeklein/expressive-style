@@ -12,11 +12,7 @@
     "noEmit": true,
     "sourceMap": true,
     "strict": true,
-    "target": "ES2020",
-    "paths": {
-      "@expressive/*": ["../../../packages/*/src"],
-      "@website/*": ["../../../website/*/src"]
-    }
+    "target": "ES2020"
   },
   "exclude": ["node_modules", "dist"]
 }
