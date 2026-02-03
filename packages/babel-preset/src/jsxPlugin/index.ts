@@ -1,6 +1,4 @@
-import { PluginObj, PluginPass } from "@babel/core";
-import { NodePath } from "@babel/traverse";
-import * as t from "@babel/types";
+import { PluginObj, PluginPass, NodePath, types as t } from "@babel/core";
 
 import { Context, hash } from "./context";
 import { Status } from "./errors";
@@ -67,7 +65,7 @@ function getUsing(path: NodePath) {
  * The function must have a name with a capital letter to be considered a component.
  */
 function isReturnedByComponent(
-  path: NodePath<t.JSXElement> | NodePath<t.JSXFragment>
+  path: NodePath<t.JSXElement> | NodePath<t.JSXFragment>,
 ) {
   let parent = path.parentPath;
 
@@ -110,7 +108,9 @@ function JSX(path: NodePath<t.JSXElement> | NodePath<t.JSXFragment>) {
   let { parentPath: parent } = path;
 
   if (parent.isExpressionStatement() && parent.parentPath.isBlock())
-    throw path.buildCodeFrameError("Using JSX as an implicit return is no longer supported.");
+    throw path.buildCodeFrameError(
+      "Using JSX as an implicit return is no longer supported.",
+    );
 
   const context =
     !parent!.isJSXElement() && !parent!.isJSXFragment() && getContext(path);
@@ -144,7 +144,6 @@ function JSX(path: NodePath<t.JSXElement> | NodePath<t.JSXFragment>) {
 
       names.set(name, attr);
     });
-
 
     if (returned) names.set("this", path);
 
@@ -197,8 +196,8 @@ function JSX(path: NodePath<t.JSXElement> | NodePath<t.JSXFragment>) {
     t.jsxElement(
       t.jsxOpeningElement(t.jSXIdentifier("div"), []),
       t.jsxClosingElement(t.jSXIdentifier("div")),
-      path.isJSXFragment() ? path.node.children : [path.node]
-    )
+      path.isJSXFragment() ? path.node.children : [path.node],
+    ),
   );
 
   inserted.setData(USING_KEY, new Set([context]));

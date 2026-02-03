@@ -1,5 +1,4 @@
-import { NodePath } from "@babel/traverse";
-import * as t from "@babel/types";
+import { NodePath, types as t } from "@babel/core";
 
 import { ParseErrors } from "./errors";
 
@@ -51,9 +50,9 @@ function parseExpression<T extends t.Expression>(
 
   if (isParenthesized(element)) return element;
 
-  if (t.isNullLiteral(element)) return null;
-
   if (t.isBooleanLiteral(element)) return element.value;
+
+  if (t.isNullLiteral(element)) return null;
 
   if (t.isTemplateLiteral(element)) {
     if (element.quasis.length == 1) return element.quasis[0].value.raw;
@@ -61,14 +60,14 @@ function parseExpression<T extends t.Expression>(
   }
 
   if (t.isNumericLiteral(element)) {
-    return parseNumericLiteral(element, false);
+    return parseNumeric(element, false);
   }
 
   if (t.isUnaryExpression(element)) {
     const { argument, operator } = element;
 
     if (operator == "-" && t.isNumericLiteral(argument))
-      return parseNumericLiteral(argument, true);
+      return parseNumeric(argument, true);
 
     if (operator == "!" && t.isIdentifier(argument, { name: "important" }))
       return "!important";
@@ -117,7 +116,7 @@ function parseExpression<T extends t.Expression>(
   throw Oops.UnknownArgument(element);
 }
 
-function parseNumericLiteral(number: t.NumericLiteral, negative: boolean) {
+function parseNumeric(number: t.NumericLiteral, negative: boolean) {
   let {
     extra: { rawValue, raw },
   } = number as any;
