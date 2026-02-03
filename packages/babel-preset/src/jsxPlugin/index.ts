@@ -42,7 +42,7 @@ function Plugin(_compiler: any, options: Options): PluginObj<State> {
         enter(path) {
           const body = path.get("body");
 
-          if (body.isFor() || body.isWhile()) return;
+          if (body.isFor() || body.isWhile() || body.isDoWhileStatement()) return;
 
           handleLabel(path);
           onExit(path, () => {
