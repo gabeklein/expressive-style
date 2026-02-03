@@ -1,4 +1,6 @@
-import Logo from "./logo.svg";
+// import Logo from "./logo.svg";
+
+const Logo = () => "🚀";
 
 export const SiteLogo = () => {
   fontWeight: bold;
