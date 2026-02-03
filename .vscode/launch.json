@@ -43,20 +43,6 @@
       "smartStep": true,
       "console": "integratedTerminal",
       "internalConsoleOptions": "neverOpen"
-    },
-    {
-      "name": "Launch Vite",
-      "type": "node",
-      "request": "launch",
-      "cwd": "${workspaceFolder}/docs/home",
-      "program": "node_modules/vite/bin/vite.js",
-      "args": ["--config", "vite.config.ts"],
-      "runtimeExecutable": "tsx",
-      "skipFiles": [
-        "<node_internals>/**",
-        "${workspaceFolder}/node_modules/**"
-      ],
-      "console": "integratedTerminal"
     }
   ],
   "inputs": [
