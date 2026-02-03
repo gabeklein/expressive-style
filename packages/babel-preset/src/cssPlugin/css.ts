@@ -1,19 +1,16 @@
 import { Context } from "../jsxPlugin";
 
-export function toStylesheet(contexts: Iterable<Context>) {
-  return Array.from(contexts)
-    .filter((d) => {
-      return d.props.size > 0;
-    })
-    .sort((d1, d2) => {
-      const diff = depth(d1) - depth(d2);
-      return diff === 0 ? 1 : diff;
-    })
+export function toStylesheet(styles: Map<string, Context>) {
+  return Array.from(styles.values())
+    .sort(depth)
     .map(toBlock)
+    .filter(Boolean)
     .join("\n");
 }
 
 function toBlock(define: Context) {
+  if(define.props.size === 0) return "";
+
   const styles = [] as string[];
 
   for (let [name, value] of define.props) {
@@ -61,13 +58,19 @@ export function toSelector(context: Context): string {
   return (selector += "." + uid);
 }
 
-function depth(context: Context) {
-  let depth = 0;
+function depth(context: Context, context2?: Context): number {
+  if (context2) {
+    const d1 = depth(context);
+    const d2 = depth(context2);
+    return d1 === d2 ? 0 : d1 - d2;
+  }
+
+  let i = 0;
 
   do {
     if (context.path.isFunction()) break;
-    else depth += /^[A-Z]/.test(context.uid) ? 2 : 1;
+    else i += /^[A-Z]/.test(context.uid) ? 2 : 1;
   } while ((context = context.parent!));
 
-  return depth;
+  return i;
 }

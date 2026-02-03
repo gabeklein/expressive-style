@@ -84,7 +84,7 @@ export function CSSPlugin(
             },
             css: {
               get(this: Preset.MetaData) {
-                return toStylesheet(this.styles.values());
+                return toStylesheet(this.styles);
               },
             },
           });
