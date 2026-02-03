@@ -15,10 +15,13 @@ export function handleLabel(path: NodePath<t.LabeledStatement>) {
     return;
   }
 
-  if (!body.isExpressionStatement())
+  if (!body.isExpressionStatement()) {
     throw modifyError(body, "Not an expression", name);
+  }
 
-  if (!context) throw modifyError(body, "Missing context", name);
+  if (!context) {
+    throw modifyError(body, "Missing context", name);
+  }
 
   const args = parseArgument(body);
 
@@ -126,26 +129,28 @@ function createFunctionContext(path: NodePath<t.Function>) {
 function getComponentName(path: NodePath): string {
   let encounteredReturn;
 
-  while (path){
-    if(path.isLabeledStatement()) {
+  while (path) {
+    if (path.isLabeledStatement()) {
       return path.node.label.name;
     }
 
-    if(path.isVariableDeclarator()) {
+    if (path.isVariableDeclarator()) {
       const { id } = path.node;
-      return t.isIdentifier(id) ? id.name : (path.parent as t.VariableDeclaration).kind;
+      return t.isIdentifier(id)
+        ? id.name
+        : (path.parent as t.VariableDeclaration).kind;
     }
 
-    if(path.isAssignmentExpression() || path.isAssignmentPattern()) {
+    if (path.isAssignmentExpression() || path.isAssignmentPattern()) {
       const { left } = path.node as t.AssignmentExpression;
       return t.isIdentifier(left) ? left.name : "assignment";
     }
 
-    if(path.isFunctionDeclaration()) {
+    if (path.isFunctionDeclaration()) {
       return path.node.id!.name;
     }
 
-    if(path.isExportDefaultDeclaration()) {
+    if (path.isExportDefaultDeclaration()) {
       try {
         const { basename, dirname, sep: separator } = require("path");
 
@@ -160,19 +165,19 @@ function getComponentName(path: NodePath): string {
       }
     }
 
-    if(path.isArrowFunctionExpression()) {
+    if (path.isArrowFunctionExpression()) {
       path = path.parentPath!;
       continue;
     }
 
-    if(path.isReturnStatement()) {
+    if (path.isReturnStatement()) {
       if (encounteredReturn) return "return";
 
       encounteredReturn = path;
 
       const ancestry = path.getAncestry();
       const within = ancestry.find((x) =>
-        x.isFunction()
+        x.isFunction(),
       ) as NodePath<t.Function>;
 
       const { node } = within;
@@ -197,17 +202,17 @@ function getComponentName(path: NodePath): string {
         continue;
       }
 
-      path = within.parentPath!
+      path = within.parentPath!;
       continue;
     }
 
-    if(path.isObjectProperty()) {
+    if (path.isObjectProperty()) {
       const { key } = path.node;
       return t.isIdentifier(key)
         ? key.name
         : t.isStringLiteral(key)
-        ? key.value
-        : "property";
+          ? key.value
+          : "property";
     }
 
     break;

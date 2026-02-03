@@ -37,24 +37,23 @@ function parseExpression<T extends t.Expression>(
 ): any {
   if (childKey) element = element[childKey] as unknown as T;
 
-  if (isParenthesized(element)) return element;
-
   if (t.isIdentifier(element)) {
     return element.name.replace(/([A-Z]+)/g, "-$1").toLowerCase();
   }
 
-  if (t.isBooleanLiteral(element)) {
-    return element.value;
-  }
-
   if (t.isStringLiteral(element)) {
-    if (element.value === "") return '""';
-    return element.value;
+    return element.value === "" ? '""' : element.value;
   }
 
-  if (t.isNullLiteral(element)) {
-    return null;
+  if (t.isSequenceExpression(element)) {
+    return element.expressions.map((x) => parseExpression(x));
   }
+
+  if (isParenthesized(element)) return element;
+
+  if (t.isNullLiteral(element)) return null;
+
+  if (t.isBooleanLiteral(element)) return element.value;
 
   if (t.isTemplateLiteral(element)) {
     if (element.quasis.length == 1) return element.quasis[0].value.raw;
@@ -92,10 +91,6 @@ function parseExpression<T extends t.Expression>(
       parseExpression(element, "left"),
       parseExpression(element, "right"),
     ];
-  }
-
-  if (t.isSequenceExpression(element)) {
-    return element.expressions.map((x) => parseExpression(x));
   }
 
   if (t.isCallExpression(element)) {
