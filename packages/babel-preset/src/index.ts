@@ -3,17 +3,17 @@ import {
   BabelFileMetadata,
   BabelFileResult,
   PluginPass,
+  types as t,
 } from "@babel/core";
-import { Identifier } from "@babel/types";
-import { Plugin, Context, Macro } from "@expressive/babel-plugin-jsx";
+import { Plugin } from "@expressive/babel-plugin-jsx";
 
 import { CSSPlugin } from "./cssPlugin";
 import * as DefaultMacros from "./macros";
 
 export interface Options {
   cssModule?: string;
-  macros?: (Record<string, Macro> | false)[];
-  define?: Record<string, Context>[];
+  macros?: (Record<string, Plugin.Macro> | false)[];
+  define?: Record<string, Plugin.Context>[];
 }
 
 export interface State extends PluginPass {
@@ -32,8 +32,8 @@ export declare namespace Preset {
   }
   interface MetaData {
     readonly css: string;
-    readonly cssModuleId?: Identifier;
-    readonly styles: Map<string, Context>;
+    readonly cssModuleId?: t.Identifier;
+    readonly styles: Map<string, Plugin.Context>;
   }
 
   export { Meta, MetaData, Options, Result };

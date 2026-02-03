@@ -1,7 +1,5 @@
-import { NodePath } from "@babel/traverse";
-import * as t from "@babel/types";
-import { Expression, Identifier, JSXElement } from "@babel/types";
-import { Plugin } from "@expressive/babel-plugin-jsx";
+import { NodePath, types as t } from "@babel/core";
+import { type Plugin } from "@expressive/babel-plugin-jsx";
 
 import { isStandard } from "./tags";
 
@@ -19,8 +17,8 @@ export function fixTagName(path: any) {
 
 export function getClassName(
   context: Plugin.Context,
-  module?: Expression
-): Expression | undefined {
+  module?: t.Expression
+): t.Expression | undefined {
   if (!context.props.size && !context.children.size) return;
 
   const { condition, alternate, uid } = context;
@@ -45,9 +43,9 @@ export function getClassName(
 }
 
 export function addClassName(
-  path: NodePath<JSXElement>,
-  name: string | Expression,
-  getHelper: () => Identifier
+  path: NodePath<t.JSXElement>,
+  name: string | t.Expression,
+  getHelper: () => t.Identifier
 ) {
   const existing = hasProp(path, "className");
   const opening = path.get("openingElement");
@@ -101,7 +99,7 @@ export function addClassName(
   throw new Error("Could not insert className");
 }
 
-export function setTagName(path: NodePath<JSXElement>, name: string) {
+export function setTagName(path: NodePath<t.JSXElement>, name: string) {
   const { openingElement, closingElement } = path.node;
   const tag = t.jsxIdentifier(name);
 
@@ -110,7 +108,7 @@ export function setTagName(path: NodePath<JSXElement>, name: string) {
   if (closingElement) closingElement.name = tag;
 }
 
-export function hasProp(path: NodePath<JSXElement>, name: string) {
+export function hasProp(path: NodePath<t.JSXElement>, name: string) {
   for (const attr of path.node.openingElement.attributes)
     if (t.isJSXAttribute(attr) && attr.name.name === name) {
       const { value } = attr;

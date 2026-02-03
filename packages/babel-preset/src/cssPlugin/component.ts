@@ -1,11 +1,9 @@
-import { NodePath } from "@babel/traverse";
-import * as t from "@babel/types";
-import { Function, Identifier, Node, ObjectProperty } from "@babel/types";
+import { Node, NodePath, types as t } from "@babel/core";
 
 import { uniqueIdentifier } from "./uniqueIdentifier";
 
 export function getComponentProp(path: NodePath, name: string, ignoreExisting = false) {
-  const func = path.find((x) => x.isFunction()) as NodePath<Function>;
+  const func = path.find((x) => x.isFunction()) as NodePath<t.Function>;
   let [props] = func.node.params;
 
   if (t.isObjectPattern(props)) {
@@ -13,10 +11,10 @@ export function getComponentProp(path: NodePath, name: string, ignoreExisting = 
 
     const prop = properties.find(
       (x) => t.isObjectProperty(x) && t.isIdentifier(x.key, { name })
-    ) as ObjectProperty | undefined;
+    ) as t.ObjectProperty | undefined;
 
     if (prop) 
-      return ignoreExisting ? false : prop.value as Identifier;
+      return ignoreExisting ? false : prop.value as t.Identifier;
 
     const id = t.identifier(name);
 
@@ -35,7 +33,7 @@ export function getComponentProp(path: NodePath, name: string, ignoreExisting = 
 }
 
 export function getComponentProps(path: NodePath) {
-  const func = path.find((x) => x.isFunction()) as NodePath<Function>;
+  const func = path.find((x) => x.isFunction()) as NodePath<t.Function>;
   let [props] = func.node.params;
   let output: Node | undefined;
 

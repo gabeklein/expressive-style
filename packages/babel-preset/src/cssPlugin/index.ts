@@ -1,6 +1,4 @@
-import { NodePath, PluginObj, template } from "@babel/core";
-import * as t from "@babel/types";
-import { ExpressionStatement, Function, Identifier } from "@babel/types";
+import { NodePath, PluginObj, template, types as t } from "@babel/core";
 import { Context, getUsing } from "@expressive/babel-plugin-jsx";
 
 import { Preset, State } from "..";
@@ -10,14 +8,14 @@ import { uniqueIdentifier } from "./uniqueIdentifier";
 
 const classNamesHelper = template.ast`
   (...args) => args.filter(Boolean).join(" ");
-` as ExpressionStatement;
+` as t.ExpressionStatement;
 
 export function CSSPlugin(
   _compiler: any,
   options: Preset.Options = {}
 ): PluginObj<State> {
   const { cssModule } = options;
-  let getHelper: () => Identifier;
+  let getHelper: () => t.Identifier;
 
   return {
     visitor: {
@@ -30,7 +28,7 @@ export function CSSPlugin(
 
         if (!using.size) return;
 
-        let forward: NodePath<Function> | undefined;
+        let forward: NodePath<t.Function> | undefined;
 
         for (const define of using) {
           const className = getClassName(define, cssModuleId);
@@ -60,7 +58,7 @@ export function CSSPlugin(
           const { metadata } = state.file;
 
           getHelper = () => {
-            let helper = state.classNameHelper as Identifier;
+            let helper = state.classNameHelper as t.Identifier;
 
             if (!helper) {
               helper = state.classNameHelper = uniqueIdentifier(
