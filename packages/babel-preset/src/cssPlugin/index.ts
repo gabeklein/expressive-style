@@ -4,7 +4,6 @@ import { Preset, State } from "..";
 import { Context, getUsing } from "../jsxPlugin";
 import { toSelector, toStylesheet } from "./css";
 import { addClassName, getClassName } from "./jsx";
-import { uniqueIdentifier } from "./uid";
 
 const classNamesHelper = template.ast`
   (...args) => args.filter(Boolean).join(" ");
@@ -136,4 +135,19 @@ function getComponentProp(path: NodePath, name: string, ignoreExisting = false) 
     return t.memberExpression(props, t.identifier(name));
 
   throw new Error(`Expected an Identifier or ObjectPattern, got ${props.type}`);
+}
+
+function uniqueIdentifier(path: NodePath, name = "temp") {
+  const { scope } = path;
+  
+  let uid = name;
+  let i = 0;
+
+  while (scope.hasLabel(uid) || scope.hasBinding(uid) || scope.hasGlobal(uid)) {
+    uid = name + ++i;
+  }
+
+  if (i > 1) uid = name + i;
+
+  return t.identifier(uid);
 }
