@@ -17,13 +17,49 @@ declare namespace Plugin {
   export { Context, Macro, Options };
 }
 
+function Plugin(_compiler: any, options: Options): PluginObj<State> {
+  return {
+    manipulateOptions(_options, parse) {
+      parse.plugins.push("jsx");
+    },
+    visitor: {
+      Program(path, state) {
+        const context = new Context(path);
+
+        Status.currentFile = state.file as any;
+        context.uid = hash(state.filename!);
+        context.define = Object.assign({}, ...(options.define || []));
+        context.macros = Object.assign({}, ...(options.macros || []));
+      },
+      JSXElement: JSX,
+      JSXFragment: JSX,
+      BlockStatement: {
+        exit,
+      },
+      LabeledStatement: {
+        enter(path) {
+          const body = path.get("body");
+
+          if (body.isFor() || body.isWhile()) return;
+
+          handleLabel(path);
+          onExit(path, () => {
+            if (!path.removed) path.remove();
+          });
+        },
+        exit,
+      },
+    },
+  };
+}
+
 const HANDLED = new WeakMap<NodePath, ExitCallback>();
 const USING_KEY = Symbol("expressive context");
+const SCOPE = new WeakMap<NodePath, Set<Context>>();
 
 function getUsing(path: NodePath) {
   return new Set(path.getData(USING_KEY)) as Set<Context>;
 }
-const SCOPE = new WeakMap<NodePath, Set<Context>>();
 
 /**
  * Checks if the JSXElement or JSXFragment is returned by a component.
@@ -166,42 +202,6 @@ function JSX(path: NodePath<t.JSXElement> | NodePath<t.JSXFragment>) {
   );
 
   inserted.setData(USING_KEY, new Set([context]));
-}
-
-function Plugin(_compiler: any, options: Options): PluginObj<State> {
-  return {
-    manipulateOptions(_options, parse) {
-      parse.plugins.push("jsx");
-    },
-    visitor: {
-      Program(path, state) {
-        const context = new Context(path);
-
-        Status.currentFile = state.file as any;
-        context.uid = hash(state.filename!);
-        context.define = Object.assign({}, ...(options.define || []));
-        context.macros = Object.assign({}, ...(options.macros || []));
-      },
-      JSXElement: JSX,
-      JSXFragment: JSX,
-      BlockStatement: {
-        exit,
-      },
-      LabeledStatement: {
-        enter(path) {
-          const body = path.get("body");
-
-          if (body.isFor() || body.isWhile()) return;
-
-          handleLabel(path);
-          onExit(path, () => {
-            if (!path.removed) path.remove();
-          });
-        },
-        exit,
-      },
-    },
-  };
 }
 
 type ExitCallback = (path: NodePath, key: string | number | null) => void;
