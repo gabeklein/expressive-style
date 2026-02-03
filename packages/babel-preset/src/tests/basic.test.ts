@@ -19,9 +19,10 @@ it("will pass", async () => {
   `);
 
   expect(output.code).toMatchInlineSnapshot(`
+    const _concat = (...args) => args.filter(Boolean).join(' ');
     const Component = (props) => {
       return (
-        <div className={classNames(props.className, 'hello_tla')} />
+        <div className={_concat(props.className, 'hello_tla')} />
       );
     };
   `);

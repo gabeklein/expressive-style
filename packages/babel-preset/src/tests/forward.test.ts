@@ -12,11 +12,10 @@ it("will forward className", async () => {
   `);
 
   expect(output.code).toMatchInlineSnapshot(`
+    const _concat = (...args) => args.filter(Boolean).join(' ');
     const Component = (props) => {
       return (
-        <div
-          className={classNames(props.className, 'Component_240')}
-        />
+        <div className={_concat(props.className, 'Component_240')} />
       );
     };
   `);
@@ -32,11 +31,12 @@ it("will forward from existing props", async () => {
   `);
 
   expect(output.code).toMatchInlineSnapshot(`
+    const _concat = (...args) => args.filter(Boolean).join(' ');
     const Component = (props) => {
       return (
         <div
           something={props.something}
-          className={classNames(props.className, 'Component_2a2')}
+          className={_concat(props.className, 'Component_2a2')}
         />
       );
     };
@@ -53,11 +53,12 @@ it("will forward from destructured props", async () => {
   `);
 
   expect(output.code).toMatchInlineSnapshot(`
+    const _concat = (...args) => args.filter(Boolean).join(' ');
     const Component = ({ className, something }) => {
       return (
         <div
           something={something}
-          className={classNames(className, 'Component_18f')}
+          className={_concat(className, 'Component_18f')}
         />
       );
     };
@@ -86,10 +87,11 @@ it("will forward className to this attribute", async () => {
   `);
 
   expect(output.code).toMatchInlineSnapshot(`
+    const _concat = (...args) => args.filter(Boolean).join(' ');
     const Component = (props) => {
       return (
         <input
-          className={classNames(props.className, 'Component_16l')}
+          className={_concat(props.className, 'Component_16l')}
         />
       );
     };
@@ -127,9 +129,10 @@ it("will apply styles by wrapping fragment", async () => {
   `);
 
   expect(output.code).toMatchInlineSnapshot(`
+    const _concat = (...args) => args.filter(Boolean).join(' ');
     export const Row = (props) => {
       return (
-        <div className={classNames(props.className, 'Row_2gs')}>
+        <div className={_concat(props.className, 'Row_2gs')}>
           <span>Something</span>
           <span>Something</span>
         </div>
@@ -157,9 +160,10 @@ it("will apply styles by wrapping fragment with this", async () => {
   `);
 
   expect(output.code).toMatchInlineSnapshot(`
+    const _concat = (...args) => args.filter(Boolean).join(' ');
     const Steps = ({ className, steps, currentStep }) => {
       return (
-        <div className={classNames(className, 'Steps_11k')}>
+        <div className={_concat(className, 'Steps_11k')}>
           {steps.map((step, i) => (
             <Step key={i} index={i} current={currentStep}>
               {step}
@@ -186,9 +190,10 @@ it("will not wrap an expression in element", async () => {
   `);
 
   expect(output.code).toMatchInlineSnapshot(`
+    const _concat = (...args) => args.filter(Boolean).join(' ');
     const Test = (props) => {
       return (
-        <div className={classNames(props.className, 'Test_2b1')}>
+        <div className={_concat(props.className, 'Test_2b1')}>
           {true && <div />}
         </div>
       );

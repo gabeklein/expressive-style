@@ -12,10 +12,10 @@ it("will apply hover pseudo class", async () => {
   `);
 
   expect(output.code).toMatchInlineSnapshot(`
+    const _concat = (...args) => args.filter(Boolean).join(' ');
     const Component = (props) => {
       return (
-        <div
-          className={classNames(props.className, 'Component_2bb')}>
+        <div className={_concat(props.className, 'Component_2bb')}>
           Hello
         </div>
       );
@@ -54,10 +54,10 @@ it("will apply hover pseudo class with nested", async () => {
   `);
 
   expect(output.code).toMatchInlineSnapshot(`
+    const _concat = (...args) => args.filter(Boolean).join(' ');
     const Component = (props) => {
       return (
-        <div
-          className={classNames(props.className, 'Component_2id')}>
+        <div className={_concat(props.className, 'Component_2id')}>
           Hello
         </div>
       );

@@ -1,6 +1,11 @@
-import { NodePath, types as t } from "@babel/core";
+import { NodePath, template, types as t } from "@babel/core";
 
 import { type Context } from "../jsxPlugin";
+import { State } from "..";
+
+const classNamesHelper = template.ast`
+  (...args) => args.filter(Boolean).join(" ");
+` as t.ExpressionStatement;
 
 export function getClassName(
   context: Context,
@@ -32,7 +37,7 @@ export function getClassName(
 export function addClassName(
   path: NodePath<t.JSXElement>,
   name: string | t.Expression,
-  getHelper: () => t.Identifier
+  state: State
 ) {
   const existing = hasProp(path, "className");
   const opening = path.get("openingElement");
@@ -55,7 +60,7 @@ export function addClassName(
     return;
   }
 
-  const helper = getHelper();
+  const helper = ensureHelper(state);
 
   if (
     t.isCallExpression(existing) &&
@@ -105,4 +110,21 @@ export function hasProp(path: NodePath<t.JSXElement>, name: string) {
 
       if (t.isExpression(value)) return value;
     }
+}
+
+function ensureHelper(state: State): t.Identifier {
+  if (state.classNameHelper) return state.classNameHelper as any;
+
+  const program = state.file.path as unknown as NodePath<t.Program>;
+  const helper = program.scope.generateUidIdentifier("concat");
+  state.classNameHelper = helper;
+
+  program.unshiftContainer(
+    "body",
+    t.variableDeclaration("const", [
+      t.variableDeclarator(helper, classNamesHelper.expression),
+    ])
+  );
+
+  return helper;
 }

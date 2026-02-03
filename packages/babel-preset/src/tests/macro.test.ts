@@ -55,11 +55,10 @@ it("will apply complex style", async () => {
   `);
 
   expect(output.code).toMatchInlineSnapshot(`
+    const _concat = (...args) => args.filter(Boolean).join(' ');
     const Component = (props) => {
       return (
-        <div
-          className={classNames(props.className, 'Component_2du')}
-        />
+        <div className={_concat(props.className, 'Component_2du')} />
       );
     };
   `);

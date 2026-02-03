@@ -1,45 +1,21 @@
-import { NodePath, PluginObj, template, types as t } from "@babel/core";
+import { NodePath, PluginObj, types as t } from "@babel/core";
 
 import { Preset, State } from "..";
 import { Context, getUsing } from "../jsxPlugin";
 import { toSelector, toStylesheet } from "./css";
 import { addClassName, getClassName } from "./jsx";
 
-const classNamesHelper = template.ast`
-  (...args) => args.filter(Boolean).join(" ");
-` as t.ExpressionStatement;
-
 export function CSSPlugin(
   _compiler: any,
   options: Preset.Options = {}
 ): PluginObj<State> {
   const { cssModule } = options;
-  let getHelper: () => t.Identifier;
 
   return {
     visitor: {
       Program: {
         enter(path, state) {
           const { metadata } = state.file;
-
-          getHelper = () => {
-            let helper = state.classNameHelper as t.Identifier;
-
-            if (!helper) {
-              helper = state.classNameHelper = uniqueIdentifier(
-                path,
-                "classNames"
-              );
-              path.unshiftContainer(
-                "body",
-                t.variableDeclaration("const", [
-                  t.variableDeclarator(helper, classNamesHelper.expression),
-                ])
-              );
-            }
-
-            return helper;
-          };
 
           if (cssModule)
             Object.defineProperty(metadata, "cssModuleId", {
@@ -83,7 +59,7 @@ export function CSSPlugin(
         for (const define of using) {
           const className = getClassName(define, cssModuleId);
 
-          if (className) addClassName(path, className, getHelper);
+          if (className) addClassName(path, className, state);
 
           if (define.path.isFunction()) forward = define.path;
         }
@@ -97,10 +73,10 @@ export function CSSPlugin(
         }
 
         if (forward){
-          const className = getComponentProp(path, "className");
+          const className = getComponentProp(forward, "className");
 
           if(className)
-            addClassName(path, className, getHelper);
+            addClassName(path, className, state);
         }
       }
     },
@@ -119,7 +95,7 @@ function getComponentProp(path: NodePath, name: string) {
     ) as t.ObjectProperty | undefined;
 
     if (prop) 
-      return false;
+      return;
 
     const id = t.identifier(name);
 

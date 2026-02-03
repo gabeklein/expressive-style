@@ -12,10 +12,10 @@ it("will apply to this", async () => {
   `);
 
   expect(output.code).toMatchInlineSnapshot(`
+    const _concat = (...args) => args.filter(Boolean).join(' ');
     const Component = ({ className, active }) => {
       return (
-        <div
-          className={classNames(className, active && 'active_tla')}>
+        <div className={_concat(className, active && 'active_tla')}>
           Hello
         </div>
       );
@@ -44,10 +44,11 @@ it("will apply else", async () => {
   `);
 
   expect(output.code).toMatchInlineSnapshot(`
+    const _concat = (...args) => args.filter(Boolean).join(' ');
     const Component = ({ className, active }) => {
       return (
         <div
-          className={classNames(
+          className={_concat(
             'Component_2a2',
             active ? 'active_tla' : 'else_tla',
             className
@@ -86,10 +87,11 @@ it("will apply to selector", async () => {
   `);
 
   expect(output.code).toMatchInlineSnapshot(`
+    const _concat = (...args) => args.filter(Boolean).join(' ');
     const Component = ({ className, active }) => {
       return (
         <div
-          className={classNames(
+          className={_concat(
             'div_tla',
             active && 'active_roo',
             className
@@ -118,10 +120,10 @@ it("will apply to child selector", async () => {
   `);
 
   expect(output.code).toMatchInlineSnapshot(`
+    const _concat = (...args) => args.filter(Boolean).join(' ');
     const Component = ({ className, active }) => {
       return (
-        <div
-          className={classNames(className, active && 'active_tla')}>
+        <div className={_concat(className, active && 'active_tla')}>
           <div className="div_xt4">Hello</div>
         </div>
       );

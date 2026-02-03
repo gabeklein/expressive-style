@@ -13,9 +13,10 @@ it("will apply", async () => {
   `);
 
   expect(output.code).toMatchInlineSnapshot(`
+    const _concat = (...args) => args.filter(Boolean).join(' ');
     const Component = (props) => {
       return (
-        <div className={classNames(props.className, 'div_tla')}>
+        <div className={_concat(props.className, 'div_tla')}>
           Hello
         </div>
       );
@@ -43,10 +44,10 @@ it("will apply to this", async () => {
   `);
 
   expect(output.code).toMatchInlineSnapshot(`
+    const _concat = (...args) => args.filter(Boolean).join(' ');
     const Component = (props) => {
       return (
-        <div
-          className={classNames(props.className, 'Component_26k')}>
+        <div className={_concat(props.className, 'Component_26k')}>
           Hello World
         </div>
       );
@@ -98,10 +99,11 @@ it("will apply to attribute this", async () => {
   `);
 
   expect(output.code).toMatchInlineSnapshot(`
+    const _concat = (...args) => args.filter(Boolean).join(' ');
     const RedInput = (props) => {
       return (
         <input
-          className={classNames(props.className, 'RedInput_245')}
+          className={_concat(props.className, 'RedInput_245')}
         />
       );
     };
@@ -120,10 +122,10 @@ it("will keep existing className", async () => {
   `);
 
   expect(output.code).toMatchInlineSnapshot(`
+    const _concat = (...args) => args.filter(Boolean).join(' ');
     const Component = (props) => {
       return (
-        <div
-          className={classNames(props.className, 'foobar div_tla')}>
+        <div className={_concat(props.className, 'foobar div_tla')}>
           Hi
         </div>
       );
@@ -151,10 +153,10 @@ it("will apply nested", async () => {
   `);
 
   expect(output.code).toMatchInlineSnapshot(`
+    const _concat = (...args) => args.filter(Boolean).join(' ');
     const Component = (props) => {
       return (
-        <div
-          className={classNames(props.className, 'container_tla')}>
+        <div className={_concat(props.className, 'container_tla')}>
           Hello <div className="inner_wj9">World</div>
         </div>
       );
@@ -323,10 +325,10 @@ it("will use classnames from module", async () => {
 
   expect(output.code).toMatchInlineSnapshot(`
     import css from './styles.module.css';
-
+    const _concat = (...args) => args.filter(Boolean).join(' ');
     const Component = (props) => {
       return (
-        <div className={classNames(props.className, css.div_tla)}>
+        <div className={_concat(props.className, css.div_tla)}>
           Hello
         </div>
       );
