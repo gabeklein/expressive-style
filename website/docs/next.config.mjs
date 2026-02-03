@@ -1,20 +1,21 @@
-import JSXPlugin from '@expressive/webpack-plugin';
+import Style from '@expressive/nextjs-plugin';
 import Nextra from 'nextra';
 
-const nextra = Nextra({
-  theme: 'nextra-theme-docs',
-  themeConfig: './common/Theme.tsx'
+const withStyle = Style();
+const withNextra = Nextra({
+  contentDirBasePath: '/docs'
 });
 
-export default nextra({
-  webpack: (config) => {
-    config.plugins.push(
-      new JSXPlugin()
-    );
-    config.module.rules.push({
-      test: /\.svg$/i,
-      issuer: /\.[jt]sx?$/,
-      use: ['@svgr/webpack'],
-    });
-  }
-});
+export default withStyle(
+  withNextra({
+    webpack: (config) => {
+      config.module.rules.push({
+        test: /\.svg$/i,
+        issuer: /\.[jt]sx?$|\.mdx$/,
+        use: ['@svgr/webpack'],
+      });
+      return config;
+    }
+  })
+);
+

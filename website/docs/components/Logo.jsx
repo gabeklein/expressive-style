@@ -6,17 +6,17 @@ export const SiteLogo = () => {
   whiteSpace: nowrap;
   alignItems: center;
   display: flex;
-  gap: px(10);
+  gap: 10;
 
   Logo: {
-    height: px(30);
+    height: 30;
     color: 0x8150ce;
   }
 
   return (
     <div>
       <Logo />
-      <text>Expressive JSX</text>
+      <span>Expressive JSX</span>
     </div>
   );
 };
