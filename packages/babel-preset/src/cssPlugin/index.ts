@@ -3,7 +3,7 @@ import { NodePath, PluginObj, types as t } from "@babel/core";
 import { Preset, State } from "..";
 import { Context, getUsing } from "../jsxPlugin";
 import { toSelector, toStylesheet } from "./css";
-import { addClassName, getClassName } from "./jsx";
+import { addClassName, getClassName, getComponentProp, uniqueIdentifier } from "./jsx";
 
 export function CSSPlugin(
   _compiler: any,
@@ -81,49 +81,4 @@ export function CSSPlugin(
       }
     },
   };
-}
-
-function getComponentProp(path: NodePath, name: string) {
-  const func = path.find((x) => x.isFunction()) as NodePath<t.Function>;
-  let [props] = func.node.params;
-
-  if (t.isObjectPattern(props)) {
-    const { properties } = props;
-
-    const prop = properties.find(
-      (x) => t.isObjectProperty(x) && t.isIdentifier(x.key, { name })
-    ) as t.ObjectProperty | undefined;
-
-    if (prop) 
-      return;
-
-    const id = t.identifier(name);
-
-    properties.unshift(t.objectProperty(id, id, false, true));
-
-    return id;
-  } else if (!props) {
-    props = uniqueIdentifier(path, "props");
-    func.unshiftContainer("params", props);
-  }
-
-  if (t.isIdentifier(props))
-    return t.memberExpression(props, t.identifier(name));
-
-  throw new Error(`Expected an Identifier or ObjectPattern, got ${props.type}`);
-}
-
-function uniqueIdentifier(path: NodePath, name = "temp") {
-  const { scope } = path;
-  
-  let uid = name;
-  let i = 0;
-
-  while (scope.hasLabel(uid) || scope.hasBinding(uid) || scope.hasGlobal(uid)) {
-    uid = name + ++i;
-  }
-
-  if (i > 1) uid = name + i;
-
-  return t.identifier(uid);
 }
