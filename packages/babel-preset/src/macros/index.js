@@ -11,5 +11,6 @@ export * from "./shadow";
 export * from "./size";
 export * from "./font";
 export * from "./outline";
+export * from "./transform";
 
 // export * from './gradient';

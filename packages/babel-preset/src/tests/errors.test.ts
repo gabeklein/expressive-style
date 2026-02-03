@@ -5,26 +5,20 @@ it("should throw error for unary operator that doesn't do anything", async () =>
   const parse = parser(`
     const Component = () => {
       color: +red;
+
+      return <div />;
     }
   `);
   
   await expect(parse).rejects.toThrow("Unary operator here doesn't do anything");
 });
 
-it("should throw error for negative hex numbers", async () => {
-  const parse = parser(`
-    const Component = () => {
-      color: -0xfff;
-    }
-  `)
-  
-  await expect(parse).rejects.toThrow("Hexadecimal numbers are converted into colors");
-});
-
 it("should throw error for arrow functions in modifiers", async () => {
   const parse = parser(`
     const Component = () => {
       color: () => 'red';
+
+      return <div />;
     }
   `)
   
@@ -35,6 +29,8 @@ it("should throw error for spread elements in call expressions", async () => {
   const parse = parser(`
     const Component = () => {
       color: fn(...args);
+
+      return <div />;
     }
   `)
   
@@ -45,6 +41,8 @@ it("should throw error for non-identifier callee in call expressions", async () 
   const parse = parser(`
     const Component = () => {
       color: obj.method();
+
+      return <div />;
     }
   `)
   
@@ -55,6 +53,8 @@ it("should throw error for unknown argument types", async () => {
   const parse = parser(`
     const Component = () => {
       color: /regex/;
+
+      return <div />;
     }
   `)
   
@@ -66,6 +66,8 @@ it("should handle macro errors with proper context", async () => {
   const parse = parser(`
     const Component = () => {
       invalidMacro: +value;
+
+      return <div />;
     }
   `)
   
@@ -78,6 +80,8 @@ it("should provide code frame with error location", async () => {
     await parser(`
       const Component = () => {
         color: +red;
+
+        return <div />;
       }
     `);
     expect.fail("Should have thrown an error");

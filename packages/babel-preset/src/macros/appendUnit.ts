@@ -3,11 +3,8 @@ export function appendUnit(val: number | string, unit: string) {
 
   if (val === undefined) return "";
 
-  if (typeof val == "string" && /\./.test(val) && !isNaN(parseFloat(val)))
-    return val + (unit || "em");
-
-  if (typeof val == "number" || parseInt(val) === Number(val))
-    return val + (unit || "px");
+  if (typeof val == "number")
+    return val + (unit || Number.isInteger(val) ? "px" : "em")
 
   return val;
 }

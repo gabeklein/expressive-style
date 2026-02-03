@@ -65,7 +65,7 @@ it("will apply complex style", async () => {
 
   expect(output.css).toMatchInlineSnapshot(`
     .Component_2du {
-      transform: translateX(10) rotate(90) scale(2);
+      transform: translateX(10px) rotate(90deg) scale(2);
     }
   `);
 });
