@@ -426,6 +426,7 @@ expect(output.css).toMatchInlineSnapshot(`...`);
 8. **Conditionals in if test**: String literals (`:hover`, `.active`) create CSS selectors, expressions (`disabled`) create conditional classes
 9. **Props destructuring**: Plugin can inject props automatically when needed
 10. **All macros are customizable**: Built-in macros are just defaults—define your own in babel config
+11. **No tsx support**: The plugin does not currently support `.tsx` files. All modules containing Expressive styles must be `.jsx` files.
 
 ## Future Improvements
 
