@@ -110,7 +110,7 @@ function JSX(path: NodePath<t.JSXElement> | NodePath<t.JSXFragment>) {
     });
 
 
-    if (returned && !names.has("this")) names.set("this", path);
+    if (returned) names.set("this", path);
 
     names.forEach((attr, name) => {
       let used = false;
@@ -159,8 +159,8 @@ function JSX(path: NodePath<t.JSXElement> | NodePath<t.JSXFragment>) {
 
   const [inserted] = path.replaceWith(
     t.jsxElement(
-      t.jsxOpeningElement(t.jSXIdentifier("this"), []),
-      t.jsxClosingElement(t.jSXIdentifier("this")),
+      t.jsxOpeningElement(t.jSXIdentifier("div"), []),
+      t.jsxClosingElement(t.jSXIdentifier("div")),
       path.isJSXFragment() ? path.node.children : [path.node]
     )
   );

@@ -8,7 +8,7 @@ it("will pass", async () => {
         color: red;
       }
 
-      return <hello />
+      return <div _hello />
     }
   `);
 
