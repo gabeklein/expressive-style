@@ -1,19 +1,6 @@
 import { NodePath, types as t } from "@babel/core";
 
 import { type Context } from "../jsxPlugin";
-import { isStandard } from "./tags";
-
-/** TODO: Move to a default handler included with macros. */
-export function fixTagName(path: any) {
-  const { name } = path.node.openingElement;
-
-  if (
-    t.isJSXIdentifier(name) &&
-    !/^[A-Z]/.test(name.name) &&
-    !isStandard(name.name)
-  )
-    setTagName(path, "div");
-}
 
 export function getClassName(
   context: Context,

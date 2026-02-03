@@ -3,7 +3,7 @@ import { NodePath, PluginObj, template, types as t } from "@babel/core";
 import { Preset, State } from "..";
 import { Context, getUsing } from "../jsxPlugin";
 import { toSelector, toStylesheet } from "./css";
-import { addClassName, fixTagName, getClassName } from "./jsx";
+import { addClassName, getClassName } from "./jsx";
 import { uniqueIdentifier } from "./uid";
 
 const classNamesHelper = template.ast`
@@ -23,8 +23,6 @@ export function CSSPlugin(
         const { cssModuleId } = state.file.metadata;
 
         const using = getUsing(path);
-
-        fixTagName(path);
 
         if (!using.size) return;
 
