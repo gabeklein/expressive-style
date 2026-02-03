@@ -91,15 +91,6 @@ export function addClassName(
   throw new Error("Could not insert className");
 }
 
-export function setTagName(path: NodePath<t.JSXElement>, name: string) {
-  const { openingElement, closingElement } = path.node;
-  const tag = t.jsxIdentifier(name);
-
-  openingElement.name = tag;
-
-  if (closingElement) closingElement.name = tag;
-}
-
 export function hasProp(path: NodePath<t.JSXElement>, name: string) {
   for (const attr of path.node.openingElement.attributes)
     if (t.isJSXAttribute(attr) && attr.name.name === name) {

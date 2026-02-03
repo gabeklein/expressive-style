@@ -45,7 +45,9 @@ export function Preset(
 ): any {
   const { macros = [] } = options;
 
-  if (!macros.some((x) => x === false)) macros.push(DefaultMacros);
+  if (!macros.some((x) => x === false)) {
+    macros.push(DefaultMacros);
+  }
 
   return {
     plugins: [
