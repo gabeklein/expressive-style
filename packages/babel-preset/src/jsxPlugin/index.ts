@@ -35,9 +35,6 @@ function Plugin(_compiler: any, options: Options): PluginObj<State> {
       },
       JSXElement: JSX,
       JSXFragment: JSX,
-      BlockStatement: {
-        exit,
-      },
       LabeledStatement: {
         enter(path) {
           const body = path.get("body");
@@ -49,6 +46,9 @@ function Plugin(_compiler: any, options: Options): PluginObj<State> {
             if (!path.removed) path.remove();
           });
         },
+        exit,
+      },
+      BlockStatement: {
         exit,
       },
     },

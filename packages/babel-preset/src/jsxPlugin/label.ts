@@ -55,9 +55,7 @@ export function handleLabel(path: NodePath<t.LabeledStatement>) {
         let args = output[key];
 
         if (args === undefined) continue;
-
         if (!Array.isArray(args)) args = [args];
-
         if (key === name) apply(args);
         else queue.push({ name: key, args });
       }
