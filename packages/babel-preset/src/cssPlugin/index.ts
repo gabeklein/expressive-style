@@ -18,38 +18,6 @@ export function CSSPlugin(
 
   return {
     visitor: {
-      JSXElement(path, state) {
-        const { cssModuleId } = state.file.metadata;
-
-        const using = getUsing(path);
-
-        if (!using.size) return;
-
-        let forward: NodePath<t.Function> | undefined;
-
-        for (const define of using) {
-          const className = getClassName(define, cssModuleId);
-
-          if (className) addClassName(path, className, getHelper);
-
-          if (define.path.isFunction()) forward = define.path;
-        }
-
-        for (const context of using) {
-          const { styles } = state.file.metadata as Preset.MetaData;
-          const key = toSelector(context);
-
-          context.children.forEach((x) => using.add(x));
-          styles.set(key, context);
-        }
-
-        if (forward){
-          const className = getComponentProp(path, "className", true);
-
-          if(className)
-            addClassName(path, className, getHelper);
-        }
-      },
       Program: {
         enter(path, state) {
           const { metadata } = state.file;
@@ -103,6 +71,38 @@ export function CSSPlugin(
           );
         },
       },
+      JSXElement(path, state) {
+        const { cssModuleId } = state.file.metadata;
+
+        const using = getUsing(path);
+
+        if (!using.size) return;
+
+        let forward: NodePath<t.Function> | undefined;
+
+        for (const define of using) {
+          const className = getClassName(define, cssModuleId);
+
+          if (className) addClassName(path, className, getHelper);
+
+          if (define.path.isFunction()) forward = define.path;
+        }
+
+        for (const context of using) {
+          const { styles } = state.file.metadata as Preset.MetaData;
+          const key = toSelector(context);
+
+          context.children.forEach((x) => using.add(x));
+          styles.set(key, context);
+        }
+
+        if (forward){
+          const className = getComponentProp(path, "className", true);
+
+          if(className)
+            addClassName(path, className, getHelper);
+        }
+      }
     },
   };
 }

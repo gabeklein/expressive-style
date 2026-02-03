@@ -8,6 +8,10 @@ import { getContext, handleLabel } from "./label";
 
 import type { Macro, Options } from "./context";
 
+const HANDLED = new WeakMap<NodePath, ExitCallback>();
+const USING_KEY = Symbol("expressive context");
+const SCOPE = new WeakMap<NodePath, Set<Context>>();
+
 type State = PluginPass & {
   context: Context;
   opts: Options;
@@ -52,10 +56,6 @@ function Plugin(_compiler: any, options: Options): PluginObj<State> {
     },
   };
 }
-
-const HANDLED = new WeakMap<NodePath, ExitCallback>();
-const USING_KEY = Symbol("expressive context");
-const SCOPE = new WeakMap<NodePath, Set<Context>>();
 
 function getUsing(path: NodePath) {
   return new Set(path.getData(USING_KEY)) as Set<Context>;
