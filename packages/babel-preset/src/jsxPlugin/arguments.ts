@@ -20,32 +20,32 @@ function isParenthesized(node: t.Expression) {
   return extra ? extra.parenthesized === true : false;
 }
 
-export function parseArgument(
-  element: NodePath<t.ExpressionStatement>,
-  childKey?: keyof t.Expression,
-) {
-  const exp = element.get("expression").node;
-  const args = parseExpression(exp, childKey);
+type Argument = 
+  | [string, ...Argument[]]
+  | t.Expression
+  | string
+  | number
+  | boolean
+  | null;
 
-  return Array.isArray(args) ? args : [args];
+export function parseArguments(
+  element: NodePath<t.ExpressionStatement>
+): Argument[] {
+  const { node } = element.get("expression");
+  const expressions = t.isSequenceExpression(node)
+    ? node.expressions
+    : [node];
+
+  return expressions.map((x) => parseExpression(x));
 }
 
-function parseExpression<T extends t.Expression>(
-  element: T,
-  childKey?: keyof T,
-): any {
-  if (childKey) element = element[childKey] as unknown as T;
-
+function parseExpression<T extends t.Expression>(element: T): any {
   if (t.isIdentifier(element)) {
     return element.name.replace(/([A-Z]+)/g, "-$1").toLowerCase();
   }
 
   if (t.isStringLiteral(element)) {
     return element.value === "" ? '""' : element.value;
-  }
-
-  if (t.isSequenceExpression(element)) {
-    return element.expressions.map((x) => parseExpression(x));
   }
 
   if (isParenthesized(element)) return element;
@@ -60,17 +60,25 @@ function parseExpression<T extends t.Expression>(
   }
 
   if (t.isNumericLiteral(element)) {
-    return parseNumeric(element, false);
+    const { value, extra: { raw } = {} } = element as any;
+    return String(value) == raw ? value : raw;
   }
 
   if (t.isUnaryExpression(element)) {
     const { argument, operator } = element;
 
-    if (operator == "-" && t.isNumericLiteral(argument))
-      return parseNumeric(argument, true);
+    if (operator == "!" && t.isIdentifier(argument))
+      return "!" + argument.name;
 
-    if (operator == "!" && t.isIdentifier(argument, { name: "important" }))
-      return "!important";
+    if (operator == "-" && t.isNumericLiteral(argument)){
+      const value = parseExpression(argument);
+
+      if(typeof value === "number")
+        return -value;
+
+      if(typeof value === "string")
+        return "-" + value;
+    }
 
     throw Oops.UnaryUseless(element);
   }
@@ -87,8 +95,8 @@ function parseExpression<T extends t.Expression>(
 
     return [
       operator,
-      parseExpression(element, "left"),
-      parseExpression(element, "right"),
+      parseExpression(element.left as t.Expression),
+      parseExpression(element.right),
     ];
   }
 
@@ -100,13 +108,12 @@ function parseExpression<T extends t.Expression>(
 
     for (const item of element.arguments) {
       if (t.isSpreadElement(item)) throw Oops.ArgumentSpread(item);
-
       if (!t.isExpression(item)) throw Oops.UnknownArgument(item);
 
       args.push(parseExpression(item));
     }
 
-    return callee.name + `(${args.join(", ")})`;
+    return [callee.name, ...args];
   }
 
   if (t.isArrowFunctionExpression(element)) {
@@ -114,41 +121,4 @@ function parseExpression<T extends t.Expression>(
   }
 
   throw Oops.UnknownArgument(element);
-}
-
-function parseNumeric(number: t.NumericLiteral, negative: boolean) {
-  let {
-    extra: { rawValue, raw },
-  } = number as any;
-
-  if (isParenthesized(number) || !/^0x/.test(raw)) {
-    if (raw.indexOf(".") > 0) return negative ? "-" + raw : raw;
-
-    return negative ? -rawValue : rawValue;
-  }
-
-  if (negative) throw Oops.HexNoNegative(number, rawValue);
-
-  raw = raw.substring(2);
-
-  if (raw.length == 1) raw = "000" + raw;
-  else if (raw.length == 2) raw = "000000" + raw;
-
-  if (raw.length % 4 == 0) {
-    let decimal = [] as any[];
-
-    if (raw.length == 4)
-      // Convert shorthand: 'ABC' => 'AABBCC' => 0xAABBCC
-      decimal = Array.from(raw as string).map((x) => parseInt(x + x, 16));
-    else
-      for (let i = 0; i < 4; i++)
-        decimal.push(parseInt(raw.slice(i * 2, i * 2 + 2), 16));
-
-    //decimal for opacity, also prevents repeating digits (i.e. 1/3)
-    decimal[3] = (decimal[3] / 255).toFixed(3);
-
-    return `rgba(${decimal.join(", ")})`;
-  }
-
-  return "#" + raw;
 }

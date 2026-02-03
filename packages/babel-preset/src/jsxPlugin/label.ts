@@ -1,7 +1,7 @@
 import { NodePath, types as t } from "@babel/core";
 
 import { onExit } from ".";
-import { parseArgument } from "./arguments";
+import { parseArguments } from "./arguments";
 import { Context, hash } from "./context";
 
 export function handleLabel(path: NodePath<t.LabeledStatement>) {
@@ -22,7 +22,7 @@ export function handleLabel(path: NodePath<t.LabeledStatement>) {
     throw modifyError(body, "Missing context", name);
   }
 
-  const args = parseArgument(body);
+  const args = parseArguments(body);
 
   try {
     const queue = [{ name, args }];
