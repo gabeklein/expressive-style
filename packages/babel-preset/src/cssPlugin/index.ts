@@ -5,7 +5,7 @@ import { Context, getUsing } from "../jsxPlugin";
 import { getComponentProp } from "./component";
 import { toSelector, toStylesheet } from "./css";
 import { addClassName, fixTagName, getClassName } from "./jsx";
-import { uniqueIdentifier } from "./uniqueIdentifier";
+import { uniqueIdentifier } from "./uid";
 
 const classNamesHelper = template.ast`
   (...args) => args.filter(Boolean).join(" ");
@@ -63,7 +63,7 @@ export function CSSPlugin(
 
             if (!helper) {
               helper = state.classNameHelper = uniqueIdentifier(
-                path.scope,
+                path,
                 "classNames"
               );
               path.unshiftContainer(
@@ -79,7 +79,7 @@ export function CSSPlugin(
 
           if (cssModule)
             Object.defineProperty(metadata, "cssModuleId", {
-              value: uniqueIdentifier(path.scope, "css"),
+              value: uniqueIdentifier(path, "css"),
             });
 
           Object.defineProperties(state.file.metadata, {

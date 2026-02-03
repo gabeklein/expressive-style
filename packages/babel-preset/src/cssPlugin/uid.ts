@@ -1,7 +1,9 @@
-import { Scope } from "@babel/traverse";
+import { NodePath } from "@babel/core";
 import * as t from "@babel/types";
 
-export function uniqueIdentifier(scope: Scope, name = "temp") {
+export function uniqueIdentifier(path: NodePath, name = "temp") {
+  const { scope } = path;
+  
   let uid = name;
   let i = 0;
 

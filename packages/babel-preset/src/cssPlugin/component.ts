@@ -1,6 +1,6 @@
 import { Node, NodePath, types as t } from "@babel/core";
 
-import { uniqueIdentifier } from "./uniqueIdentifier";
+import { uniqueIdentifier } from "./uid";
 
 export function getComponentProp(path: NodePath, name: string, ignoreExisting = false) {
   const func = path.find((x) => x.isFunction()) as NodePath<t.Function>;
@@ -22,7 +22,7 @@ export function getComponentProp(path: NodePath, name: string, ignoreExisting = 
 
     return id;
   } else if (!props) {
-    props = uniqueIdentifier(path.scope, "props");
+    props = uniqueIdentifier(path, "props");
     func.unshiftContainer("params", props);
   }
 
@@ -40,14 +40,14 @@ export function getComponentProps(path: NodePath) {
   if (!props) {
     func.pushContainer(
       "params",
-      (output = uniqueIdentifier(path.scope, "props"))
+      (output = uniqueIdentifier(path, "props"))
     );
   } else if (t.isObjectPattern(props)) {
     const existing = props.properties.find((x) => t.isRestElement(x));
 
     if (t.isRestElement(existing)) output = existing.argument;
 
-    const inserted = t.restElement(uniqueIdentifier(path.scope, "rest"));
+    const inserted = t.restElement(uniqueIdentifier(path, "rest"));
 
     props.properties.push(inserted);
 
