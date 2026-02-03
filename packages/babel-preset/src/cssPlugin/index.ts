@@ -97,7 +97,7 @@ export function CSSPlugin(
         }
 
         if (forward){
-          const className = getComponentProp(path, "className", true);
+          const className = getComponentProp(path, "className");
 
           if(className)
             addClassName(path, className, getHelper);
@@ -107,7 +107,7 @@ export function CSSPlugin(
   };
 }
 
-function getComponentProp(path: NodePath, name: string, ignoreExisting = false) {
+function getComponentProp(path: NodePath, name: string) {
   const func = path.find((x) => x.isFunction()) as NodePath<t.Function>;
   let [props] = func.node.params;
 
@@ -119,7 +119,7 @@ function getComponentProp(path: NodePath, name: string, ignoreExisting = false) 
     ) as t.ObjectProperty | undefined;
 
     if (prop) 
-      return ignoreExisting ? false : prop.value as t.Identifier;
+      return false;
 
     const id = t.identifier(name);
 
