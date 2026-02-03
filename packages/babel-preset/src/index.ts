@@ -3,6 +3,7 @@ import {
   BabelFileMetadata,
   BabelFileResult,
   PluginPass,
+  TransformOptions,
   types as t,
 } from "@babel/core";
 
@@ -40,9 +41,9 @@ export declare namespace Preset {
 }
 
 export function Preset(
-  _compiler: any,
-  options: Preset.Options = {} as any
-): any {
+  _compiler: unknown,
+  options: Preset.Options = {}
+): TransformOptions {
   const { macros = [] } = options;
 
   if (!macros.some((x) => x === false)) {
