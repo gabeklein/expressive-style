@@ -1,6 +1,5 @@
 import { NodePath, types as t } from "@babel/core";
 
-import { onExit } from ".";
 import { parseArguments } from "./arguments";
 import { Context, hash } from "./context";
 
@@ -219,12 +218,6 @@ function createIfContext(path: NodePath<t.IfStatement>) {
     outer.also.add(inner);
     inner.condition = test;
   }
-
-  onExit(path, (path, key) => {
-    if (key == "alternate" || inner.alternate) return;
-
-    if (!path.removed) path.remove();
-  });
 
   return inner;
 }

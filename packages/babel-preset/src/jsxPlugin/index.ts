@@ -6,9 +6,9 @@ import { getContext, handleLabel } from "./label";
 
 import type { Macro, Options } from "./context";
 
-const HANDLED = new WeakMap<NodePath, ExitCallback>();
 const USING_KEY = Symbol("expressive context");
 const SCOPE = new WeakMap<NodePath, Set<Context>>();
+const IGNORED = new WeakSet<NodePath>();
 
 type State = PluginPass & {
   context: Context;
@@ -39,18 +39,31 @@ function Plugin(_compiler: any, options: Options): PluginObj<State> {
         enter(path) {
           const body = path.get("body");
 
-          if (body.isFor() || body.isWhile() || body.isDoWhileStatement())
+          if (body.isFor() || body.isWhile() || body.isDoWhileStatement()){
+            IGNORED.add(path);
             return;
+          }
 
           handleLabel(path);
-          onExit(path, () => {
-            if (!path.removed) path.remove();
-          });
         },
-        exit,
+        exit(path) {
+          if (!IGNORED.has(path)) path.remove();
+        },
       },
-      BlockStatement: {
-        exit,
+      IfStatement: {
+        exit(path) {
+          const context = Context.get(path);
+          if (!context) return;
+          if (path.key === "alternate" || context.alternate) return;
+          if (!path.removed) path.remove();
+        },
+      },
+      Function: {
+        exit(path) {
+          const context = Context.get(path);
+          if(!context || context.usedBy.size > 0 || context.props.size === 0) return;
+          throw path.buildCodeFrameError("Component defines styles but returns no JSX.");
+        },
       },
     },
   };
@@ -199,23 +212,7 @@ function JSX(path: NodePath<t.JSXElement> | NodePath<t.JSXFragment>) {
   );
 
   inserted.setData(USING_KEY, new Set([context]));
+  context.usedBy.add(inserted);
 }
 
-type ExitCallback = (path: NodePath, key: string | number | null) => void;
-
-function onExit(path: NodePath, callback: ExitCallback) {
-  HANDLED.set(path, callback);
-}
-
-function exit(path: NodePath) {
-  for (const p of path.getAncestry()) {
-    if (p.isBlockStatement()) continue;
-
-    const callback = HANDLED.get(p);
-
-    if (callback) callback(p, p.key);
-    else break;
-  }
-}
-
-export { Context, getUsing, Macro, onExit, Options, Plugin, State };
+export { Context, getUsing, Macro, Options, Plugin, State };
