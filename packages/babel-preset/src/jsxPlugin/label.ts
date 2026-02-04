@@ -65,31 +65,27 @@ export function getContext(path: NodePath): Context {
   let key = path.key;
 
   while ((path = path.parentPath!)) {
-    const context = Context.get(path);
+    let context = Context.get(path);
 
-    if (context) {
-      if (key === "alternate") {
-        let { alternate, parent, path } = context;
-
-        if (!alternate) {
-          alternate = new Context(path, parent, "else");
-          context.children.add(alternate);
-          context.alternate = alternate;
-        }
-
-        return alternate;
-      }
-
-      return context;
+    if (!context) {
+      if (path.isFunction()) context = createFunctionContext(path);
+      else if (path.isIfStatement()) context = createIfContext(path);
     }
 
-    if (path.isFunction()) return createFunctionContext(path);
-    if (path.isIfStatement()) return createIfContext(path);
+    if (context) return key === "alternate" ? getAlternate(context) : context;
 
     key = path.key;
   }
 
   throw new Error("Context not found");
+}
+
+function getAlternate(context: Context): Context {
+  if (!context.alternate) {
+    context.alternate = new Context(context.path, context.parent, "else");
+    context.children.add(context.alternate);
+  }
+  return context.alternate;
 }
 
 function createIfContext(path: NodePath<t.IfStatement>) {

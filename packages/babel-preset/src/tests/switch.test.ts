@@ -72,6 +72,48 @@ it("will apply else", async () => {
   `);
 });
 
+it("else-only applies style when condition is false", async () => {
+  const output = await parser(`
+    const Component = ({ active }) => {
+      background: white;
+
+      if(active) {
+        console.log("active");
+      } else
+        color: blue;
+
+      return <div>Hello</div>
+    }
+  `);
+
+  // color:blue is in the else branch — should only apply when active is false.
+  // If getContext returns the if-context instead of creating an alternate,
+  // color:blue ends up conditional on active being TRUE (inverted).
+  expect(output.css).toMatchInlineSnapshot(`
+    .Component_2hp {
+      background: white;
+    }
+    .else_tla {
+      color: blue;
+    }
+  `);
+  expect(output.code).toMatchInlineSnapshot(`
+    const _concat = (...args) => args.filter(Boolean).join(' ');
+    const Component = ({ className, active }) => {
+      return (
+        <div
+          className={_concat(
+            'Component_2hp',
+            active ? 'active_tla' : 'else_tla',
+            className
+          )}>
+          Hello
+        </div>
+      );
+    };
+  `);
+});
+
 it("will apply to selector", async () => {
   const output = await parser(`
     const Component = ({ active }) => {
