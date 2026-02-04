@@ -98,13 +98,34 @@ export function getContext(path: NodePath): Context {
 }
 
 function createFunctionContext(path: NodePath<t.Function>) {
-  const name = getComponentName(path);
   const context = getContext(path);
+  const name = getComponentName(path);
   const component = new Context(path, context, name);
 
   component.define["this"] = component;
 
   return component;
+}
+
+function createIfContext(path: NodePath<t.IfStatement>) {
+  const test = path.node.test;
+  const name = t.isIdentifier(test)
+    ? test.name
+    : "if_" + hash(path.get("test").getSource());
+
+  const outer = getContext(path);
+  const inner = new Context(path, outer, name);
+
+  if (t.isStringLiteral(test)) {
+    outer.children.add(inner);
+    inner.uid = outer.uid;
+    inner.condition = test.value;
+  } else {
+    outer.also.add(inner);
+    inner.condition = test;
+  }
+
+  return inner;
 }
 
 function getComponentName(path: NodePath): string {
@@ -200,25 +221,4 @@ function getComponentName(path: NodePath): string {
   }
 
   return "element";
-}
-
-function createIfContext(path: NodePath<t.IfStatement>) {
-  const test = path.node.test;
-  const name = t.isIdentifier(test)
-    ? test.name
-    : "if_" + hash(path.get("test").getSource());
-
-  const outer = getContext(path);
-  const inner = new Context(path, outer, name);
-
-  if (t.isStringLiteral(test)) {
-    outer.children.add(inner);
-    inner.uid = outer.uid;
-    inner.condition = test.value;
-  } else {
-    outer.also.add(inner);
-    inner.condition = test;
-  }
-
-  return inner;
 }

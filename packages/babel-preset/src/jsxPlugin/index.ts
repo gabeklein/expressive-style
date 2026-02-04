@@ -47,15 +47,15 @@ function Plugin(_compiler: any, options: Options): PluginObj<State> {
           handleLabel(path);
         },
         exit(path) {
-          if (!IGNORED.has(path)) path.remove();
+          if (IGNORED.has(path)) return;
+          path.remove();
         },
       },
       IfStatement: {
         exit(path) {
           const context = Context.get(path);
-          if (!context) return;
-          if (path.key === "alternate" || context.alternate) return;
-          if (!path.removed) path.remove();
+          if (!context || context.alternate || path.key === "alternate") return;
+          path.remove();
         },
       },
       Function: {
@@ -72,19 +72,17 @@ function Plugin(_compiler: any, options: Options): PluginObj<State> {
 function JSX(path: NodePath<t.JSXElement> | NodePath<t.JSXFragment>) {
   if (USING.has(path)) return;
 
-  let { parentPath: parent } = path;
+  const { parentPath: parent } = path;
 
   if (parent.isExpressionStatement() && parent.parentPath.isBlock())
     throw path.buildCodeFrameError(
       "Using JSX as an implicit return is no longer supported."
     );
 
-  const context =
-    !parent!.isJSXElement() && !parent!.isJSXFragment() && getContext(path);
+  const isChild = parent.isJSXElement() || parent.isJSXFragment();
+  const context = !isChild && getContext(path);
   const scope = new Set(context ? [context] : SCOPE.get(parent!));
   const using = new Set<Context>();
-
-  if (parent!.isParenthesizedExpression()) parent = parent!.parentPath;
 
   const returned = isReturnedByComponent(path);
 
@@ -115,6 +113,8 @@ function JSX(path: NodePath<t.JSXElement> | NodePath<t.JSXFragment>) {
     });
 
     if (returned) names.set("this", path);
+
+    USING.set(path, using);
 
     names.forEach((attr, name) => {
       let used = false;
@@ -150,8 +150,6 @@ function JSX(path: NodePath<t.JSXElement> | NodePath<t.JSXFragment>) {
     });
   }
 
-  USING.set(path, using);
-
   if (
     returned === false ||
     context === false ||
@@ -165,7 +163,7 @@ function JSX(path: NodePath<t.JSXElement> | NodePath<t.JSXFragment>) {
     t.jsxElement(
       t.jsxOpeningElement(t.jSXIdentifier("div"), []),
       t.jsxClosingElement(t.jSXIdentifier("div")),
-      path.isJSXFragment() ? path.node.children : [path.node]
+      path.node.children
     )
   );
 
