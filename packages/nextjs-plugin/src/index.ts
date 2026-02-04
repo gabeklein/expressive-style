@@ -18,9 +18,7 @@ export interface ExpressiveNextPluginOptions extends Options {
  * });
  * ```
  */
-function withExpressive(
-  expressiveOptions: ExpressiveNextPluginOptions = {}
-) {
+function withExpressive(expressiveOptions: ExpressiveNextPluginOptions = {}) {
   return (nextConfig: NextConfig = {}): NextConfig => {
     // Check for Turbopack usage
     const experimental = nextConfig.experimental || {};
@@ -32,11 +30,11 @@ function withExpressive(
     if (usingTurbopack) {
       console.warn(
         "\n⚠️  Expressive JSX does not yet support Turbopack.\n" +
-        "   Turbopack is experimental and its plugin API is still unstable.\n" +
-        "   Please disable Turbopack to use Expressive JSX:\n" +
-        "   - Remove 'experimental.turbo' from next.config.js\n" +
-        "   - Or use: next dev (without --turbo flag)\n" +
-        "   GitHub issue: https://github.com/gabeklein/expressive-dsl/issues/XXX\n"
+          "   Turbopack is experimental and its plugin API is still unstable.\n" +
+          "   Please disable Turbopack to use Expressive JSX:\n" +
+          "   - Remove 'experimental.turbo' from next.config.js\n" +
+          "   - Or use: next dev (without --turbo flag)\n" +
+          "   GitHub issue: https://github.com/gabeklein/expressive-dsl/issues/XXX\n"
       );
 
       // Return config unmodified to avoid breaking Next.js build
@@ -48,9 +46,7 @@ function withExpressive(
 
       webpack: (config, options) => {
         // Add Expressive JSX webpack plugin
-        config.plugins.push(
-          new ExpressiveJSXPlugin(expressiveOptions)
-        );
+        config.plugins.push(new ExpressiveJSXPlugin(expressiveOptions));
 
         // Call user's webpack config if provided
         if (typeof nextConfig.webpack === "function") {

@@ -6,7 +6,9 @@ interface BackgroundPassthroughOutput {
   background: unknown[];
 }
 
-export function background(a?: unknown[]): BackgroundColorOutput | BackgroundPassthroughOutput {
+export function background(
+  a?: unknown[]
+): BackgroundColorOutput | BackgroundPassthroughOutput {
   if (Array.isArray(a)) {
     const [head, ...tail] = a;
 
@@ -37,7 +39,12 @@ export function background(a?: unknown[]): BackgroundColorOutput | BackgroundPas
 
 export { background as bg };
 
-export function rgba(r: number, g: number, b: number, a: number = 1): { value: string } {
+export function rgba(
+  r: number,
+  g: number,
+  b: number,
+  a: number = 1
+): { value: string } {
   for (const x of [r, g, b])
     if (typeof x != "number")
       throw new Error("malformed arguments in rgb statement");
@@ -49,7 +56,12 @@ export function rgba(r: number, g: number, b: number, a: number = 1): { value: s
   };
 }
 
-export function hsla(h: number, s: number, l: number, a: number = 1): { value: string } {
+export function hsla(
+  h: number,
+  s: number,
+  l: number,
+  a: number = 1
+): { value: string } {
   for (const x of [h, s, l])
     if (typeof x != "number")
       throw new Error("malformed arguments in hsl statement");

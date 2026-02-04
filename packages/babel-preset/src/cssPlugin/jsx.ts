@@ -114,8 +114,7 @@ export function getComponentProp(path: NodePath, name: string) {
       (x) => t.isObjectProperty(x) && t.isIdentifier(x.key, { name })
     ) as t.ObjectProperty | undefined;
 
-    if (prop) 
-      return;
+    if (prop) return;
 
     const id = t.identifier(name);
 
@@ -135,7 +134,7 @@ export function getComponentProp(path: NodePath, name: string) {
 
 export function uniqueIdentifier(path: NodePath, name = "temp") {
   const { scope } = path;
-  
+
   let uid = name;
   let i = 0;
 

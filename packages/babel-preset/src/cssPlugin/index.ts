@@ -3,7 +3,12 @@ import { NodePath, PluginObj, types as t } from "@babel/core";
 import { Preset, State } from "..";
 import { Context, getUsing } from "../jsxPlugin";
 import { toSelector, toStylesheet } from "./css";
-import { addClassName, getClassName, getComponentProp, uniqueIdentifier } from "./jsx";
+import {
+  addClassName,
+  getClassName,
+  getComponentProp,
+  uniqueIdentifier,
+} from "./jsx";
 
 export function CSSPlugin(
   _compiler: any,
@@ -72,13 +77,12 @@ export function CSSPlugin(
           styles.set(key, context);
         }
 
-        if (forward){
+        if (forward) {
           const className = getComponentProp(forward, "className");
 
-          if(className)
-            addClassName(path, className, state);
+          if (className) addClassName(path, className, state);
         }
-      }
+      },
     },
   };
 }

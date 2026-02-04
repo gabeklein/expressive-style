@@ -76,7 +76,10 @@ export function gridColumn(...args: unknown[]): { gridColumn: string } {
  * // gridRows: "min", "1.0", "max";
  * // → display: grid; grid-template-rows: min-content 1.0fr max-content;
  */
-export function gridRows(...args: unknown[]): { display: string; gridTemplateRows: string } {
+export function gridRows(...args: unknown[]): {
+  display: string;
+  gridTemplateRows: string;
+} {
   return {
     display: "grid",
     gridTemplateRows: recombineTemplate(args),
@@ -93,7 +96,10 @@ export function gridRows(...args: unknown[]): { display: string; gridTemplateRow
  * // gridColumns: 100, "1.0", 100;
  * // → display: grid; grid-template-columns: 100px 1.0fr 100px;
  */
-export function gridColumns(...args: unknown[]): { display: string; gridTemplateColumns: string } {
+export function gridColumns(...args: unknown[]): {
+  display: string;
+  gridTemplateColumns: string;
+} {
   return {
     display: "grid",
     gridTemplateColumns: recombineTemplate(args),

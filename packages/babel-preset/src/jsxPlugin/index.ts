@@ -39,7 +39,8 @@ function Plugin(_compiler: any, options: Options): PluginObj<State> {
         enter(path) {
           const body = path.get("body");
 
-          if (body.isFor() || body.isWhile() || body.isDoWhileStatement()) return;
+          if (body.isFor() || body.isWhile() || body.isDoWhileStatement())
+            return;
 
           handleLabel(path);
           onExit(path, () => {
@@ -65,7 +66,7 @@ function getUsing(path: NodePath) {
  * The function must have a name with a capital letter to be considered a component.
  */
 function isReturnedByComponent(
-  path: NodePath<t.JSXElement> | NodePath<t.JSXFragment>,
+  path: NodePath<t.JSXElement> | NodePath<t.JSXFragment>
 ) {
   let parent = path.parentPath;
 
@@ -109,7 +110,7 @@ function JSX(path: NodePath<t.JSXElement> | NodePath<t.JSXFragment>) {
 
   if (parent.isExpressionStatement() && parent.parentPath.isBlock())
     throw path.buildCodeFrameError(
-      "Using JSX as an implicit return is no longer supported.",
+      "Using JSX as an implicit return is no longer supported."
     );
 
   const context =
@@ -196,8 +197,8 @@ function JSX(path: NodePath<t.JSXElement> | NodePath<t.JSXFragment>) {
     t.jsxElement(
       t.jsxOpeningElement(t.jSXIdentifier("div"), []),
       t.jsxClosingElement(t.jSXIdentifier("div")),
-      path.isJSXFragment() ? path.node.children : [path.node],
-    ),
+      path.isJSXFragment() ? path.node.children : [path.node]
+    )
   );
 
   inserted.setData(USING_KEY, new Set([context]));

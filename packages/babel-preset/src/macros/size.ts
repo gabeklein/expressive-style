@@ -6,7 +6,11 @@ function withPrefix(prefix?: string) {
   const widthKey = prefix ? `${prefix}Width` : "width";
   const heightKey = prefix ? `${prefix}Height` : "height";
 
-  return function size(x: number | string, y?: number | string, unit?: string): SizeOutput {
+  return function size(
+    x: number | string,
+    y?: number | string,
+    unit?: string
+  ): SizeOutput {
     if (typeof y == "string" && typeof x == "number") {
       unit = y;
       y = undefined;

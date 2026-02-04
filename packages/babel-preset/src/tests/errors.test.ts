@@ -9,8 +9,10 @@ it("should throw error for unary operator that doesn't do anything", async () =>
       return <div />;
     }
   `);
-  
-  await expect(parse).rejects.toThrow("Unary operator here doesn't do anything");
+
+  await expect(parse).rejects.toThrow(
+    "Unary operator here doesn't do anything"
+  );
 });
 
 it("should throw error for arrow functions in modifiers", async () => {
@@ -20,8 +22,8 @@ it("should throw error for arrow functions in modifiers", async () => {
 
       return <div />;
     }
-  `)
-  
+  `);
+
   await expect(parse).rejects.toThrow("Arrow Function not supported yet");
 });
 
@@ -32,9 +34,11 @@ it("should throw error for spread elements in call expressions", async () => {
 
       return <div />;
     }
-  `)
-  
-  await expect(parse).rejects.toThrow("Cannot parse argument spreads for modifier handlers");
+  `);
+
+  await expect(parse).rejects.toThrow(
+    "Cannot parse argument spreads for modifier handlers"
+  );
 });
 
 it("should throw error for non-identifier callee in call expressions", async () => {
@@ -44,8 +48,8 @@ it("should throw error for non-identifier callee in call expressions", async () 
 
       return <div />;
     }
-  `)
-  
+  `);
+
   await expect(parse).rejects.toThrow("Only Identifers allowed here");
 });
 
@@ -56,9 +60,11 @@ it("should throw error for unknown argument types", async () => {
 
       return <div />;
     }
-  `)
-  
-  await expect(parse).rejects.toThrow("Unknown argument while parsing for modifier");
+  `);
+
+  await expect(parse).rejects.toThrow(
+    "Unknown argument while parsing for modifier"
+  );
 });
 
 // TODO: improve error message
@@ -69,11 +75,10 @@ it("should handle macro errors with proper context", async () => {
 
       return <div />;
     }
-  `)
-  
+  `);
+
   await expect(parse).rejects.toThrow();
 });
-
 
 it("should provide code frame with error location", async () => {
   try {

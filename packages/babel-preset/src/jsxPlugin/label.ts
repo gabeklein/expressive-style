@@ -114,9 +114,9 @@ function createFunctionContext(path: NodePath<t.Function>) {
             t.jsxOpeningElement(t.jsxIdentifier("this"), [], true),
             null,
             [],
-            true,
-          ),
-        ),
+            true
+          )
+        )
       );
   });
 
@@ -174,7 +174,7 @@ function getComponentName(path: NodePath): string {
 
       const ancestry = path.getAncestry();
       const within = ancestry.find((x) =>
-        x.isFunction(),
+        x.isFunction()
       ) as NodePath<t.Function>;
 
       const { node } = within;
@@ -208,8 +208,8 @@ function getComponentName(path: NodePath): string {
       return t.isIdentifier(key)
         ? key.name
         : t.isStringLiteral(key)
-          ? key.value
-          : "property";
+        ? key.value
+        : "property";
     }
 
     break;
@@ -250,7 +250,7 @@ function modifyError(path: NodePath, err: unknown, modifierName: string) {
     // Build error with Babel integration for source location
     const error = path.hub.buildError(
       path.node,
-      `Modifier "${modifierName}" failed: ${err.message}`,
+      `Modifier "${modifierName}" failed: ${err.message}`
     );
 
     // Trim stack frames after the parse call to hide internal steps
@@ -263,6 +263,6 @@ function modifyError(path: NodePath, err: unknown, modifierName: string) {
 
   return path.hub.buildError(
     path.node,
-    `Modifier "${modifierName}" failed: ${err}`,
+    `Modifier "${modifierName}" failed: ${err}`
   );
 }

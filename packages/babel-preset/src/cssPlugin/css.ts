@@ -9,7 +9,7 @@ export function toStylesheet(styles: Map<string, Context>) {
 }
 
 function toBlock(define: Context) {
-  if(define.props.size === 0) return "";
+  if (define.props.size === 0) return "";
 
   const styles = [] as string[];
 
@@ -19,8 +19,7 @@ function toBlock(define: Context) {
       .replace(/([A-Z]+)/g, "-$1")
       .toLowerCase();
 
-    if (Array.isArray(value))
-      value = value.map(toValue);
+    if (Array.isArray(value)) value = value.map(toValue);
 
     styles.push(`  ${property}: ${value.join(" ")};`);
   }
@@ -31,19 +30,18 @@ function toBlock(define: Context) {
   return `${select} {\n${style}\n}`;
 }
 
-function toValue(value: unknown){
-  if(typeof value == "string"){
+function toValue(value: unknown) {
+  if (typeof value == "string") {
     if (value.startsWith("$"))
       return `var(--${value
         .slice(1)
         .replace(/([A-Z]+)/g, "-$1")
         .toLowerCase()})`;
 
-    if(value.startsWith("0x"))
-      return toColor(value);
+    if (value.startsWith("0x")) return toColor(value);
   }
 
-  if(Array.isArray(value)){
+  if (Array.isArray(value)) {
     const [name, ...args] = value;
     return name + `(${args.join(", ")})`;
   }

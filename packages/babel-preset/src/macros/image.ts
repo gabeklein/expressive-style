@@ -21,7 +21,9 @@ function requireExpression(value: string) {
   };
 }
 
-export function backgroundImage(from: string | Record<string, unknown>): { backgroundImage: unknown } {
+export function backgroundImage(from: string | Record<string, unknown>): {
+  backgroundImage: unknown;
+} {
   if (typeof from === "string" && /^\.\.?\//.test(from))
     return {
       backgroundImage: {
@@ -79,7 +81,10 @@ interface IconOutput {
  * // icon: "icons/star.svg", 0x3366cc;
  * // → -webkit-mask-image: url("icons/star.svg"); background-color: #3366cc;
  */
-export function icon(mask?: string, color?: string | number): IconOutput | undefined {
+export function icon(
+  mask?: string,
+  color?: string | number
+): IconOutput | undefined {
   if (!mask) return;
 
   if (!mask.includes(".svg")) mask = mask.concat(".svg");

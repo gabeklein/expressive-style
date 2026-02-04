@@ -31,7 +31,11 @@
  * // outline: "blue", 3, "dotted";
  * // → outline: blue 3px dotted;
  */
-export function outline(a?: string, b?: string | number, ...rest: (string | number)[]): { outline: string } {
+export function outline(
+  a?: string,
+  b?: string | number,
+  ...rest: (string | number)[]
+): { outline: string } {
   if (a == "none")
     return {
       outline: "none",

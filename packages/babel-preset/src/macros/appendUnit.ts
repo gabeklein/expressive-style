@@ -4,7 +4,7 @@ export function appendUnit(val: number | string, unit?: string) {
   if (val === undefined) return "";
 
   if (typeof val == "number")
-    return val + (unit || Number.isInteger(val) ? "px" : "em")
+    return val + (unit || Number.isInteger(val) ? "px" : "em");
 
   return val;
 }

@@ -88,7 +88,13 @@ const INVERSE: Record<string, string> = {
   bottom: "top",
 };
 
-function position(kind: string, a?: number | string, b: number | string = 0, c: number | string = b, d?: number | string): PositionOutput {
+function position(
+  kind: string,
+  a?: number | string,
+  b: number | string = 0,
+  c: number | string = b,
+  d?: number | string
+): PositionOutput {
   const out: PositionOutput = {
     position: kind,
     top: b,
@@ -104,7 +110,9 @@ function position(kind: string, a?: number | string, b: number | string = 0, c: 
 
     if (k2) {
       if (k1 == "fill") delete out[INVERSE[k2] as keyof PositionOutput];
-      else for (const dir of [k1, k2]) delete out[INVERSE[dir] as keyof PositionOutput];
+      else
+        for (const dir of [k1, k2])
+          delete out[INVERSE[dir] as keyof PositionOutput];
 
       return out;
     }
@@ -116,7 +124,9 @@ function position(kind: string, a?: number | string, b: number | string = 0, c: 
   let bottom: number | string | undefined;
 
   // argument count excludes `kind`
-  const argc = [a, b, c, d].filter((v) => v !== undefined).length + (a === undefined ? 0 : 0);
+  const argc =
+    [a, b, c, d].filter((v) => v !== undefined).length +
+    (a === undefined ? 0 : 0);
 
   switch (arguments.length - 1) {
     case 0:

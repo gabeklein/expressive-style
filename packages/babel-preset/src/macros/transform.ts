@@ -47,7 +47,9 @@ function withUnit(value: number | string, unit: string | null): string {
  * `transform: rotate3d(1, 0, 0, 45);`
  * // → transform: rotate3d(1, 0, 0, 45deg);
  */
-export function transform(...args: (string | TransformTuple)[]): { transform: string } {
+export function transform(...args: (string | TransformTuple)[]): {
+  transform: string;
+} {
   const parts = args.map((arg) => {
     if (!Array.isArray(arg)) return arg;
 
@@ -57,7 +59,7 @@ export function transform(...args: (string | TransformTuple)[]): { transform: st
     const mapped =
       name === "rotate3d"
         ? params.map((p, i) =>
-            withUnit(p, i === params.length - 1 ? "deg" : null),
+            withUnit(p, i === params.length - 1 ? "deg" : null)
           )
         : params.map((p) => withUnit(p, unitFor(name)));
 

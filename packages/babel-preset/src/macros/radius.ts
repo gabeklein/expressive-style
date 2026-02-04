@@ -47,7 +47,11 @@ const CORNER_MATRIX: Record<string, number[]> = {
  * // radius: "top", 16, 4;
  * // → border-radius: 16px 16px 4px 4px;
  */
-export function radius(dir: string | number, r1?: number, r2?: number): { borderRadius: string } {
+export function radius(
+  dir: string | number,
+  r1?: number,
+  r2?: number
+): { borderRadius: string } {
   let value: string | number = "";
 
   if (dir == "round") value = 999;

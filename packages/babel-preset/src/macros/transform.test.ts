@@ -8,8 +8,8 @@ it("applies px to translate and perspective functions", () => {
       ["translateX", 10],
       ["translateY", 20],
       ["translateZ", 5],
-      ["perspective", 500],
-    ),
+      ["perspective", 500]
+    )
   ).toEqual({
     transform:
       "translateX(10px) translateY(20px) translateZ(5px) perspective(500px)",
@@ -18,7 +18,7 @@ it("applies px to translate and perspective functions", () => {
   expect(transform(["translate", 10, 20], ["translate3d", 10, 20, 30])).toEqual(
     {
       transform: "translate(10px, 20px) translate3d(10px, 20px, 30px)",
-    },
+    }
   );
 });
 
@@ -28,8 +28,8 @@ it("applies deg to rotate and skew functions", () => {
       ["rotate", 45],
       ["rotateX", 90],
       ["rotateY", 180],
-      ["rotateZ", 30],
-    ),
+      ["rotateZ", 30]
+    )
   ).toEqual({
     transform: "rotate(45deg) rotateX(90deg) rotateY(180deg) rotateZ(30deg)",
   });
@@ -45,8 +45,8 @@ it("leaves scale functions unitless", () => {
       ["scale", 2],
       ["scaleX", 1.5],
       ["scaleY", 0.8],
-      ["scale3d", 2, 3, 1],
-    ),
+      ["scale3d", 2, 3, 1]
+    )
   ).toEqual({
     transform: "scale(2) scaleX(1.5) scaleY(0.8) scale3d(2, 3, 1)",
   });
@@ -60,7 +60,7 @@ it("applies deg only to the angle in rotate3d", () => {
 
 it("handles zero, negatives, and string passthrough", () => {
   expect(
-    transform(["translateX", 0], ["translateX", -20], ["rotate", -45]),
+    transform(["translateX", 0], ["translateX", -20], ["rotate", -45])
   ).toEqual({
     transform: "translateX(0) translateX(-20px) rotate(-45deg)",
   });

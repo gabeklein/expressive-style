@@ -37,7 +37,7 @@ export function easingGradient(
   from: string,
   timing: string,
   to: string,
-  stops: number = 13,
+  stops: number = 13
 ): { backgroundImage: string } {
   direction = direction.replace(/([A-Z])/g, " $1").toLowerCase();
   timing = timing.replace(/([A-Z]+)/g, "-$1").toLowerCase();

@@ -12,7 +12,11 @@ function _border(dir?: string) {
   let key: string = "border";
   if (dir) key += dir[0].toUpperCase() + dir.slice(1);
 
-  return (color?: string | number, width?: string | number, style?: string): BorderOutput => {
+  return (
+    color?: string | number,
+    width?: string | number,
+    style?: string
+  ): BorderOutput => {
     if (color == "none" || color == "transparent")
       return {
         [key]: color,

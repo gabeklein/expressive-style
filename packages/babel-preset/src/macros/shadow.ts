@@ -24,7 +24,12 @@
  * // shadow: none;
  * // → box-shadow: none;
  */
-export function shadow(color: string | number, radius: number = 10, x: number = 2, y: number = x): { boxShadow: string } {
+export function shadow(
+  color: string | number,
+  radius: number = 10,
+  x: number = 2,
+  y: number = x
+): { boxShadow: string } {
   const boxShadow =
     color == "initial" || color == "none"
       ? String(color)

@@ -1,14 +1,21 @@
-import { get } from '@expressive/react';
-import { command, Editor, editor, jsx, cssInJsx, readOnly } from '@website/editor';
+import { get } from "@expressive/react";
+import {
+  command,
+  Editor,
+  editor,
+  jsx,
+  cssInJsx,
+  readOnly,
+} from "@website/editor";
 
-import { Document } from './Document';
-import { Main } from './Main';
+import { Document } from "./Document";
+import { Main } from "./Main";
 
 export class InputEditor extends Editor {
   doc = get(Document);
   main = get(Main);
 
-  extends(){
+  extends() {
     return [
       jsx,
       editor,
@@ -19,19 +26,16 @@ export class InputEditor extends Editor {
         "-": () => {
           this.main.fontSize--;
         },
-        "s": () => {
+        s: () => {
           this.doc.build(this.text);
-        }
-      })
+        },
+      }),
     ];
   }
 }
 
 export class OutputJSX extends Editor {
-  extends(){
-    return [
-      cssInJsx,
-      readOnly
-    ];
+  extends() {
+    return [cssInJsx, readOnly];
   }
 }

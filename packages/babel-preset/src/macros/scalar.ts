@@ -5,7 +5,10 @@ interface NamedValue {
   inner: [number | string];
 }
 
-export function nToNUnits(value: number | string | NamedValue, unit?: string): string[] {
+export function nToNUnits(
+  value: number | string | NamedValue,
+  unit?: string
+): string[] {
   if (value == "fill") value = "100%";
 
   if (typeof value === "object" && (value as NamedValue).named) {

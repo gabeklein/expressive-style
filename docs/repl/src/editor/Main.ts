@@ -1,7 +1,7 @@
-import Model, { has, use } from '@expressive/react';
-import { Editor } from '@website/editor';
+import Model, { has, use } from "@expressive/react";
+import { Editor } from "@website/editor";
 
-import { Document } from './Document';
+import { Document } from "./Document";
 
 declare global {
   interface Window {
@@ -16,15 +16,19 @@ declare namespace Main {
 class Main extends Model {
   document = use(Document);
 
-  editors = has(Editor, editor => {
+  editors = has(Editor, (editor) => {
     const doc = this.document;
 
     switch (editor.constructor.name) {
       case "InputEditor":
-        doc.get(x => { editor.text = x.input })
+        doc.get((x) => {
+          editor.text = x.input;
+        });
         break;
       case "OutputJSX":
-        doc.get(x => { editor.text = x.output })
+        doc.get((x) => {
+          editor.text = x.output;
+        });
         break;
     }
   });
@@ -33,8 +37,8 @@ class Main extends Model {
   layout: Main.Layout = "compact";
   options = {
     output: "jsx",
-    printStyle: "pretty"
-  }
+    printStyle: "pretty",
+  };
 }
 
-export { Main }
+export { Main };

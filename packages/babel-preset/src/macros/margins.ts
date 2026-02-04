@@ -28,10 +28,13 @@ export function margin(...args: (number | string)[]): { margin: string } {
   const a1 = args[0];
   let value: string;
 
-  if ((args.length == 1 && a1 == "auto") || a1 == "none" || (typeof a1 === "string" && / /.test(a1)))
+  if (
+    (args.length == 1 && a1 == "auto") ||
+    a1 == "none" ||
+    (typeof a1 === "string" && / /.test(a1))
+  )
     value = String(a1);
-  else
-    value = args.map((x) => appendUnit(x)).join(" ");
+  else value = args.map((x) => appendUnit(x)).join(" ");
 
   return { margin: value };
 }
@@ -64,10 +67,13 @@ export function padding(...args: (number | string)[]): { padding: string } {
   const a1 = args[0];
   let value: string;
 
-  if ((args.length == 1 && a1 == "auto") || a1 == "none" || (typeof a1 === "string" && / /.test(a1)))
+  if (
+    (args.length == 1 && a1 == "auto") ||
+    a1 == "none" ||
+    (typeof a1 === "string" && / /.test(a1))
+  )
     value = String(a1);
-  else
-    value = args.map((x) => appendUnit(x)).join(" ");
+  else value = args.map((x) => appendUnit(x)).join(" ");
 
   return { padding: value };
 }
@@ -79,7 +85,10 @@ export function padding(...args: (number | string)[]): { padding: string } {
  * // marginTop: 10;
  * // → margin-top: 10px;
  */
-export function marginTop(a: number | string, unit?: string): { marginTop: string } {
+export function marginTop(
+  a: number | string,
+  unit?: string
+): { marginTop: string } {
   return { marginTop: appendUnit(a, unit) };
 }
 
@@ -90,7 +99,10 @@ export function marginTop(a: number | string, unit?: string): { marginTop: strin
  * // marginLeft: 15;
  * // → margin-left: 15px;
  */
-export function marginLeft(a: number | string, unit?: string): { marginLeft: string } {
+export function marginLeft(
+  a: number | string,
+  unit?: string
+): { marginLeft: string } {
   return { marginLeft: appendUnit(a, unit) };
 }
 
@@ -101,7 +113,10 @@ export function marginLeft(a: number | string, unit?: string): { marginLeft: str
  * // marginRight: 15;
  * // → margin-right: 15px;
  */
-export function marginRight(a: number | string, unit?: string): { marginRight: string } {
+export function marginRight(
+  a: number | string,
+  unit?: string
+): { marginRight: string } {
   return { marginRight: appendUnit(a, unit) };
 }
 
@@ -112,7 +127,10 @@ export function marginRight(a: number | string, unit?: string): { marginRight: s
  * // marginBottom: 10;
  * // → margin-bottom: 10px;
  */
-export function marginBottom(a: number | string, unit?: string): { marginBottom: string } {
+export function marginBottom(
+  a: number | string,
+  unit?: string
+): { marginBottom: string } {
   return { marginBottom: appendUnit(a, unit) };
 }
 
@@ -137,7 +155,10 @@ export { marginBottom as marginB };
  * // paddingH: 10, 30;
  * // → padding-left: 10px; padding-right: 30px;
  */
-export function paddingHorizontal(a: number | string, b?: number | string): { paddingLeft: number | string; paddingRight: number | string } {
+export function paddingHorizontal(
+  a: number | string,
+  b?: number | string
+): { paddingLeft: number | string; paddingRight: number | string } {
   return {
     paddingLeft: a,
     paddingRight: b || a,
@@ -160,7 +181,10 @@ export function paddingHorizontal(a: number | string, b?: number | string): { pa
  * // paddingV: 10, 30;
  * // → padding-top: 10px; padding-bottom: 30px;
  */
-export function paddingVertical(a: number | string, b?: number | string): { paddingTop: number | string; paddingBottom: number | string } {
+export function paddingVertical(
+  a: number | string,
+  b?: number | string
+): { paddingTop: number | string; paddingBottom: number | string } {
   return {
     paddingTop: a,
     paddingBottom: b || a,
@@ -183,7 +207,10 @@ export function paddingVertical(a: number | string, b?: number | string): { padd
  * // marginH: 10, 30;
  * // → margin-left: 10px; margin-right: 30px;
  */
-export function marginHorizontal(a: number | string, b?: number | string): { marginLeft: number | string; marginRight: number | string } {
+export function marginHorizontal(
+  a: number | string,
+  b?: number | string
+): { marginLeft: number | string; marginRight: number | string } {
   return {
     marginLeft: a,
     marginRight: b || a,
@@ -206,7 +233,10 @@ export function marginHorizontal(a: number | string, b?: number | string): { mar
  * // marginV: 10, 30;
  * // → margin-top: 10px; margin-bottom: 30px;
  */
-export function marginVertical(a: number | string, b?: number | string): { marginTop: number | string; marginBottom: number | string } {
+export function marginVertical(
+  a: number | string,
+  b?: number | string
+): { marginTop: number | string; marginBottom: number | string } {
   return {
     marginTop: a,
     marginBottom: b || a,

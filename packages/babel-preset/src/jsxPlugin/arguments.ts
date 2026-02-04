@@ -29,7 +29,7 @@ type Argument =
   | null;
 
 export function parseArguments(
-  element: NodePath<t.ExpressionStatement>,
+  element: NodePath<t.ExpressionStatement>
 ): Argument[] {
   const { node } = element.get("expression");
   const expressions = t.isSequenceExpression(node) ? node.expressions : [node];
