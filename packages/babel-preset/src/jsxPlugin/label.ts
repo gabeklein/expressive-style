@@ -18,10 +18,6 @@ export function handleLabel(path: NodePath<t.LabeledStatement>) {
     throw macroError(body, "Not an expression", name);
   }
 
-  if (!context) {
-    throw macroError(body, "Missing context", name);
-  }
-
   const args = parseArguments(body);
 
   try {
@@ -71,7 +67,7 @@ export function getContext(path: NodePath): Context {
   while ((path = path.parentPath!)) {
     const context = Context.get(path);
 
-    if (context instanceof Context) {
+    if (context) {
       if (key === "alternate") {
         let { alternate, parent, path } = context;
 
@@ -88,7 +84,6 @@ export function getContext(path: NodePath): Context {
     }
 
     if (path.isFunction()) return createFunctionContext(path);
-
     if (path.isIfStatement()) return createIfContext(path);
 
     key = path.key;
@@ -177,9 +172,8 @@ function getComponentName(path: NodePath): string {
 
       encounteredReturn = path;
 
-      const ancestry = path.getAncestry();
-      const within = ancestry.find((x) =>
-        x.isFunction()
+      const within = path.findParent((x) =>
+        x.isFunction(),
       ) as NodePath<t.Function>;
 
       const { node } = within;
