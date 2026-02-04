@@ -69,10 +69,6 @@ function Plugin(_compiler: any, options: Options): PluginObj<State> {
   };
 }
 
-function getUsing(path: NodePath) {
-  return new Set(USING.get(path));
-}
-
 function JSX(path: NodePath<t.JSXElement> | NodePath<t.JSXFragment>) {
   if (USING.has(path)) return;
 
@@ -215,6 +211,10 @@ function isReturnedByComponent(
   }
 
   return false;
+}
+
+function getUsing(path: NodePath) {
+  return new Set(USING.get(path));
 }
 
 export { Context, getUsing, Macro, Options, Plugin, State };
