@@ -93,10 +93,7 @@ function isReturnedByComponent(
 
     if (varParent.isVariableDeclarator()) {
       const { id } = varParent.node;
-      if (t.isIdentifier(id) && /^[A-Z]/.test(id.name)) {
-        const binding = path.scope.getBinding(id.name);
-        return binding ? binding.constantViolations.length === 0 : false;
-      }
+      if (t.isIdentifier(id) && /^[A-Z]/.test(id.name)) return true;
     }
   }
 

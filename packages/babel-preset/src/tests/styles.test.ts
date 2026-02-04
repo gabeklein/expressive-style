@@ -299,6 +299,9 @@ it("will prioritize capitalized styles", async () => {
   `);
 
   expect(output.css).toMatchInlineSnapshot(`
+    .Something_15e {
+      color: purple;
+    }
     .something_jsf {
       color: red;
     }
