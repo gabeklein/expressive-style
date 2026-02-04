@@ -101,24 +101,8 @@ function createFunctionContext(path: NodePath<t.Function>) {
   const name = getComponentName(path);
   const context = getContext(path);
   const component = new Context(path, context, name);
-  const body = path.get("body");
 
   component.define["this"] = component;
-
-  onExit(path, () => {
-    if (body.isBlockStatement() && !body.get("body").length)
-      body.pushContainer(
-        "body",
-        t.expressionStatement(
-          t.jsxElement(
-            t.jsxOpeningElement(t.jsxIdentifier("this"), [], true),
-            null,
-            [],
-            true
-          )
-        )
-      );
-  });
 
   return component;
 }
