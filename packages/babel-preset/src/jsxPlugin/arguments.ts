@@ -55,8 +55,8 @@ function parseExpression<T extends t.Expression>(element: T): any {
   if (t.isNullLiteral(element)) return null;
 
   if (t.isTemplateLiteral(element)) {
-    if (element.quasis.length == 1) return element.quasis[0].value.raw;
-    return element;
+    if (element.quasis.length != 1) return element;
+    return element.quasis[0].value.raw;
   }
 
   if (t.isNumericLiteral(element)) {
