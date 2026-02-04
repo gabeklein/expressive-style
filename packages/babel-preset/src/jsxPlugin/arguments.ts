@@ -68,7 +68,7 @@ function parseExpression<T extends t.Expression>(element: T): any {
     if (operator == "-" && t.isNumericLiteral(argument)) {
       const value = parseExpression(argument);
 
-      if (typeof value === "number") return -value;
+      if (typeof value === "number") return -1 * value;
 
       if (typeof value === "string") return "-" + value;
     }
