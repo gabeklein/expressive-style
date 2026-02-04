@@ -18,7 +18,7 @@ export const jsxMustReturn: Rule.RuleModule = {
     return {
       ExpressionStatement(node) {
         const expression = node.expression as any;
-        let parent = node.parent;
+        let parent = node.parent as Rule.Node | null;
 
         // Only check inside functions
         while (parent) {
