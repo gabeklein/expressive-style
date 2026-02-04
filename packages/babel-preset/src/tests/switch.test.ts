@@ -87,7 +87,7 @@ it("will mix style and real-statement switch", async () => {
   `);
 
   expect(output.css).toMatchInlineSnapshot(`
-    .Component_2hp {
+    .Component_14m {
       background: white;
     }
     .else_tla {
@@ -103,7 +103,7 @@ it("will mix style and real-statement switch", async () => {
       return (
         <div
           className={_concat(
-            'Component_2hp',
+            'Component_14m',
             !active && 'else_tla',
             className
           )}>
