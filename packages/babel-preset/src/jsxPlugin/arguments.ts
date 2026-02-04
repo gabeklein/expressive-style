@@ -20,7 +20,7 @@ function isParenthesized(node: t.Expression) {
   return extra ? extra.parenthesized === true : false;
 }
 
-type Argument = 
+type Argument =
   | [string, ...Argument[]]
   | t.Expression
   | string
@@ -29,20 +29,16 @@ type Argument =
   | null;
 
 export function parseArguments(
-  element: NodePath<t.ExpressionStatement>
+  element: NodePath<t.ExpressionStatement>,
 ): Argument[] {
   const { node } = element.get("expression");
-  const expressions = t.isSequenceExpression(node)
-    ? node.expressions
-    : [node];
+  const expressions = t.isSequenceExpression(node) ? node.expressions : [node];
 
   return expressions.map((x) => parseExpression(x));
 }
 
 function parseExpression<T extends t.Expression>(element: T): any {
-  if (t.isIdentifier(element)) {
-    return element.name.replace(/([A-Z]+)/g, "-$1").toLowerCase();
-  }
+  if (t.isIdentifier(element)) return element.name;
 
   if (t.isStringLiteral(element)) {
     return element.value === "" ? '""' : element.value;
@@ -67,17 +63,14 @@ function parseExpression<T extends t.Expression>(element: T): any {
   if (t.isUnaryExpression(element)) {
     const { argument, operator } = element;
 
-    if (operator == "!" && t.isIdentifier(argument))
-      return "!" + argument.name;
+    if (operator == "!" && t.isIdentifier(argument)) return "!" + argument.name;
 
-    if (operator == "-" && t.isNumericLiteral(argument)){
+    if (operator == "-" && t.isNumericLiteral(argument)) {
       const value = parseExpression(argument);
 
-      if(typeof value === "number")
-        return -value;
+      if (typeof value === "number") return -value;
 
-      if(typeof value === "string")
-        return "-" + value;
+      if (typeof value === "string") return "-" + value;
     }
 
     throw Oops.UnaryUseless(element);
