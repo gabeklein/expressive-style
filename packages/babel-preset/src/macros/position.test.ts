@@ -106,9 +106,9 @@ for (const macro of [absolute, fixed]) {
           left: 0,
           right: 0,
           bottom: 0,
-        };
+        } as const;
 
-        delete offset[inverse];
+        delete offset[inverse as keyof typeof offset];
 
         expect(result).toEqual(offset);
       });
@@ -122,9 +122,9 @@ for (const macro of [absolute, fixed]) {
           left: 10,
           right: 10,
           bottom: 10,
-        };
+        } as const;
 
-        delete offset[inverse];
+        delete offset[inverse as keyof typeof offset];
 
         expect(result).toEqual(offset);
       });

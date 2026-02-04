@@ -1,4 +1,4 @@
-type TransformTuple = [string, ...number[]];
+type TransformTuple = [string, ...(number | string)[]];
 
 function unitFor(name: string): string | null {
   if (name.startsWith("rotate") || name.startsWith("skew")) return "deg";
