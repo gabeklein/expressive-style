@@ -53,7 +53,7 @@ function createParser(options?: Preset.Options, plugins?: PluginItem[]) {
 
     code = code.replace(/\n$/gm, "");
     code = code.replace(
-      "const classNames = (...args) => args.filter(Boolean).join(' ');",
+      "const _concat = (...args) => args.filter(Boolean).join(' ');",
       ""
     );
 

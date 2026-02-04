@@ -12,7 +12,6 @@ it("will apply to this", async () => {
   `);
 
   expect(output.code).toMatchInlineSnapshot(`
-    const _concat = (...args) => args.filter(Boolean).join(' ');
     const Component = ({ className, active }) => {
       return (
         <div className={_concat(className, active && 'active_tla')}>
@@ -44,7 +43,6 @@ it("will apply else", async () => {
   `);
 
   expect(output.code).toMatchInlineSnapshot(`
-    const _concat = (...args) => args.filter(Boolean).join(' ');
     const Component = ({ className, active }) => {
       return (
         <div
@@ -94,8 +92,8 @@ it("will mix style and real-statement switch", async () => {
       color: blue;
     }
   `);
+  
   expect(output.code).toMatchInlineSnapshot(`
-    const _concat = (...args) => args.filter(Boolean).join(' ');
     const Component = ({ className, active }) => {
       if (active) {
         console.log('active');
@@ -129,7 +127,6 @@ it("will apply to selector", async () => {
   `);
 
   expect(output.code).toMatchInlineSnapshot(`
-    const _concat = (...args) => args.filter(Boolean).join(' ');
     const Component = ({ className, active }) => {
       return (
         <div
@@ -162,7 +159,6 @@ it("will apply to child selector", async () => {
   `);
 
   expect(output.code).toMatchInlineSnapshot(`
-    const _concat = (...args) => args.filter(Boolean).join(' ');
     const Component = ({ className, active }) => {
       return (
         <div className={_concat(className, active && 'active_tla')}>

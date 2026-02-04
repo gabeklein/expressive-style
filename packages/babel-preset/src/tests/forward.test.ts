@@ -12,7 +12,6 @@ it("will forward className", async () => {
   `);
 
   expect(output.code).toMatchInlineSnapshot(`
-    const _concat = (...args) => args.filter(Boolean).join(' ');
     const Component = (props) => {
       return (
         <div className={_concat(props.className, 'Component_240')} />
@@ -31,7 +30,6 @@ it("will forward from existing props", async () => {
   `);
 
   expect(output.code).toMatchInlineSnapshot(`
-    const _concat = (...args) => args.filter(Boolean).join(' ');
     const Component = (props) => {
       return (
         <div
@@ -53,7 +51,6 @@ it("will forward from destructured props", async () => {
   `);
 
   expect(output.code).toMatchInlineSnapshot(`
-    const _concat = (...args) => args.filter(Boolean).join(' ');
     const Component = ({ className, something }) => {
       return (
         <div
@@ -87,7 +84,6 @@ it("will forward className to this attribute", async () => {
   `);
 
   expect(output.code).toMatchInlineSnapshot(`
-    const _concat = (...args) => args.filter(Boolean).join(' ');
     const Component = (props) => {
       return (
         <input
@@ -129,7 +125,6 @@ it("will apply styles by wrapping fragment", async () => {
   `);
 
   expect(output.code).toMatchInlineSnapshot(`
-    const _concat = (...args) => args.filter(Boolean).join(' ');
     export const Row = (props) => {
       return (
         <div className={_concat(props.className, 'Row_2gs')}>
@@ -160,7 +155,6 @@ it("will apply styles by wrapping fragment with this", async () => {
   `);
 
   expect(output.code).toMatchInlineSnapshot(`
-    const _concat = (...args) => args.filter(Boolean).join(' ');
     const Steps = ({ className, steps, currentStep }) => {
       return (
         <div className={_concat(className, 'Steps_11k')}>
@@ -190,7 +184,6 @@ it("will not wrap an expression in element", async () => {
   `);
 
   expect(output.code).toMatchInlineSnapshot(`
-    const _concat = (...args) => args.filter(Boolean).join(' ');
     const Test = (props) => {
       return (
         <div className={_concat(props.className, 'Test_2b1')}>

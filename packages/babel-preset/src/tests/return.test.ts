@@ -64,7 +64,6 @@ it("will combine if 'this' is styled", async () => {
   `);
 
   expect(output.code).toMatchInlineSnapshot(`
-    const _concat = (...args) => args.filter(Boolean).join(' ');
     function Component(props) {
       return (
         <div
