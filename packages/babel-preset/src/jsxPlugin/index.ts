@@ -6,7 +6,7 @@ import { getContext, handleLabel } from "./label";
 
 import type { Macro, Options } from "./context";
 
-const USING_KEY = Symbol("expressive context");
+const USING = new WeakMap<NodePath, Set<Context>>();
 const SCOPE = new WeakMap<NodePath, Set<Context>>();
 const IGNORED = new WeakSet<NodePath>();
 
@@ -70,51 +70,11 @@ function Plugin(_compiler: any, options: Options): PluginObj<State> {
 }
 
 function getUsing(path: NodePath) {
-  return new Set(path.getData(USING_KEY)) as Set<Context>;
-}
-
-/**
- * Checks if the JSXElement or JSXFragment is returned by a component.
- * The function may be a declaration, expression, or arrow function.
- * The function must have a name with a capital letter to be considered a component.
- */
-function isReturnedByComponent(
-  path: NodePath<t.JSXElement> | NodePath<t.JSXFragment>
-) {
-  let parent = path.parentPath;
-
-  if (parent.isParenthesizedExpression()) parent = parent.parentPath;
-
-  if (!parent.isReturnStatement() && !parent.isArrowFunctionExpression())
-    return false;
-
-  // Traverse up to find the containing function
-  while (!parent.isFunction()) {
-    if (parent.isProgram() || !parent.parentPath) return false;
-    parent = parent.parentPath;
-  }
-
-  // Check for named function declarations/expressions
-  if (parent.isFunctionDeclaration() || parent.isFunctionExpression()) {
-    const { id } = parent.node;
-    if (t.isIdentifier(id) && /^[A-Z]/.test(id.name)) return true;
-  }
-
-  // Handle arrow functions - check if assigned to a capitalized variable
-  if (parent.isFunctionExpression() || parent.isArrowFunctionExpression()) {
-    const varParent = parent.parentPath;
-
-    if (varParent.isVariableDeclarator()) {
-      const { id } = varParent.node;
-      if (t.isIdentifier(id) && /^[A-Z]/.test(id.name)) return true;
-    }
-  }
-
-  return false;
+  return new Set(USING.get(path));
 }
 
 function JSX(path: NodePath<t.JSXElement> | NodePath<t.JSXFragment>) {
-  if (path.getData(USING_KEY)) return;
+  if (USING.has(path)) return;
 
   let { parentPath: parent } = path;
 
@@ -144,7 +104,9 @@ function JSX(path: NodePath<t.JSXElement> | NodePath<t.JSXFragment>) {
       tag = tag.get("object");
     }
 
-    if (tag.isJSXIdentifier()) names.set(tag.toString(), tag);
+    if (tag.isJSXIdentifier()) {
+      names.set(tag.toString(), tag);
+    }
 
     opening.get("attributes").forEach((attr) => {
       if (!attr.isJSXAttribute() || attr.node.value) return;
@@ -192,7 +154,7 @@ function JSX(path: NodePath<t.JSXElement> | NodePath<t.JSXFragment>) {
     });
   }
 
-  path.setData(USING_KEY, using);
+  USING.set(path, using);
 
   if (
     returned === false ||
@@ -211,8 +173,48 @@ function JSX(path: NodePath<t.JSXElement> | NodePath<t.JSXFragment>) {
     )
   );
 
-  inserted.setData(USING_KEY, new Set([context]));
+  USING.set(inserted, new Set([context]));
   context.usedBy.add(inserted);
+}
+
+/**
+ * Checks if the JSXElement or JSXFragment is returned by a component.
+ * The function may be a declaration, expression, or arrow function.
+ * The function must have a name with a capital letter to be considered a component.
+ */
+function isReturnedByComponent(
+  path: NodePath<t.JSXElement> | NodePath<t.JSXFragment>
+) {
+  let parent = path.parentPath;
+
+  if (parent.isParenthesizedExpression()) parent = parent.parentPath;
+
+  if (!parent.isReturnStatement() && !parent.isArrowFunctionExpression())
+    return false;
+
+  // Traverse up to find the containing function
+  while (!parent.isFunction()) {
+    if (parent.isProgram() || !parent.parentPath) return false;
+    parent = parent.parentPath;
+  }
+
+  // Check for named function declarations/expressions
+  if (parent.isFunctionDeclaration() || parent.isFunctionExpression()) {
+    const { id } = parent.node;
+    if (t.isIdentifier(id) && /^[A-Z]/.test(id.name)) return true;
+  }
+
+  // Handle arrow functions - check if assigned to a capitalized variable
+  if (parent.isFunctionExpression() || parent.isArrowFunctionExpression()) {
+    const varParent = parent.parentPath;
+
+    if (varParent.isVariableDeclarator()) {
+      const { id } = varParent.node;
+      if (t.isIdentifier(id) && /^[A-Z]/.test(id.name)) return true;
+    }
+  }
+
+  return false;
 }
 
 export { Context, getUsing, Macro, Options, Plugin, State };
