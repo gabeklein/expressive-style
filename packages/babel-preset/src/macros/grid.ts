@@ -11,11 +11,10 @@ interface GridAreaOutput {
  *
  * @param rows - Row placement value (integer start, or a slash-expression).
  * @param cols - Column placement value.
- * @returns      A style map with `gridRow` and `gridColumn`.
  *
  * @example
- * gridArea(1, 2);
- * // → { gridRow: "1", gridColumn: "2" }
+ * // gridArea: 1, 2;
+ * // → grid-row: 1; grid-column: 2;
  */
 export function gridArea(...args: unknown[]): GridAreaOutput | undefined {
   if (args.length == 2)
@@ -31,11 +30,10 @@ export function gridArea(...args: unknown[]): GridAreaOutput | undefined {
  * `start / end` string.
  *
  * @param args - Row placement value(s).
- * @returns     A style map with `gridRow`.
  *
  * @example
- * gridRow(2);
- * // → { gridRow: "2" }
+ * // gridRow: 2;
+ * // → grid-row: 2;
  */
 export function gridRow(...args: unknown[]): { gridRow: string } {
   return {
@@ -48,11 +46,10 @@ export function gridRow(...args: unknown[]): { gridRow: string } {
  * {@link gridRow}.
  *
  * @param args - Column placement value(s).
- * @returns     A style map with `gridColumn`.
  *
  * @example
- * gridColumn(1);
- * // → { gridColumn: "1" }
+ * // gridColumn: 1;
+ * // → grid-column: 1;
  */
 export function gridColumn(...args: unknown[]): { gridColumn: string } {
   return {
@@ -70,15 +67,14 @@ export function gridColumn(...args: unknown[]): { gridColumn: string } {
  * - **Other strings**      → used verbatim.
  *
  * @param args - Row template tokens.
- * @returns     A style map with `display` and `gridTemplateRows`.
  *
  * @example
- * gridRows("1fr", 200, "1fr");
- * // → { display: "grid", gridTemplateRows: "1fr 200px 1fr" }
+ * // gridRows: "1fr", 200, "1fr";
+ * // → display: grid; grid-template-rows: 1fr 200px 1fr;
  *
  * @example
- * gridRows("min", "1.0", "max");
- * // → { display: "grid", gridTemplateRows: "min-content 1.0fr max-content" }
+ * // gridRows: "min", "1.0", "max";
+ * // → display: grid; grid-template-rows: min-content 1.0fr max-content;
  */
 export function gridRows(...args: unknown[]): { display: string; gridTemplateRows: string } {
   return {
@@ -92,11 +88,10 @@ export function gridRows(...args: unknown[]): { display: string; gridTemplateRow
  * Follows the same value-conversion rules as {@link gridRows}.
  *
  * @param args - Column template tokens.
- * @returns     A style map with `display` and `gridTemplateColumns`.
  *
  * @example
- * gridColumns(100, "1.0", 100);
- * // → { display: "grid", gridTemplateColumns: "100px 1.0fr 100px" }
+ * // gridColumns: 100, "1.0", 100;
+ * // → display: grid; grid-template-columns: 100px 1.0fr 100px;
  */
 export function gridColumns(...args: unknown[]): { display: string; gridTemplateColumns: string } {
   return {

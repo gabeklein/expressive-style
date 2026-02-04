@@ -26,22 +26,29 @@ interface FlexAlignOutput {
  * to `"center"`.  Any other string is assigned directly to `justify-content`.
  *
  * @param args - One or more direction / alignment keywords.
- * @returns     A style map with `display: flex` and the resolved flex properties.
  *
  * @example
- * // Horizontal row, centred on both axes
- * flexAlign("right", "center");
- * // → { display: "flex", flexDirection: "row", justifyContent: "center", alignItems: "center" }
+ * Horizontal row, centred on both axes
+ * - `flexAlign: right, center;`
+ * ```css
+ * element {
+ *    display: flex;
+ *    flex-direction: row;
+ *    justify-content: center;
+ *    align-items: center;
+ * }
+ * ```
  *
  * @example
- * // Column layout
- * flexAlign("down");
- * // → { display: "flex", flexDirection: "column" }
- *
- * @example
- * // Centre only (default row direction)
- * flexAlign("center");
- * // → { display: "flex", justifyContent: "center", alignItems: "center" }
+ * Centre only (default row direction)
+ * - `flexAlign: center;`
+ * ```css
+ * element {
+ *    display: flex;
+ *    justify-content: center;
+ *    align-items: center;
+ * }
+ * ```
  */
 export function flexAlign(...args: string[]): FlexAlignOutput {
   const style: FlexAlignOutput = {

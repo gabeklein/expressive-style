@@ -23,9 +23,16 @@ function withPrefix(prefix?: string) {
  * Sets `width` and `height`.
  *
  * @example
- * size(100);           // → { width: [100], height: [100] }
- * size(200, 100);      // → { width: [200], height: [100] }
- * size(50, "rem");     // → { width: [50, "rem"], height: [50, "rem"] }
+ * // size: 100;
+ * // → width: 100px; height: 100px;
+ *
+ * @example
+ * // size: 200, 100;
+ * // → width: 200px; height: 100px;
+ *
+ * @example
+ * // size: 50, "rem";
+ * // → width: 50rem; height: 50rem;
  */
 export const size = withPrefix();
 
@@ -33,8 +40,12 @@ export const size = withPrefix();
  * Sets `min-width` and `min-height`.
  *
  * @example
- * minSize(200);        // → { minWidth: [200], minHeight: [200] }
- * minSize(300, 150);   // → { minWidth: [300], minHeight: [150] }
+ * // minSize: 200;
+ * // → min-width: 200px; min-height: 200px;
+ *
+ * @example
+ * // minSize: 300, 150;
+ * // → min-width: 300px; min-height: 150px;
  */
 export const minSize = withPrefix("min");
 
@@ -42,8 +53,12 @@ export const minSize = withPrefix("min");
  * Sets `max-width` and `max-height`.
  *
  * @example
- * maxSize(600);        // → { maxWidth: [600], maxHeight: [600] }
- * maxSize(800, 400);   // → { maxWidth: [800], maxHeight: [400] }
+ * // maxSize: 600;
+ * // → max-width: 600px; max-height: 600px;
+ *
+ * @example
+ * // maxSize: 800, 400;
+ * // → max-width: 800px; max-height: 400px;
  */
 export const maxSize = withPrefix("max");
 
@@ -58,22 +73,21 @@ export const maxSize = withPrefix("max");
  * @param x    - Primary dimension.
  * @param y    - Secondary dimension or aspect-ratio fraction.
  * @param unit - Explicit CSS unit.
- * @returns    A style map with `width` and `height`.
  *
  * @example
  * // Square
- * aspectSize(200, 200);
- * // → { width: [200], height: [200] }
+ * // aspectSize: 200, 200;
+ * // → width: 200px; height: 200px;
  *
  * @example
  * // 16:9 — negative fraction scales height down
- * aspectSize(320, -0.5625);
- * // → { width: [320], height: [180] }
+ * // aspectSize: 320, -0.5625;
+ * // → width: 320px; height: 180px;
  *
  * @example
  * // Positive fraction scales width down
- * aspectSize(200, 0.5);
- * // → { width: [100], height: [200] }
+ * // aspectSize: 200, 0.5;
+ * // → width: 100px; height: 200px;
  */
 export function aspectSize(x: number, y: number, unit?: string): SizeOutput {
   const y2 = Math.abs(y);

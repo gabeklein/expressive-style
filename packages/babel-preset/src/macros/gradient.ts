@@ -4,46 +4,42 @@ const easingCoordinates = require("easing-coordinates") as {
   easingCoordinates: (fn: string, steps?: number) => { x: number; y: number }[];
 };
 
+type GradientDirection = "toTop" | "toRight" | "toBottom" | "toLeft";
+
 /**
  * Generates a CSS `linear-gradient` whose colour stops follow an easing curve
- * rather than being evenly spaced.  Useful for producing smooth, perceptually
- * uniform fades (e.g. transparent-to-colour overlays).
+ * rather than being evenly spaced.  Useful for smooth, perceptually uniform
+ * fades (e.g. transparent-to-colour overlays).
  *
- * The `timing` argument accepts any CSS easing keyword in camelCase — it is
- * automatically converted to kebab-case before being forwarded to
- * `easing-coordinates`.
+ * `timing` accepts any CSS easing keyword in camelCase — it is automatically
+ * converted to kebab-case before being forwarded to `easing-coordinates`.
  *
  * The special colour value `"transparent"` is normalised to a zero-alpha
  * version of the *other* colour so that the gradient interpolates through the
  * colour's hue instead of through grey.
  *
- * @param direction - Gradient direction as a single hyphenated token
- *                    (e.g. `"to-right"`, `"to-bottom"`).  The hyphen is
- *                    replaced with a space in the output.
- * @param from      - Starting colour (any value accepted by `chroma-js`, or
- *                    `"transparent"`).
- * @param timing    - Easing function name in camelCase (e.g. `"easeInOut"`).
+ * @param direction - Gradient direction in camelCase (e.g. `toRight`, `toBottom`).
+ * @param from      - Starting colour (any value accepted by `chroma-js`, or `"transparent"`).
+ * @param timing    - Easing function name in camelCase (e.g. `easeInOut`).
  * @param to        - Ending colour (same rules as `from`).
  * @param stops     - Number of colour stops to generate. Defaults to `13`.
- * @returns         A style map with a single `backgroundImage` property.
  *
  * @example
- * easingGradient("to-right", "black", "easeInOut", "white");
- * // → { backgroundImage: "linear-gradient(to right, hsl(...), ...)" }
+ * // easingGradient: toRight, "black", easeInOut, "white";
+ * // → background-image: linear-gradient(to right, ...);
  *
  * @example
- * // Fade from a colour to transparent using 20 stops
- * easingGradient("to-bottom", "#3366cc", "easeOut", "transparent", 20);
- * // → { backgroundImage: "linear-gradient(to bottom, hsl(...), ...)" }
+ * // easingGradient: toBottom, "#3366cc", easeOut, "transparent", 20;
+ * // → background-image: linear-gradient(to bottom, ...);
  */
 export function easingGradient(
-  direction: string,
+  direction: GradientDirection | string,
   from: string,
   timing: string,
   to: string,
   stops: number = 13,
 ): { backgroundImage: string } {
-  direction = direction.replace("-", " ");
+  direction = direction.replace(/([A-Z])/g, " $1").toLowerCase();
   timing = timing.replace(/([A-Z]+)/g, "-$1").toLowerCase();
   [from, to] = normalize(from, to);
 

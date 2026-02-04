@@ -24,6 +24,25 @@ function _border(dir?: string) {
   };
 }
 
+/**
+ * Sets `border` with colour, width, and style.
+ *
+ * Pass `"none"` or `"transparent"` to clear the border.  Otherwise the
+ * output is `<color> <style> <width>` with sensible defaults: colour →
+ * `black`, style → `solid`, width → `1px`.
+ *
+ * @param color - Border colour, `"none"`, or `"transparent"`.
+ * @param width - Border width (number → `px`). Defaults to `1`.
+ * @param style - Border style keyword. Defaults to `"solid"`.
+ *
+ * @example
+ * `border: 0xddd;`
+ * // → border: #ddd solid 1px;
+ *
+ * @example
+ * `border: 0x333, 2;`
+ * // → border: #333 solid 2px;
+ */
 export const border = _border();
 
 export const borderTop = _border("top");

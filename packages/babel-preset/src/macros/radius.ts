@@ -26,27 +26,26 @@ const CORNER_MATRIX: Record<string, number[]> = {
  *              direction string (`"top"`, `"left"`, `"top-left"`, etc.).
  * @param r1  - Primary radius applied to the corners matched by `dir`.
  * @param r2  - Fallback radius for the corners *not* matched. Defaults to `0`.
- * @returns   A style map with `borderRadius`.
  *
  * @example
  * // Fully rounded (pill shape)
- * radius("round");
- * // → { borderRadius: "999px" }
+ * // radius: round;
+ * // → border-radius: 999px;
  *
  * @example
  * // Uniform 12 px
- * radius(12);
- * // → { borderRadius: "12px" }
+ * // radius: 12;
+ * // → border-radius: 12px;
  *
  * @example
  * // Top edge only
- * radius("top", 8);
- * // → { borderRadius: "8px 8px 0 0" }
+ * // radius: "top", 8;
+ * // → border-radius: 8px 8px 0 0;
  *
  * @example
  * // Top corners 16, bottom corners 4
- * radius("top", 16, 4);
- * // → { borderRadius: "16px 16px 4px 4px" }
+ * // radius: "top", 16, 4;
+ * // → border-radius: 16px 16px 4px 4px;
  */
 export function radius(dir: string | number, r1?: number, r2?: number): { borderRadius: string } {
   let value: string | number = "";
@@ -79,11 +78,10 @@ export function radius(dir: string | number, r1?: number, r2?: number): { border
  * diameter and forwarding `size` so that width and height match.
  *
  * @param a - Diameter of the circle in pixels.
- * @returns  A style map with `borderRadius` and `size`.
  *
  * @example
- * circle(100);
- * // → { borderRadius: 50, size: 100 }
+ * // circle: 100;
+ * // → border-radius: 50px; width: 100px; height: 100px;
  */
 export function circle(a: number): { borderRadius: number; size: number } {
   return {

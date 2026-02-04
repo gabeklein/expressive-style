@@ -22,27 +22,26 @@ interface PositionOutput {
  * `"top-right"` keep only those two edges.
  *
  * @param args - Inset values or a fill keyword.
- * @returns     A style map with `position: "absolute"` and the resolved insets.
  *
  * @example
  * // Cover the entire parent
- * absolute("fill");
- * // → { position: "absolute", top: 0, left: 0, right: 0, bottom: 0 }
+ * // absolute: fill;
+ * // → position: absolute; top: 0; left: 0; right: 0; bottom: 0;
  *
  * @example
  * // 10 px inset on all sides
- * absolute(10);
- * // → { position: "absolute", top: 10, right: 10, bottom: 10, left: 10 }
+ * // absolute: 10;
+ * // → position: absolute; top: 10px; right: 10px; bottom: 10px; left: 10px;
  *
  * @example
  * // Vertical 10, horizontal 20
- * absolute(10, 20);
- * // → { position: "absolute", top: 10, right: 20, bottom: 10, left: 20 }
+ * // absolute: 10, 20;
+ * // → position: absolute; top: 10px; right: 20px; bottom: 10px; left: 20px;
  *
  * @example
  * // Stick to the top edge only
- * absolute("fill-top");
- * // → { position: "absolute", top: 0, left: 0, right: 0 }
+ * // absolute: "fill-top";
+ * // → position: absolute; top: 0; left: 0; right: 0;
  */
 export function absolute(...args: (number | string)[]): PositionOutput {
   return position("absolute", ...args);
@@ -54,22 +53,28 @@ export function absolute(...args: (number | string)[]): PositionOutput {
  * Accepts the same arguments and fill keywords as {@link absolute}.
  *
  * @param args - Inset values or a fill keyword.
- * @returns     A style map with `position: "fixed"` and the resolved insets.
  *
  * @example
  * // Fixed overlay covering the viewport
- * fixed("fill");
- * // → { position: "fixed", top: 0, left: 0, right: 0, bottom: 0 }
+ * // fixed: fill;
+ * // → position: fixed; top: 0; left: 0; right: 0; bottom: 0;
  *
  * @example
  * // Fixed, pinned to the bottom
- * fixed("fill-bottom");
- * // → { position: "fixed", left: 0, right: 0, bottom: 0 }
+ * // fixed: "fill-bottom";
+ * // → position: fixed; left: 0; right: 0; bottom: 0;
  */
 export function fixed(...args: (number | string)[]): PositionOutput {
   return position("fixed", ...args);
 }
 
+/**
+ * Sets `position: relative`.
+ *
+ * @example
+ * // relative;
+ * // → position: relative;
+ */
 export function relative(): { position: string } {
   return {
     position: "relative",

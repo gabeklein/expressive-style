@@ -10,27 +10,26 @@
  *
  * @param a - Colour string, the keyword `"none"`, or omitted for the default green dashed outline.
  * @param b - Width or additional outline tokens.  When present all arguments are joined.
- * @returns  A style map with `outline`.
  *
  * @example
  * // Disable outline
- * outline("none");
- * // → { outline: "none" }
+ * // outline: none;
+ * // → outline: none;
  *
  * @example
- * // Default debug outline
- * outline();
- * // → { outline: "1px dashed green" }
+ * // Default debug outline (no argument)
+ * // outline;
+ * // → outline: 1px dashed green;
  *
  * @example
  * // Custom colour, default width & style
- * outline("red");
- * // → { outline: "1px dashed red" }
+ * // outline: red;
+ * // → outline: 1px dashed red;
  *
  * @example
  * // Full manual specification
- * outline("blue", 3, "dotted");
- * // → { outline: "blue 3px dotted" }
+ * // outline: "blue", 3, "dotted";
+ * // → outline: blue 3px dotted;
  */
 export function outline(a?: string, b?: string | number, ...rest: (string | number)[]): { outline: string } {
   if (a == "none")

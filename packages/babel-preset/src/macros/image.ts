@@ -2,11 +2,10 @@
  * Sets `background-image` to a `url()` wrapping the given path.
  *
  * @param a - The image URL or path string.
- * @returns  A style map with `backgroundImage`.
  *
  * @example
- * image("/assets/photo.png");
- * // → { backgroundImage: 'url("/assets/photo.png")' }
+ * // image: "/assets/photo.png";
+ * // → background-image: url("/assets/photo.png");
  */
 export function image(a: string): { backgroundImage: string } {
   return {
@@ -64,6 +63,22 @@ interface IconOutput {
   bg?: string | number;
 }
 
+/**
+ * Sets `-webkit-mask-image` for SVG-based icon masking, optionally
+ * tinting with a background colour.  The `.svg` extension is appended
+ * automatically when missing.
+ *
+ * @param mask  - Path to the SVG mask file.
+ * @param color - Optional tint colour (applied as `bg`).
+ *
+ * @example
+ * // icon: "icons/arrow";
+ * // → -webkit-mask-image: url("icons/arrow.svg");
+ *
+ * @example
+ * // icon: "icons/star.svg", 0x3366cc;
+ * // → -webkit-mask-image: url("icons/star.svg"); background-color: #3366cc;
+ */
 export function icon(mask?: string, color?: string | number): IconOutput | undefined {
   if (!mask) return;
 

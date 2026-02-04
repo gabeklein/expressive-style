@@ -14,22 +14,21 @@ interface FontOutput {
  * Arguments are processed in order; later values of the same type overwrite earlier ones.
  *
  * @param args - Any mix of weight numbers, size numbers, and family name strings.
- * @returns     A style map containing only the properties that were supplied.
  *
  * @example
  * // Weight + size
- * font(700, 18);
- * // → { fontWeight: 700, fontSize: 18 }
+ * // font: 700, 18;
+ * // → font-weight: 700; font-size: 18px;
  *
  * @example
  * // Family only
- * font("Inter");
- * // → { fontFamily: "Inter" }
+ * // font: "Inter";
+ * // → font-family: Inter;
  *
  * @example
  * // All three
- * font(400, 16, "System UI");
- * // → { fontWeight: 400, fontSize: 16, fontFamily: "System UI" }
+ * // font: 400, 16, "System UI";
+ * // → font-weight: 400; font-size: 16px; font-family: System UI;
  */
 export function font(...args: (number | string)[]): FontOutput {
   const output: FontOutput = {};

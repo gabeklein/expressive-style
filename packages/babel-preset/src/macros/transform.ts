@@ -26,32 +26,26 @@ function withUnit(value: number | string, unit: string | null): string {
  * parameter; the first three (axis vector) remain unitless.
  *
  * @param args - Transform function descriptors (strings or tuples).
- * @returns    A style map with `transform`.
  *
  * @example
  * // Single translateX
- * transform(["translateX", 40]);
- * // → { transform: "translateX(40px)" }
+ * `transform: translateX(40);`
+ * // → transform: translateX(40px);
  *
  * @example
  * // Rotation
- * transform(["rotate", 45]);
- * // → { transform: "rotate(45deg)" }
+ * `transform: rotate(45);`
+ * // → transform: rotate(45deg);
  *
  * @example
  * // Compound — translate then scale
- * transform(["translateY", 20], ["scale", 1.5]);
- * // → { transform: "translateY(20px) scale(1.5)" }
+ * `transform: translateY(20), scale(1.5);`
+ * // → transform: translateY(20px) scale(1.5);
  *
  * @example
  * // rotate3d — only the angle gets a unit
- * transform(["rotate3d", 1, 0, 0, 45]);
- * // → { transform: "rotate3d(1, 0, 0, 45deg)" }
- *
- * @example
- * // Passthrough keyword
- * transform("none");
- * // → { transform: "none" }
+ * `transform: rotate3d(1, 0, 0, 45);`
+ * // → transform: rotate3d(1, 0, 0, 45deg);
  */
 export function transform(...args: (string | TransformTuple)[]): { transform: string } {
   const parts = args.map((arg) => {
