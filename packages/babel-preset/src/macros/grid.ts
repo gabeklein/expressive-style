@@ -1,4 +1,3 @@
-/** Style map returned by {@link gridArea}. */
 interface GridAreaOutput {
   gridRow: string;
   gridColumn: string;
@@ -106,10 +105,6 @@ export function gridColumns(...args: unknown[]): { display: string; gridTemplate
   };
 }
 
-/**
- * Flattens a slash-expression (encoded as nested arrays by the parser) back
- * into a CSS `start / end` string.
- */
 function recombineSlash(args: unknown): string {
   args = ([] as unknown[]).concat(args);
 
@@ -126,19 +121,10 @@ function recombineSlash(args: unknown): string {
   }
 }
 
-/** Joins grid-template tokens into a single space-separated string. */
 function recombineTemplate(args: unknown[]): string {
   return args.map(formatGridValue).join(" ");
 }
 
-/**
- * Converts a single grid-template token to its CSS string.
- *
- * - Numbers → `px`
- * - Decimal strings → `fr`
- * - `"min"` / `"max"` → `min-content` / `max-content`
- * - Everything else → verbatim
- */
 function formatGridValue(x: unknown): string {
   if (typeof x == "number") return x + "px";
 

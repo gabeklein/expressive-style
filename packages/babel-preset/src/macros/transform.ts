@@ -1,20 +1,11 @@
-/** A single transform function as an array: `[name, ...params]`. */
 type TransformTuple = [string, ...number[]];
 
-/**
- * Returns the appropriate CSS unit for a given transform-function name.
- *
- * - `rotate*` / `skew*`        → `"deg"`
- * - `translate*` / `perspective` → `"px"`
- * - Everything else (scale)    → `null` (unitless)
- */
 function unitFor(name: string): string | null {
   if (name.startsWith("rotate") || name.startsWith("skew")) return "deg";
   if (name.startsWith("translate") || name === "perspective") return "px";
   return null;
 }
 
-/** Converts a numeric value to a string, appending the given unit when non-zero. */
 function withUnit(value: number | string, unit: string | null): string {
   if (typeof value !== "number" || value === 0) return String(value);
   return unit ? value + unit : String(value);

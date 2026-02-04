@@ -1,4 +1,3 @@
-/** Style map returned by {@link font}. */
 interface FontOutput {
   fontWeight?: number;
   fontSize?: number;
@@ -43,33 +42,14 @@ export function font(...args: (number | string)[]): FontOutput {
   return output;
 }
 
-/**
- * Sets `font-family` from one or more font names.
- *
- * Names that contain whitespace are automatically wrapped in double quotes
- * so the output is a valid CSS font stack.
- *
- * @param args - Font family names.
- * @returns     A style map with the `fontFamily` property.
- *
- * @example
- * fontFamily("Inter", "sans-serif");
- * // → { fontFamily: "Inter, sans-serif" }
- *
- * @example
- * fontFamily("Times New Roman", "Georgia", "serif");
- * // → { fontFamily: '"Times New Roman", Georgia, serif' }
- */
 export function fontFamily(...args: string[]): { fontFamily: string } {
   return {
     fontFamily: args.map(quoteIfWhitespace).join(", "),
   };
 }
 
-/** Wraps a font name in quotes when it contains a space. */
 function quoteIfWhitespace(font: string): string {
   return ~font.indexOf(" ") ? `"${font}"` : font;
 }
 
-/** Alias for {@link fontFamily}. */
 export { fontFamily as family };

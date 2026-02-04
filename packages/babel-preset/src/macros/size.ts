@@ -1,30 +1,11 @@
-/** Style map shape returned by the size-family macros. */
 interface SizeOutput {
   [key: string]: [number | string, string | undefined];
 }
 
-/**
- * Factory that produces a size macro scoped to an optional CSS-property prefix
- * (`"min"`, `"max"`, or none for bare `width`/`height`).
- *
- * When the second argument is a string and the first is a number, the string
- * is treated as an explicit unit and `y` defaults to `x`.
- *
- * @param prefix - Property prefix (`"min"`, `"max"`, or `undefined`).
- */
 function withPrefix(prefix?: string) {
   const widthKey = prefix ? `${prefix}Width` : "width";
   const heightKey = prefix ? `${prefix}Height` : "height";
 
-  /**
-   * Sets width and height (or their min/max variants) in one call.
-   *
-   * @param x    - Width value.
-   * @param y    - Height value. When omitted or when a unit string is passed
-   *              as the second argument, height equals width.
-   * @param unit - Explicit CSS unit applied to both dimensions.
-   * @returns    A style map with the width and height keys.
-   */
   return function size(x: number | string, y?: number | string, unit?: string): SizeOutput {
     if (typeof y == "string" && typeof x == "number") {
       unit = y;

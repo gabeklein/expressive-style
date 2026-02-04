@@ -1,4 +1,3 @@
-/** Direction keywords that map to a `flex-direction` value. */
 const DIRECTIONS: Record<string, string | null> = {
   right: "row",
   left: "row-reverse",
@@ -10,7 +9,6 @@ const DIRECTIONS: Record<string, string | null> = {
   "column-reverse": null,
 };
 
-/** Style map returned by {@link flexAlign}. */
 interface FlexAlignOutput {
   display: string;
   flexDirection?: string;

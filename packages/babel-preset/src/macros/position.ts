@@ -1,4 +1,3 @@
-/** Style map returned by the position macros. */
 interface PositionOutput {
   position: string;
   top?: number | string;
@@ -71,22 +70,12 @@ export function fixed(...args: (number | string)[]): PositionOutput {
   return position("fixed", ...args);
 }
 
-/**
- * Sets `position: relative` with no insets.
- *
- * @returns A style map with `position: "relative"`.
- *
- * @example
- * relative();
- * // → { position: "relative" }
- */
 export function relative(): { position: string } {
   return {
     position: "relative",
   };
 }
 
-/** Maps each edge to its opposite for directional-fill logic. */
 const INVERSE: Record<string, string> = {
   top: "bottom",
   left: "right",
@@ -94,15 +83,6 @@ const INVERSE: Record<string, string> = {
   bottom: "top",
 };
 
-/**
- * Core positioning logic shared by {@link absolute} and {@link fixed}.
- *
- * @param kind - The CSS `position` value (`"absolute"` or `"fixed"`).
- * @param a    - First inset value or a fill/direction keyword.
- * @param b    - Second inset value (defaults to `0`).
- * @param c    - Third inset value (defaults to `b`).
- * @param d    - Fourth inset value.
- */
 function position(kind: string, a?: number | string, b: number | string = 0, c: number | string = b, d?: number | string): PositionOutput {
   const out: PositionOutput = {
     position: kind,

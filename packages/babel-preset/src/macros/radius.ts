@@ -1,9 +1,5 @@
 import { appendUnit } from "./appendUnit";
 
-/**
- * Lookup table mapping a single direction keyword to a 4-element bitmask
- * `[top-left, top-right, bottom-right, bottom-left]`.
- */
 const CORNER_MATRIX: Record<string, number[]> = {
   top: [1, 1, 0, 0],
   left: [1, 0, 0, 1],

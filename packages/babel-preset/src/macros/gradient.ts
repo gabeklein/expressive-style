@@ -1,6 +1,5 @@
 import chroma from "chroma-js";
 
-/** easing-coordinates has no published types; the default export is the namespace object. */
 const easingCoordinates = require("easing-coordinates") as {
   easingCoordinates: (fn: string, steps?: number) => { x: number; y: number }[];
 };
@@ -66,20 +65,14 @@ export function easingGradient(
   };
 }
 
-/** Extracts the portion of a CSS function string before the opening parenthesis. */
 function getBeforeParenthesisMaybe(str: string): string {
   return str.includes("(") ? str.substring(0, str.indexOf("(")) : str;
 }
 
-/** Extracts the content between the outermost parentheses. */
 function getParenthesisInsides(str: string): string {
   return str.match(/\((.*)\)/)!.pop()!;
 }
 
-/**
- * Rounds numeric values inside an HSL(A) string to 3 decimal places so that
- * the generated gradient CSS stays readable.  Percentage tokens are left alone.
- */
 function roundHslAlpha(color: string): string {
   const prefix = getBeforeParenthesisMaybe(color);
   const values = getParenthesisInsides(color)
@@ -95,10 +88,6 @@ function roundHslAlpha(color: string): string {
   return `${prefix}(${values.join(", ")})`;
 }
 
-/**
- * Replaces the keyword `"transparent"` with a zero-alpha version of the
- * neighbouring colour so gradients interpolate through hue instead of grey.
- */
 function normalize(...colors: string[]): string[] {
   return colors.map((color, i) =>
     color === "transparent"
