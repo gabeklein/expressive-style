@@ -43,3 +43,26 @@ export function ParseErrors<O extends Record<string, string>>(register: O) {
     readonly [P in keyof O]: ParseError;
   };
 }
+
+export function macroError(path: NodePath, err: unknown, modifierName: string) {
+  if (err instanceof Error) {
+    // Build error with Babel integration for source location
+    const error = path.hub.buildError(
+      path.node,
+      `Modifier "${modifierName}" failed: ${err.message}`
+    );
+
+    // Trim stack frames after the parse call to hide internal steps
+    const stackLines = err.stack!.split("\n    at ");
+    const parseIndex = stackLines.findIndex((line) => /^parse/.test(line));
+    error.stack = stackLines.slice(0, parseIndex + 1).join("\n    at ");
+
+    return error;
+  }
+
+  return path.hub.buildError(
+    path.node,
+    `Modifier "${modifierName}" failed: ${err}`
+  );
+}
+

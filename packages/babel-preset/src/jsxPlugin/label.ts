@@ -2,6 +2,7 @@ import { NodePath, types as t } from "@babel/core";
 
 import { parseArguments } from "./arguments";
 import { Context, hash } from "./context";
+import { macroError } from "./errors";
 
 export function handleLabel(path: NodePath<t.LabeledStatement>) {
   const context = getContext(path);
@@ -14,11 +15,11 @@ export function handleLabel(path: NodePath<t.LabeledStatement>) {
   }
 
   if (!body.isExpressionStatement()) {
-    throw modifyError(body, "Not an expression", name);
+    throw macroError(body, "Not an expression", name);
   }
 
   if (!context) {
-    throw modifyError(body, "Missing context", name);
+    throw macroError(body, "Missing context", name);
   }
 
   const args = parseArguments(body);
@@ -60,7 +61,7 @@ export function handleLabel(path: NodePath<t.LabeledStatement>) {
       }
     }
   } catch (err: unknown) {
-    throw modifyError(body, err, name);
+    throw macroError(body, err, name);
   }
 }
 
@@ -220,26 +221,4 @@ function createIfContext(path: NodePath<t.IfStatement>) {
   }
 
   return inner;
-}
-
-function modifyError(path: NodePath, err: unknown, modifierName: string) {
-  if (err instanceof Error) {
-    // Build error with Babel integration for source location
-    const error = path.hub.buildError(
-      path.node,
-      `Modifier "${modifierName}" failed: ${err.message}`
-    );
-
-    // Trim stack frames after the parse call to hide internal steps
-    const stackLines = err.stack!.split("\n    at ");
-    const parseIndex = stackLines.findIndex((line) => /^parse/.test(line));
-    error.stack = stackLines.slice(0, parseIndex + 1).join("\n    at ");
-
-    return error;
-  }
-
-  return path.hub.buildError(
-    path.node,
-    `Modifier "${modifierName}" failed: ${err}`
-  );
 }
