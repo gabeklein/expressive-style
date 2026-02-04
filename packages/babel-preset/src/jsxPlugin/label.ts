@@ -97,16 +97,6 @@ export function getContext(path: NodePath): Context {
   throw new Error("Context not found");
 }
 
-function createFunctionContext(path: NodePath<t.Function>) {
-  const context = getContext(path);
-  const name = getComponentName(path);
-  const component = new Context(path, context, name);
-
-  component.define["this"] = component;
-
-  return component;
-}
-
 function createIfContext(path: NodePath<t.IfStatement>) {
   const test = path.node.test;
   const name = t.isIdentifier(test)
@@ -126,6 +116,16 @@ function createIfContext(path: NodePath<t.IfStatement>) {
   }
 
   return inner;
+}
+
+function createFunctionContext(path: NodePath<t.Function>) {
+  const context = getContext(path);
+  const name = getComponentName(path);
+  const component = new Context(path, context, name);
+
+  component.define["this"] = component;
+
+  return component;
 }
 
 function getComponentName(path: NodePath): string {
