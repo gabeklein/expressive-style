@@ -54,8 +54,22 @@ function Plugin(_compiler: any, options: Options): PluginObj<State> {
       IfStatement: {
         exit(path) {
           const context = Context.get(path);
-          if (!context || context.alternate || path.key === "alternate") return;
-          path.remove();
+          if (!context || path.key === "alternate") return;
+
+          const { consequent, alternate } = path.node;
+
+          const consequentEmpty = t.isBlockStatement(consequent)
+            ? consequent.body.length === 0
+            : t.isEmptyStatement(consequent);
+
+          if (!consequentEmpty) return;
+
+          if (
+            !alternate ||
+            t.isEmptyStatement(alternate) ||
+            (t.isBlockStatement(alternate) && alternate.body.length === 0)
+          )
+            path.remove();
         },
       },
       Function: {

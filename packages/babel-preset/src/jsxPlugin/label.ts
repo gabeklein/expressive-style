@@ -82,7 +82,8 @@ export function getContext(path: NodePath): Context {
 
 function getAlternate(context: Context): Context {
   if (!context.alternate) {
-    context.alternate = new Context(context.path, context.parent, "else");
+    const altPath = context.path.get("alternate") as NodePath;
+    context.alternate = new Context(altPath, context.parent, "else");
     context.children.add(context.alternate);
   }
   return context.alternate;

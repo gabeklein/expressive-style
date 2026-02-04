@@ -17,9 +17,15 @@ export function getClassName(
 
   if (typeof condition == "string" || t.isStringLiteral(condition)) return;
 
-  const value = module
-    ? t.memberExpression(module, t.identifier(uid), false)
-    : t.stringLiteral(uid);
+  const needsClass =
+    context.props.size > 0 ||
+    context.children.size > (alternate ? 1 : 0);
+
+  const value = needsClass
+    ? module
+      ? t.memberExpression(module, t.identifier(uid), false)
+      : t.stringLiteral(uid)
+    : undefined;
 
   if (!condition) return value;
 
@@ -28,10 +34,11 @@ export function getClassName(
 
     if (typeof alt === "string") alt = t.stringLiteral(alt);
 
-    if (alt) return t.conditionalExpression(condition, value, alt);
+    if (alt && value) return t.conditionalExpression(condition, value, alt);
+    if (alt) return t.logicalExpression("&&", t.unaryExpression("!", condition), alt);
   }
 
-  return t.logicalExpression("&&", condition, value);
+  if (value) return t.logicalExpression("&&", condition, value);
 }
 
 export function addClassName(
