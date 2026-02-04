@@ -29,7 +29,9 @@ function parser(argument?: Preset.Options | string, plugins?: PluginItem[]) {
 function createParser(options?: Preset.Options, plugins?: PluginItem[]) {
   return async function parse(source: string) {
     const testName = expect.getState().currentTestName!;
-    const filename = testName.replace(/ >.+/, "");
+    // vitest prepends "filepath > " when run from a subdirectory so strip it
+    const parts = testName.split(" > ");
+    const filename = (parts[0].includes("/") ? parts.slice(1).join(" > ") : testName).replace(/ >.+/, "");
     const result = await transformAsync(source, {
       filename,
       plugins,
