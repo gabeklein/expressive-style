@@ -100,18 +100,22 @@ export function toSelector(context: Context): string {
 }
 
 function depth(context: Context, context2?: Context): number {
-  if (context2) {
-    const d1 = depth(context);
-    const d2 = depth(context2);
-    return d1 === d2 ? 0 : d1 - d2;
-  }
+  const pos = context.position;
+  
+  if (typeof context.condition === "string")
+    context = context.parent!;
 
   let i = 0;
 
   do {
     if (context.path.isFunction()) break;
-    else i += /^[A-Z]/.test(context.uid) ? 2 : 1;
-  } while ((context = context.parent!));
+    else if(/^[A-Z]/.test(context.uid) && !("this" in context.define)) i+= 2;
+    else i++;
+  } while (context = context.parent!);
+
+  if(context2){
+    return i - depth(context2) || pos - context2.position;
+  }
 
   return i;
 }

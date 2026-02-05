@@ -1,6 +1,6 @@
 import { PluginObj, PluginPass, NodePath, types as t } from "@babel/core";
 
-import { Context, hash } from "./context";
+import { Context, hash, RootContext } from "./context";
 import { Status } from "./errors";
 import { getContext, handleLabel } from "./label";
 
@@ -26,12 +26,8 @@ function Plugin(_compiler: any, options: Options): PluginObj<State> {
     },
     visitor: {
       Program(path, state) {
-        const context = new Context(path);
-
+        new RootContext(path, state, options);
         Status.currentFile = state.file as any;
-        context.uid = hash(state.filename!);
-        context.define = Object.assign({}, ...(options.define || []));
-        context.macros = Object.assign({}, ...(options.macros || []));
       },
       JSXElement: JSX,
       JSXFragment: JSX,

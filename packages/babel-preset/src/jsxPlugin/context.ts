@@ -1,4 +1,5 @@
 import { PluginPass, NodePath, types as t } from "@babel/core";
+import { State } from ".";
 
 export type Macro = (
   this: Context,
@@ -18,11 +19,14 @@ export type BabelState = PluginPass & {
 const CONTEXT = new WeakMap<NodePath, Context>();
 
 export class Context {
-  path: NodePath;
-  parent: Context | undefined;
-  define: Record<string, Context> = {};
-  macros: Record<string, Macro> = {};
-  uid = "";
+  readonly path: NodePath;
+  readonly position: number;
+  readonly parent: Context | undefined;
+
+  readonly define: Record<string, Context> = {};
+  readonly macros: Record<string, Macro> = {};
+
+  uid: string;
 
   also = new Set<Context>();
   props = new Map<string, any>();
@@ -38,6 +42,8 @@ export class Context {
   constructor(path: NodePath, parent?: Context, name?: string) {
     CONTEXT.set(path, this);
     this.path = path;
+    this.position = path.node?.start ?? 0;
+    this.uid = "";
 
     if (!(parent instanceof Context)) return;
 
@@ -51,6 +57,17 @@ export class Context {
         parent.children.add(this);
       }
     while ((parent = parent.parent));
+  }
+}
+
+export class RootContext extends Context {
+  constructor(path: NodePath, state: State, public options: Options) {
+    const { define = [], macros = [] } = options;
+
+    super(path);
+    this.uid = hash(state.filename!);
+    Object.assign(this.define, ...define);
+    Object.assign(this.macros, ...macros);
   }
 }
 
