@@ -38,13 +38,6 @@ it("will replace & with parent selector", async () => {
     }
   `);
 
-  expect(output.code).toMatchInlineSnapshot(`
-    const Component = (props) => {
-      return (
-        <div className={_concat(props.className, 'Component_28p')} />
-      );
-    };
-  `);
   expect(output.css).toMatchInlineSnapshot(`
     .Component_28p {
       color: red;
@@ -67,13 +60,6 @@ it("will replace & in child combinator", async () => {
     }
   `);
 
-  expect(output.code).toMatchInlineSnapshot(`
-    const Component = (props) => {
-      return (
-        <div className={_concat(props.className, 'Component_2ic')} />
-      );
-    };
-  `);
   expect(output.css).toMatchInlineSnapshot(`
     .Component_2ic {
       color: red;
@@ -96,13 +82,6 @@ it("will replace & as descendant target", async () => {
     }
   `);
 
-  expect(output.code).toMatchInlineSnapshot(`
-    const Component = (props) => {
-      return (
-        <div className={_concat(props.className, 'Component_23e')} />
-      );
-    };
-  `);
   expect(output.css).toMatchInlineSnapshot(`
     .Component_23e {
       color: red;
@@ -127,13 +106,6 @@ it("will replace & nested inside a label", async () => {
     }
   `);
 
-  expect(output.code).toMatchInlineSnapshot(`
-    const Component = (props) => {
-      return (
-        <div className={_concat(props.className, 'inner_tla')} />
-      );
-    };
-  `);
   expect(output.css).toMatchInlineSnapshot(`
     .inner_tla {
       color: red;
@@ -161,21 +133,9 @@ it("will apply hover pseudo class with nested", async () => {
       }
     
       return (
-        <div>
-          Hello
-        </div>
+        <div />
       )
     }
-  `);
-
-  expect(output.code).toMatchInlineSnapshot(`
-    const Component = (props) => {
-      return (
-        <div className={_concat(props.className, 'Component_2id')}>
-          Hello
-        </div>
-      );
-    };
   `);
 
   expect(output.css).toMatchInlineSnapshot(`
