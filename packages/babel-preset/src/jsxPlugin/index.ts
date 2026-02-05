@@ -102,6 +102,9 @@ function JSX(path: NodePath<t.JSXElement> | NodePath<t.JSXFragment>) {
 
   SCOPE.set(path, scope);
 
+  for (const ctx of scope)
+    ctx.children.forEach((child) => scope.add(child));
+
   if (path.isJSXElement()) {
     const names = new Map<string, NodePath>();
     const opening = path.get("openingElement");

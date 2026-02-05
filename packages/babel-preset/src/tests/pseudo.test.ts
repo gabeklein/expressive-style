@@ -153,3 +153,68 @@ it("will apply hover pseudo class with nested", async () => {
     }
   `);
 });
+
+it("will combine pseudo with conditional", async () => {
+  const output = await parser(`
+    const Component = ({ ready }) => {
+      color: red;
+    
+      if(":hover"){
+        color: blue;
+      }
+    
+      if(ready){
+        color: blue;
+        
+        if(":hover"){
+          color: green
+
+          inner: {
+            color: purple;
+          }
+        }
+      }
+    
+      return (
+        <div>
+          Hello
+          <inner />
+        </div>
+      )
+    }
+  `);
+
+  expect(output.code).toMatchInlineSnapshot(`
+    const Component = ({ className, ready }) => {
+      return (
+        <div
+          className={_concat(
+            'Component_2fd',
+            ready && 'ready_tla',
+            className
+          )}>
+          Hello
+          <inner className="inner_i0z" />
+        </div>
+      );
+    };
+  `);
+
+  expect(output.css).toMatchInlineSnapshot(`
+    .Component_2fd {
+      color: red;
+    }
+    .ready_tla {
+      color: blue;
+    }
+    .ready_tla:hover {
+      color: green;
+    }
+    .Component_2fd:hover {
+      color: blue;
+    }
+    .ready_tla:hover .inner_i0z {
+      color: purple;
+    }
+  `);
+});
