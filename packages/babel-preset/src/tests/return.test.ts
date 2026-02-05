@@ -5,7 +5,7 @@ it("should throw error for implicit JSX return", async () => {
   await expect(async () => {
     await parser(`
       function Component(){
-        <div>Hello</div>
+        <div />
       }
     `);
   }).rejects.toThrow();
@@ -14,13 +14,13 @@ it("should throw error for implicit JSX return", async () => {
 it("will optimize arrow expression", async () => {
   const output = await parser(`
     const Component = () => {
-      return <div>Hello</div>
+      return <div />
     }
   `);
 
   expect(output.code).toMatchInlineSnapshot(`
     const Component = (props) => {
-      return <div className={props.className}>Hello</div>;
+      return <div className={props.className} />;
     };
   `);
 });
@@ -57,7 +57,7 @@ it("will combine if 'this' is styled", async () => {
 
       return (
         <div _inner>
-          <div _thing>Hello</div>
+          <div _thing />
         </div>
       )
     }
@@ -71,7 +71,7 @@ it("will combine if 'this' is styled", async () => {
             props.className,
             'inner_tla Component_2cj'
           )}>
-          <div className="thing_tla">Hello</div>
+          <div className="thing_tla" />
         </div>
       );
     }

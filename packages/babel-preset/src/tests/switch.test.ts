@@ -7,16 +7,16 @@ it("will apply to this", async () => {
       if(active)
         color: red;
       
-      return <div>Hello</div>
+      return <div />
     }
   `);
 
   expect(output.code).toMatchInlineSnapshot(`
     const Component = ({ className, active }) => {
       return (
-        <div className={_concat(className, active && 'active_tla')}>
-          Hello
-        </div>
+        <div
+          className={_concat(className, active && 'active_tla')}
+        />
       );
     };
   `);
@@ -38,7 +38,7 @@ it("will apply else", async () => {
       else
         color: blue;
       
-      return <div>Hello</div>
+      return <div />
     }
   `);
 
@@ -50,9 +50,8 @@ it("will apply else", async () => {
             'Component_2a2',
             active ? 'active_tla' : 'else_tla',
             className
-          )}>
-          Hello
-        </div>
+          )}
+        />
       );
     };
   `);
@@ -80,7 +79,7 @@ it("will mix style and real-statement switch", async () => {
       } else
         color: blue;
 
-      return <div>Hello</div>
+      return <div />
     }
   `);
 
@@ -104,9 +103,8 @@ it("will mix style and real-statement switch", async () => {
             'Component_14m',
             !active && 'else_tla',
             className
-          )}>
-          Hello
-        </div>
+          )}
+        />
       );
     };
   `);
@@ -122,7 +120,7 @@ it("will apply to selector", async () => {
           color: red;
       }
       
-      return <div>Hello</div>
+      return <div />
     }
   `);
 
@@ -134,9 +132,8 @@ it("will apply to selector", async () => {
             'div_tla',
             active && 'active_roo',
             className
-          )}>
-          Hello
-        </div>
+          )}
+        />
       );
     };
   `);
@@ -152,7 +149,7 @@ it("will apply to child selector", async () => {
 
       return (
         <div>
-          <div>Hello</div>
+          <div />
         </div>
       )
     }
@@ -162,7 +159,7 @@ it("will apply to child selector", async () => {
     const Component = ({ className, active }) => {
       return (
         <div className={_concat(className, active && 'active_tla')}>
-          <div className="div_xt4">Hello</div>
+          <div className="div_xt4" />
         </div>
       );
     };
@@ -182,7 +179,7 @@ it.skip("will apply without brackets", async () => {
       div: if(active)
         color: red;
       
-      return <div>Hello</div>
+      return <div />
     }
   `);
 

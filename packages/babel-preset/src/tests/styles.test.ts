@@ -8,17 +8,13 @@ it("will apply", async () => {
         color: blue;
       }
     
-      return <div>Hello</div>
+      return <div />
     }
   `);
 
   expect(output.code).toMatchInlineSnapshot(`
     const Component = (props) => {
-      return (
-        <div className={_concat(props.className, 'div_tla')}>
-          Hello
-        </div>
-      );
+      return <div className={_concat(props.className, 'div_tla')} />;
     };
   `);
 
@@ -200,7 +196,7 @@ it("will apply to jsx in conditional statement", async () => {
     
       return (
         <div>
-          {true && <div _hi>Hello</div>}
+          {true && <div _hi />}
         </div>
       )
     }
@@ -210,7 +206,7 @@ it("will apply to jsx in conditional statement", async () => {
     const Component = (props) => {
       return (
         <div className={props.className}>
-          {true && <div className="hi_tla">Hello</div>}
+          {true && <div className="hi_tla" />}
         </div>
       );
     };
@@ -317,7 +313,7 @@ it("will use classnames from module", async () => {
         color: blue;
       }
     
-      return <div>Hello</div>
+      return <div />
     }
   `);
 
@@ -326,9 +322,7 @@ it("will use classnames from module", async () => {
 
     const Component = (props) => {
       return (
-        <div className={_concat(props.className, css.div_tla)}>
-          Hello
-        </div>
+        <div className={_concat(props.className, css.div_tla)} />
       );
     };
   `);
@@ -339,7 +333,7 @@ it("will handle border correctly", async () => {
     const Component = () => {
       border: dashed, 2, $borderLight;
     
-      return <div>Hello</div>;
+      return <div />;
     }
   `);
 
