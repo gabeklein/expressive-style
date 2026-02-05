@@ -250,11 +250,11 @@ it("will export styles in order", async () => {
     .active_tla {
       color: yellow;
     }
-    .outer_tla {
-      color: red;
-    }
     .something_tla {
       color: purple;
+    }
+    .outer_tla {
+      color: red;
     }
     .something_upu {
       color: green;

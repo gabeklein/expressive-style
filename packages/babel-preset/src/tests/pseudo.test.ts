@@ -204,14 +204,14 @@ it("will combine pseudo with conditional", async () => {
     .Component_2fd {
       color: red;
     }
+    .Component_2fd:hover {
+      color: blue;
+    }
     .ready_tla {
       color: blue;
     }
     .ready_tla:hover {
       color: green;
-    }
-    .Component_2fd:hover {
-      color: blue;
     }
     .ready_tla:hover .inner_i0z {
       color: purple;
