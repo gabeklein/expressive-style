@@ -34,8 +34,11 @@ export function getClassName(
 
     if (typeof alt === "string") alt = t.stringLiteral(alt);
 
-    if (alt && value) return t.conditionalExpression(condition, value, alt);
-    if (alt) return t.logicalExpression("&&", t.unaryExpression("!", condition), alt);
+    if (alt) {
+      if(value) return t.conditionalExpression(condition, value, alt);
+
+      return t.logicalExpression("&&", t.unaryExpression("!", condition), alt);
+    }
   }
 
   if (value) return t.logicalExpression("&&", condition, value);

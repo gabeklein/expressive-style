@@ -12,7 +12,7 @@ import {
 
 export function CSSPlugin(
   _compiler: any,
-  options: Preset.Options = {}
+  options: Preset.Options = {},
 ): PluginObj<State> {
   const { cssModule } = options;
 
@@ -47,8 +47,8 @@ export function CSSPlugin(
             "body",
             t.importDeclaration(
               [t.importDefaultSpecifier(cssModuleId)],
-              t.stringLiteral(cssModule)
-            )
+              t.stringLiteral(cssModule),
+            ),
           );
         },
       },
@@ -59,28 +59,25 @@ export function CSSPlugin(
 
         if (!using.size) return;
 
-        let forward: NodePath<t.Function> | undefined;
-
-        for (const define of using) {
-          const className = getClassName(define, cssModuleId);
+        for (const context of using) {
+          const className = getClassName(context, cssModuleId);
 
           if (className) addClassName(path, className, state);
 
-          if (define.path.isFunction()) forward = define.path;
+          if (context.path.isFunction()) {
+            const className = getComponentProp(context.path, "className");
+
+            if (className) addClassName(path, className, state);
+          }
         }
 
         for (const context of using) {
+          context.children.forEach((x) => using.add(x));
+
           const { styles } = state.file.metadata as Preset.MetaData;
           const key = toSelector(context);
 
-          context.children.forEach((x) => using.add(x));
           styles.set(key, context);
-        }
-
-        if (forward) {
-          const className = getComponentProp(forward, "className");
-
-          if (className) addClassName(path, className, state);
         }
       },
     },
