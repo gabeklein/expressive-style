@@ -77,8 +77,14 @@ function toColor(raw: string) {
 export function toSelector(context: Context): string {
   let { parent, condition, uid } = context;
 
-  if (typeof condition === "string")
-    return toSelector(context.parent!) + condition;
+  if (typeof condition === "string"){
+    const parent = toSelector(context.parent!);
+
+    if(condition.includes("&"))
+      return condition.replace(/&/g, parent);
+
+    return parent + condition;
+  }
 
   let selector = "";
 
