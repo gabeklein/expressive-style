@@ -11,6 +11,6 @@ export default defineConfig({
     optimizeDeps: {
       exclude: ["fumadocs-ui", "fumadocs-core", "@fumadocs/ui"],
     },
-    plugins: [tailwindcss(), mdx(MdxConfig), tsconfigPaths(), stylePlugin()],
+    plugins: [tailwindcss(), mdx(MdxConfig), tsconfigPaths(), stylePlugin({ cssModules: false })],
   } satisfies UserConfig as Config["vite"],
 });
