@@ -47,8 +47,8 @@ function jsxPlugin(options: Options = {}): Plugin {
     configureServer(server) {
       moduleGraph = server.moduleGraph;
     },
-    resolveId(id, importer) {
-      if (id === "__EXPRESSIVE_CSS__") return getCssId(importer!);
+    resolveId(id, importer = "") {
+      if (id === "__EXPRESSIVE_CSS__") return getCssId(importer);
     },
     load(path: string) {
       const cached = CACHE.get(path);
@@ -84,4 +84,4 @@ function jsxPlugin(options: Options = {}): Plugin {
   };
 }
 
-export default jsxPlugin;
+export { jsxPlugin as default, jsxPlugin };
