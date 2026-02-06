@@ -66,6 +66,8 @@ function VirtualFiles(
         }
       : input;
 
+  const resolved = new Map<string, string>();
+
   return <Plugin>{
     enforce: "pre",
     name: "virtual-files-plugin",
@@ -76,18 +78,19 @@ function VirtualFiles(
       },
     }),
     resolveId(id, requester) {
-      if (requester) id = resolve(dirname(requester), id);
+      const absolute = requester
+        ? resolve(dirname(requester), id)
+        : resolve(__dirname, id);
 
-      const file = relative(__dirname, id);
+      const path = relative(__dirname, absolute);
 
-      if (file in source) {
-        source[id] = source[file];
-        delete source[file];
-        return id;
+      if (path in source) {
+        resolved.set(absolute, source[path]);
+        return absolute;
       }
     },
     load(id) {
-      if (id in source) return source[id];
+      return resolved.get(id);
     },
     generateBundle(_, bundle: any) {
       for (const key in bundle) {
