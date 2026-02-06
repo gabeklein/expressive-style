@@ -6,7 +6,7 @@ import { Thing } from "@/components/Thing"
 Expressive JSX is a build-time CSS-in-JS solution that **upcycles JavaScript syntax**—specifically labeled statements—into a powerful styling system.
 
 <Callout type="info">
-  **Zero Runtime Overhead** — All transformations happen at build time. CSS is extracted to separate stylesheets.
+  **Zero Runtime Overhead** — All transformations happen at build time. CSS is generated and re-imported as modules for each file.
 </Callout>
 
 ## What Makes It Different?
@@ -14,10 +14,10 @@ Expressive JSX is a build-time CSS-in-JS solution that **upcycles JavaScript syn
 Instead of inventing new syntax, Expressive JSX repurposes existing JavaScript features that are rarely used:
 
 - **Labels** (from `for`/`while` loops) → Style scopes
-- **Bare identifiers** → CSS properties and values
+- **Bare identifiers** → CSS properties and values; camelCase converts to kebab
 - **If statements** → Conditional styles and pseudo-selectors
 
-This means it's **valid JavaScript** that gets new meaning at build time.
+Key is that only **valid JavaScript but inert** gets new meaning at build time.
 
 ## Quick Example
 
@@ -36,24 +36,13 @@ const Button = ({ disabled }) => {
   }
 
   // Pseudo-selectors
-  if (':hover' && !disabled) {
+  if (':hover') {
     background: 0x9b6fd9;
   }
 
   return <button>Click me</button>;
 }
 ```
-
-This transforms to:
-
-- Zero runtime code
-- Extracted CSS classes
-- Type-safe prop checking
-- No wrapper components
-
-<Thing>
-  This component is styled with Expressive JSX!
-</Thing>
 
 ## Core Concepts
 
@@ -111,7 +100,7 @@ background: 0xff0000;     // → background: #ff0000
 
 ### CamelCase Values
 
-Use bare identifiers for CSS values:
+Use bare identifiers for CSS values; strings still can be used to not collide with keywords:
 
 ```jsx
 cursor: pointer;          // → cursor: "pointer"
