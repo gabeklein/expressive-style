@@ -4,8 +4,10 @@ import { ModuleGraph, Plugin } from "vite";
 import { transform, TransformOptions, TransformResult } from "./transform";
 
 const VIRTUAL_CSS = "\0virtual:css:";
+const CSS_MODULE_IMPORT = "__EXPRESSIVE_CSS_MODULE__";
 
 const getCssId = (path: string) => VIRTUAL_CSS + localize(path) + ".css";
+const getCssModuleId = (path: string) => localize(path) + ".module.css";
 const localize = (path: string) => {
   const cwd = process.cwd();
   return path.startsWith(cwd) ? "/" + relative(cwd, path) : path;
@@ -14,12 +16,19 @@ const localize = (path: string) => {
 const DEFAULT_SHOULD_TRANSFORM = (id: string) =>
   !/node_modules/.test(id) && id.endsWith(".jsx");
 
-export interface Options extends TransformOptions {
+export interface Options {
   test?: RegExp | ((uri: string) => boolean);
+  cssModules?: boolean;
+  transform?: TransformOptions;
 }
 
 function jsxPlugin(options: Options = {}): Plugin {
-  const test = options.test;
+  const { test, cssModules } = options;
+  const transformOptions = options.transform || {};
+
+  if (cssModules)
+    transformOptions.cssModule = CSS_MODULE_IMPORT;
+
   const accept: (id: string) => boolean =
     typeof test == "function"
       ? test
@@ -31,12 +40,13 @@ function jsxPlugin(options: Options = {}): Plugin {
   let moduleGraph!: ModuleGraph;
 
   async function transformCache(id: string, code: string) {
-    const result = await transform(id, code, options);
+    const result = await transform(id, code, transformOptions);
 
-    if (result.css) result.code += `\nimport "__EXPRESSIVE_CSS__";`;
+    if (!cssModules && result.css)
+      result.code += `\nimport "__EXPRESSIVE_CSS__";`;
 
     CACHE.set(id, result);
-    CACHE.set(getCssId(id), result);
+    CACHE.set(cssModules ? getCssModuleId(id) : getCssId(id), result);
 
     return result;
   }
@@ -49,16 +59,28 @@ function jsxPlugin(options: Options = {}): Plugin {
     },
     resolveId(id, importer = "") {
       if (id === "__EXPRESSIVE_CSS__") return getCssId(importer);
+      if (id === CSS_MODULE_IMPORT && importer) return getCssModuleId(importer);
     },
     load(path: string) {
       const cached = CACHE.get(path);
 
-      if (cached && path.startsWith(VIRTUAL_CSS)) return cached.css;
+      if (!cached) return;
+
+      if (path.startsWith(VIRTUAL_CSS) || path.endsWith(".module.css"))
+        return cached.css;
     },
     async transform(code, id) {
+      if (id.startsWith(VIRTUAL_CSS)) {
+        const result = CACHE.get(id);
+        return result ? result.css : null;
+      }
+
+      // Let Vite's CSS plugin handle CSS modules
+      if (id.endsWith(".module.css")) return null;
+
       const result = CACHE.get(id);
 
-      if (result) return id.startsWith(VIRTUAL_CSS) ? result.css : result;
+      if (result) return result;
 
       if (accept(id)) return transformCache(id, code);
 
@@ -77,9 +99,10 @@ function jsxPlugin(options: Options = {}): Plugin {
 
       if (cached.css == result.css) return;
 
-      const cssModule = moduleGraph.getModuleById(getCssId(file));
+      const cssId = cssModules ? getCssModuleId(file) : getCssId(file);
+      const cssMod = moduleGraph.getModuleById(cssId);
 
-      if (cssModule) modules.push(cssModule);
+      if (cssMod) modules.push(cssMod);
     },
   };
 }

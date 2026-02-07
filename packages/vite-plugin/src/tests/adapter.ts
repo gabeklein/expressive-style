@@ -4,7 +4,7 @@ import { format } from "prettier";
 import { build, Plugin } from "vite";
 import { expect } from "vitest";
 
-import MyPlugin from "..";
+import MyPlugin, { Options } from "..";
 
 interface BuildOutput {
   [name: string]: string;
@@ -28,7 +28,7 @@ expect.addSnapshotSerializer({
   },
 });
 
-export async function bundle(input: Record<string, string> | string = "") {
+export async function bundle(input: Record<string, string> | string = "", options: Options = {}) {
   const output: Record<string, string> = {};
 
   BUILD_OUTPUT.add(output);
@@ -40,7 +40,7 @@ export async function bundle(input: Record<string, string> | string = "") {
         external: /polyfill/,
       },
     },
-    plugins: [VirtualFiles(input, output), MyPlugin()],
+    plugins: [VirtualFiles(input, output), MyPlugin(options)],
   });
 
   return output;
