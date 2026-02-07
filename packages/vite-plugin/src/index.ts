@@ -53,12 +53,12 @@ function jsxPlugin(options: Options = {}): Plugin {
     load(path: string) {
       const cached = CACHE.get(path);
 
-      if (cached && path.startsWith(VIRTUAL_CSS)) return cached.css;
+      if (cached && path.endsWith("css")) return cached.css;
     },
     async transform(code, id) {
       const result = CACHE.get(id);
 
-      if (result) return id.startsWith(VIRTUAL_CSS) ? result.css : result;
+      if (result) return id.endsWith("css") ? result.css : result;
 
       if (accept(id)) return transformCache(id, code);
 
