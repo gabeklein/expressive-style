@@ -16,6 +16,10 @@ const localize = (path: string) => {
 
 const stripQuery = (id: string) => id.split("?")[0];
 
+interface CacheEntry extends TransformResult {
+  source: string;
+}
+
 // ── Diagnostic logging ──────────────────────────────────────────────
 const DIM = "\x1b[2m";
 const RESET = "\x1b[0m";
@@ -44,16 +48,14 @@ export interface PluginOptions extends TransformOptions {
 function jsxPlugin(options: PluginOptions = {}): Plugin {
   const accept = shouldTransform(options);
 
-  const CACHE = new Map<string, TransformResult>();
+  const CACHE = new Map<string, CacheEntry>();
   let moduleGraph!: ModuleGraph;
 
-  async function transformCache(id: string, code: string) {
-    const result = await transform(id, code, options);
+  async function transformCache(id: string, source: string) {
+    const result = await transform(id, source, options);
     const cssId = getCssId(id);
 
     if (result.css) {
-      // Use a CSS-looking import specifier so framework CSS collectors
-      // (Waku, Next.js, etc.) recognize it as a CSS dependency.
       const cssImport = getCssImport(id);
       result.code += `\nimport "${cssImport}";`;
 
@@ -66,10 +68,26 @@ function jsxPlugin(options: PluginOptions = {}): Plugin {
       log("transform", DIM, `no CSS for ${localize(id)}`);
     }
 
-    CACHE.set(id, result);
-    CACHE.set(cssId, result);
+    const entry: CacheEntry = { ...result, source };
 
-    return result;
+    CACHE.set(id, entry);
+    CACHE.set(cssId, entry);
+
+    return entry;
+  }
+
+  function invalidateCssModule(fileId: string) {
+    if (!moduleGraph) return null;
+
+    const cssId = getCssId(fileId);
+    const cssModule = moduleGraph.getModuleById(cssId);
+
+    if (cssModule) {
+      moduleGraph.invalidateModule(cssModule);
+      log("hmr", MAGENTA, `invalidated CSS module ${localize(cssId)}`);
+    }
+
+    return cssModule;
   }
 
   return {
@@ -82,8 +100,6 @@ function jsxPlugin(options: PluginOptions = {}): Plugin {
     resolveId(id, importer = "", options) {
       const clean = stripQuery(id);
 
-      // Handle: import "virtual:css:/src/foo.jsx.css"
-      // Also handles ?direct and other query-param variants
       if (clean.startsWith(VIRTUAL_PREFIX)) {
         const resolved = RESOLVED_PREFIX + clean.slice(VIRTUAL_PREFIX.length);
         log("resolveId", YELLOW, `"${clean}" → resolved`, {
@@ -92,7 +108,6 @@ function jsxPlugin(options: PluginOptions = {}): Plugin {
         return resolved;
       }
 
-      // Legacy: import "__EXPRESSIVE_CSS__"
       if (id === "__EXPRESSIVE_CSS__") {
         const resolved = getCssId(importer);
         log("resolveId", YELLOW, `legacy __EXPRESSIVE_CSS__ → resolved`, {
@@ -117,27 +132,33 @@ function jsxPlugin(options: PluginOptions = {}): Plugin {
         return cached.css;
       }
 
-      log("load", RED, `CACHE MISS for ${clean.replace("\0", "\\0")}`, {
-        ssr,
-        cacheKeys: [...CACHE.keys()].filter(k => k.includes("virtual:css")).map(k => k.replace("\0", "\\0")),
-      });
+      log("load", RED, `CACHE MISS for ${clean.replace("\0", "\\0")}`, { ssr });
     },
     async transform(code, id, options) {
       const ssr = !!(options as any)?.ssr;
       const clean = stripQuery(id);
 
-      // Handle cached virtual CSS modules
-      const result = CACHE.get(clean);
-      if (result) {
+      const cached = CACHE.get(clean);
+
+      if (cached) {
+        // Virtual CSS modules — always return from cache
         if (clean.endsWith(".css")) {
           log("transform", CYAN, `returning cached CSS for ${localize(clean)}`, { ssr });
-          return result.css;
+          return cached.css;
         }
-        log("transform", CYAN, `returning cached code for ${localize(clean)}`, { ssr });
-        return result;
+
+        // JSX file — check if source changed since last transform
+        if (cached.source === code) {
+          log("transform", CYAN, `returning cached code for ${localize(clean)}`, { ssr });
+          return cached;
+        }
+
+        // Source changed! Re-transform.
+        log("transform", YELLOW, `source changed, re-transforming ${localize(id)}`, { ssr });
+        invalidateCssModule(clean);
+        return transformCache(id, code);
       }
 
-      // Transform JSX files
       if (accept(id)) {
         log("transform", YELLOW, `transforming ${localize(id)}`, { ssr });
         return transformCache(id, code);
@@ -151,18 +172,27 @@ function jsxPlugin(options: PluginOptions = {}): Plugin {
 
       if (!cached) return;
 
-      log("hmr", MAGENTA, `updating ${localize(file)}`);
+      log("hmr", MAGENTA, `file changed: ${localize(file)}`);
 
       const source = await context.read();
       const result = await transformCache(file, source);
 
-      if (cached.code == result.code) modules.pop();
+      const codeChanged = cached.code !== result.code;
+      const cssChanged = cached.css !== result.css;
 
-      if (cached.css == result.css) return;
+      log("hmr", MAGENTA, `changes detected`, { codeChanged, cssChanged });
 
-      const cssModule = moduleGraph.getModuleById(getCssId(file));
+      if (!codeChanged && !cssChanged) return [];
 
-      if (cssModule) modules.push(cssModule);
+      const updates = codeChanged ? [...modules] : [];
+
+      if (cssChanged) {
+        const cssModule = invalidateCssModule(file);
+        if (cssModule) updates.push(cssModule);
+      }
+
+      log("hmr", MAGENTA, `sending ${updates.length} module(s) for HMR`);
+      return updates;
     },
   };
 }
