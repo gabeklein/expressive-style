@@ -1,7 +1,7 @@
 import { relative } from "path";
 import { ModuleGraph, Plugin } from "vite";
 
-import { transform, TransformOptions, TransformResult } from "./transform";
+import { shouldTransform, transform, TransformOptions, TransformResult } from "./transform";
 
 const VIRTUAL_CSS = "\0virtual:css:";
 
@@ -11,21 +11,11 @@ const localize = (path: string) => {
   return path.startsWith(cwd) ? "/" + relative(cwd, path) : path;
 };
 
-const DEFAULT_SHOULD_TRANSFORM = (id: string) =>
-  !/node_modules/.test(id) && id.endsWith(".jsx");
-
-export interface Options extends TransformOptions {
-  test?: RegExp | ((uri: string) => boolean);
+export interface PluginOptions extends TransformOptions {
 }
 
-function jsxPlugin(options: Options = {}): Plugin {
-  const test = options.test;
-  const accept: (id: string) => boolean =
-    typeof test == "function"
-      ? test
-      : test instanceof RegExp
-      ? (id) => test.test(id)
-      : DEFAULT_SHOULD_TRANSFORM;
+function jsxPlugin(options: PluginOptions = {}): Plugin {
+  const accept = shouldTransform(options);
 
   const CACHE = new Map<string, TransformResult>();
   let moduleGraph!: ModuleGraph;
