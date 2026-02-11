@@ -39,18 +39,18 @@ export const Hero = () => {
     textDecoration: none;
     transition: 'all 0.2s ease';
     cursor: pointer;
-  }
 
-  primary: {
-    background: 0x8150ce;
-    color: white;
-    border: none;
-  }
+    primary: {
+      background: 0x8150ce;
+      color: white;
+      border: none;
+    }
 
-  secondary: {
-    background: transparent;
-    color: 0x8150ce;
-    border: '2px solid #8150ce';
+    secondary: {
+      background: transparent;
+      color: 0x8150ce;
+      border: '2px solid #8150ce';
+    }
   }
 
   return (
