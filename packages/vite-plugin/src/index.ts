@@ -2,7 +2,12 @@ import { relative } from "path";
 import { HotChannel, Plugin } from "vite";
 
 import { log } from "./log";
-import { shouldTransform, transform, TransformOptions, TransformResult } from "./transform";
+import {
+  shouldTransform,
+  transform,
+  TransformOptions,
+  TransformResult,
+} from "./transform";
 
 const VIRTUAL_PREFIX = "virtual:css:";
 const RESOLVED_PREFIX = "\0" + VIRTUAL_PREFIX;
@@ -21,8 +26,7 @@ interface CacheEntry extends TransformResult {
   source: string;
 }
 
-export interface PluginOptions extends TransformOptions {
-}
+export interface PluginOptions extends TransformOptions {}
 
 function jsxPlugin(options: PluginOptions = {}): Plugin {
   const accept = shouldTransform(options);
@@ -65,11 +69,12 @@ function jsxPlugin(options: PluginOptions = {}): Plugin {
     },
     resolveId(id, importer = "", options) {
       const clean = stripQuery(id);
+      const ssr = !!(options as any)?.ssr;
 
       if (clean.startsWith(VIRTUAL_PREFIX)) {
         const resolved = RESOLVED_PREFIX + id.slice(VIRTUAL_PREFIX.length);
         log.gold("resolveId", `"${id}" → resolved`, {
-          ssr: !!(options as any)?.ssr,
+          ssr,
         });
         return resolved;
       }
@@ -78,7 +83,7 @@ function jsxPlugin(options: PluginOptions = {}): Plugin {
         const resolved = getCssId(importer);
         log.gold("resolveId", `legacy __EXPRESSIVE_CSS__ → resolved`, {
           importer: localize(importer),
-          ssr: !!(options as any)?.ssr,
+          ssr,
         });
         return resolved;
       }
@@ -108,16 +113,26 @@ function jsxPlugin(options: PluginOptions = {}): Plugin {
 
       if (cached) {
         if (clean.endsWith(".css")) {
-          log.cyan("transform", `returning cached CSS for ${localize(clean)}`, { ssr });
+          log.cyan("transform", `returning cached CSS for ${localize(clean)}`, {
+            ssr,
+          });
           return cached.css;
         }
 
         if (cached.source === code) {
-          log.cyan("transform", `returning cached code for ${localize(clean)}`, { ssr });
+          log.cyan(
+            "transform",
+            `returning cached code for ${localize(clean)}`,
+            { ssr },
+          );
           return cached;
         }
 
-        log.gold("transform", `source changed, re-transforming ${localize(id)}`, { ssr });
+        log.gold(
+          "transform",
+          `source changed, re-transforming ${localize(id)}`,
+          { ssr },
+        );
         return transformCache(id, code);
       }
 
@@ -155,11 +170,11 @@ function jsxPlugin(options: PluginOptions = {}): Plugin {
         return modules;
       }
 
-      // Server components have no client modules — Waku handles RSC
+      // Server components have no client modules — frameworks like Waku handle RSC
       // re-render, but as a safety net, trigger full-reload if CSS changed.
       if (cssChanged && hot) {
         log.pink("hmr", `server component CSS changed → full-reload`);
-        hot?.send?.({ type: 'full-reload', path: '*' });
+        hot?.send?.({ type: "full-reload", path: "*" });
       }
 
       return [];
