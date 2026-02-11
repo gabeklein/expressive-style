@@ -1,10 +1,10 @@
 import type { BaseLayoutProps } from 'fumadocs-ui/layouts/shared';
-import { SiteLogo } from '@/components/Logo';
+import { Logo } from '@/components/Logo';
 
 export function baseOptions(): BaseLayoutProps {
   return {
     nav: {
-      title: <SiteLogo />,
+      title: <Logo />,
     },
     links: [
       {
