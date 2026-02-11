@@ -5,11 +5,6 @@ export const Logo = () => {
   alignItems: center;
   display: flex;
   gap: 10;
-  width: 100;
-
-  Logo: {
-    size: 15;
-  }
 
   return (
     <div>
@@ -21,6 +16,7 @@ export const Logo = () => {
 
 export const Svg = () => {
   color: 0x8150ce;
+  size: 40;
   
   return (
     <svg viewBox="0 0 1019 701" xmlns="http://www.w3.org/2000/svg">

@@ -3,13 +3,6 @@ export const Features = () => {
   maxWidth: 1200;
   margin: 0, auto;
 
-  grid: {
-    display: grid;
-    gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))';
-    gap: 30;
-    marginTop: 40;
-  }
-
   heading: {
     fontSize: 2.5;
     fontWeight: bold;
@@ -26,6 +19,14 @@ export const Features = () => {
       color: 0x999;
     }
   }
+
+  grid: {
+    display: grid;
+    gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))';
+    gap: 30;
+    marginTop: 40;
+  }
+
   return (
     <section>
       <h2 _heading>Why Expressive JSX?</h2>
