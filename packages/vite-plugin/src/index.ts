@@ -1,5 +1,5 @@
 import { relative } from "path";
-import { ModuleGraph, Plugin } from "vite";
+import { HotChannel, Plugin } from "vite";
 
 import { shouldTransform, transform, TransformOptions, TransformResult } from "./transform";
 
@@ -49,14 +49,15 @@ function jsxPlugin(options: PluginOptions = {}): Plugin {
   const accept = shouldTransform(options);
 
   const CACHE = new Map<string, CacheEntry>();
-  let moduleGraph!: ModuleGraph;
+  let hot: HotChannel | undefined;
+  let cssVersion = 0;
 
   async function transformCache(id: string, source: string) {
     const result = await transform(id, source, options);
     const cssId = getCssId(id);
 
     if (result.css) {
-      const cssImport = getCssImport(id);
+      const cssImport = getCssImport(id) + `?v=${cssVersion++}`;
       result.code += `\nimport "${cssImport}";`;
 
       log("transform", GREEN, `generated CSS for ${localize(id)}`, {
@@ -76,33 +77,19 @@ function jsxPlugin(options: PluginOptions = {}): Plugin {
     return entry;
   }
 
-  function invalidateCssModule(fileId: string) {
-    if (!moduleGraph) return null;
-
-    const cssId = getCssId(fileId);
-    const cssModule = moduleGraph.getModuleById(cssId);
-
-    if (cssModule) {
-      moduleGraph.invalidateModule(cssModule);
-      log("hmr", MAGENTA, `invalidated CSS module ${localize(cssId)}`);
-    }
-
-    return cssModule;
-  }
-
   return {
     name: "expressive-jsx-plugin",
     enforce: "pre",
     configureServer(server) {
-      moduleGraph = server.moduleGraph;
+      hot = server.hot;
       log("init", CYAN, "configureServer called");
     },
     resolveId(id, importer = "", options) {
       const clean = stripQuery(id);
 
       if (clean.startsWith(VIRTUAL_PREFIX)) {
-        const resolved = RESOLVED_PREFIX + clean.slice(VIRTUAL_PREFIX.length);
-        log("resolveId", YELLOW, `"${clean}" → resolved`, {
+        const resolved = RESOLVED_PREFIX + id.slice(VIRTUAL_PREFIX.length);
+        log("resolveId", YELLOW, `"${id}" → resolved`, {
           ssr: !!(options as any)?.ssr,
         });
         return resolved;
@@ -141,21 +128,17 @@ function jsxPlugin(options: PluginOptions = {}): Plugin {
       const cached = CACHE.get(clean);
 
       if (cached) {
-        // Virtual CSS modules — always return from cache
         if (clean.endsWith(".css")) {
           log("transform", CYAN, `returning cached CSS for ${localize(clean)}`, { ssr });
           return cached.css;
         }
 
-        // JSX file — check if source changed since last transform
         if (cached.source === code) {
           log("transform", CYAN, `returning cached code for ${localize(clean)}`, { ssr });
           return cached;
         }
 
-        // Source changed! Re-transform.
         log("transform", YELLOW, `source changed, re-transforming ${localize(id)}`, { ssr });
-        invalidateCssModule(clean);
         return transformCache(id, code);
       }
 
@@ -172,7 +155,9 @@ function jsxPlugin(options: PluginOptions = {}): Plugin {
 
       if (!cached) return;
 
-      log("hmr", MAGENTA, `file changed: ${localize(file)}`);
+      log("hmr", MAGENTA, `file changed: ${localize(file)}`, {
+        moduleCount: modules.length,
+      });
 
       const source = await context.read();
       const result = await transformCache(file, source);
@@ -184,15 +169,21 @@ function jsxPlugin(options: PluginOptions = {}): Plugin {
 
       if (!codeChanged && !cssChanged) return [];
 
-      const updates = codeChanged ? [...modules] : [];
-
-      if (cssChanged) {
-        const cssModule = invalidateCssModule(file);
-        if (cssModule) updates.push(cssModule);
+      // For client components, return modules so Vite sends HMR.
+      // The new CSS hash in the import URL means the browser fetches fresh CSS.
+      if (modules.length > 0) {
+        log("hmr", MAGENTA, `sending ${modules.length} module(s) for HMR`);
+        return modules;
       }
 
-      log("hmr", MAGENTA, `sending ${updates.length} module(s) for HMR`);
-      return updates;
+      // Server components have no client modules — Waku handles RSC
+      // re-render, but as a safety net, trigger full-reload if CSS changed.
+      if (cssChanged && hot) {
+        log("hmr", MAGENTA, `server component CSS changed → full-reload`);
+        if(hot) hot.send!({ type: 'full-reload', path: '*' });
+      }
+
+      return [];
     },
   };
 }
