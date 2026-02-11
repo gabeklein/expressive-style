@@ -1,5 +1,5 @@
 {
-  "name": "@website/repl",
+  "name": "@docs/repl",
   "version": "0.3.2",
   "private": true,
   "module": "src/App.jsx",
@@ -11,7 +11,7 @@
     "@babel/standalone": "^7.23.2",
     "@expressive/babel-preset": "workspace:*",
     "@expressive/react": "^0.51.0",
-    "@website/editor": "workspace:*",
+    "@docs/editor": "workspace:*",
     "prettier": "^2.8.8",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"

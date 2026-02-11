@@ -147,7 +147,7 @@ importers:
       '@expressive/react':
         specifier: ^0.51.0
         version: 0.51.2(react@18.3.1)
-      '@website/editor':
+      '@docs/editor':
         specifier: workspace:*
         version: link:../editor
       prettier:

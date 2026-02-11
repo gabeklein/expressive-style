@@ -1,5 +1,5 @@
 import Model, { has, use } from "@expressive/react";
-import { Editor } from "@website/editor";
+import { Editor } from "@docs/editor";
 
 import { Document } from "./Document";
 

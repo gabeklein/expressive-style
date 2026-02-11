@@ -6,7 +6,7 @@ import {
   jsx,
   cssInJsx,
   readOnly,
-} from "@website/editor";
+} from "@docs/editor";
 
 import { Document } from "./Document";
 import { Main } from "./Main";
