@@ -1,6 +1,7 @@
 import { relative } from "path";
 import { HotChannel, Plugin } from "vite";
 
+import { log } from "./log";
 import { shouldTransform, transform, TransformOptions, TransformResult } from "./transform";
 
 const VIRTUAL_PREFIX = "virtual:css:";
@@ -20,28 +21,6 @@ interface CacheEntry extends TransformResult {
   source: string;
 }
 
-// ── Diagnostic logging ──────────────────────────────────────────────
-const DIM = "\x1b[2m";
-const RESET = "\x1b[0m";
-const CYAN = "\x1b[36m";
-const YELLOW = "\x1b[33m";
-const GREEN = "\x1b[32m";
-const RED = "\x1b[31m";
-const MAGENTA = "\x1b[35m";
-
-function log(hook: string, color: string, msg: string, extra?: Record<string, unknown>) {
-  const now = new Date();
-  const t = `${String(now.getMinutes()).padStart(2, "0")}:${String(now.getSeconds()).padStart(2, "0")}.${String(now.getMilliseconds()).padStart(3, "0")}`;
-  const parts = [`${DIM}${t}${RESET}`, `${MAGENTA}[expressive]${RESET}`, `${color}${hook}${RESET}`, msg];
-  if (extra) {
-    for (const [k, v] of Object.entries(extra)) {
-      parts.push(`${DIM}${k}=${JSON.stringify(v)}${RESET}`);
-    }
-  }
-  console.log(parts.join(" "));
-}
-// ─────────────────────────────────────────────────────────────────────
-
 export interface PluginOptions extends TransformOptions {
 }
 
@@ -60,13 +39,13 @@ function jsxPlugin(options: PluginOptions = {}): Plugin {
       const cssImport = getCssImport(id) + `?v=${cssVersion++}`;
       result.code += `\nimport "${cssImport}";`;
 
-      log("transform", GREEN, `generated CSS for ${localize(id)}`, {
+      log.green("transform", `generated CSS for ${localize(id)}`, {
         cssImport,
         cssLength: result.css.length,
         cssPreview: result.css.slice(0, 120),
       });
     } else {
-      log("transform", DIM, `no CSS for ${localize(id)}`);
+      log.dim("transform", `no CSS for ${localize(id)}`);
     }
 
     const entry: CacheEntry = { ...result, source };
@@ -82,14 +61,14 @@ function jsxPlugin(options: PluginOptions = {}): Plugin {
     enforce: "pre",
     configureServer(server) {
       hot = server.hot;
-      log("init", CYAN, "configureServer called");
+      log.cyan("init", "configureServer called");
     },
     resolveId(id, importer = "", options) {
       const clean = stripQuery(id);
 
       if (clean.startsWith(VIRTUAL_PREFIX)) {
         const resolved = RESOLVED_PREFIX + id.slice(VIRTUAL_PREFIX.length);
-        log("resolveId", YELLOW, `"${id}" → resolved`, {
+        log.gold("resolveId", `"${id}" → resolved`, {
           ssr: !!(options as any)?.ssr,
         });
         return resolved;
@@ -97,7 +76,7 @@ function jsxPlugin(options: PluginOptions = {}): Plugin {
 
       if (id === "__EXPRESSIVE_CSS__") {
         const resolved = getCssId(importer);
-        log("resolveId", YELLOW, `legacy __EXPRESSIVE_CSS__ → resolved`, {
+        log.gold("resolveId", `legacy __EXPRESSIVE_CSS__ → resolved`, {
           importer: localize(importer),
           ssr: !!(options as any)?.ssr,
         });
@@ -112,14 +91,14 @@ function jsxPlugin(options: PluginOptions = {}): Plugin {
       const ssr = !!(options as any)?.ssr;
 
       if (cached && clean.endsWith(".css")) {
-        log("load", GREEN, `serving CSS for ${localize(clean)}`, {
+        log.green("load", `serving CSS for ${localize(clean)}`, {
           ssr,
           cssLength: cached.css.length,
         });
         return cached.css;
       }
 
-      log("load", RED, `CACHE MISS for ${clean.replace("\0", "\\0")}`, { ssr });
+      log.red("load", `CACHE MISS for ${clean.replace("\0", "\\0")}`, { ssr });
     },
     async transform(code, id, options) {
       const ssr = !!(options as any)?.ssr;
@@ -129,21 +108,21 @@ function jsxPlugin(options: PluginOptions = {}): Plugin {
 
       if (cached) {
         if (clean.endsWith(".css")) {
-          log("transform", CYAN, `returning cached CSS for ${localize(clean)}`, { ssr });
+          log.cyan("transform", `returning cached CSS for ${localize(clean)}`, { ssr });
           return cached.css;
         }
 
         if (cached.source === code) {
-          log("transform", CYAN, `returning cached code for ${localize(clean)}`, { ssr });
+          log.cyan("transform", `returning cached code for ${localize(clean)}`, { ssr });
           return cached;
         }
 
-        log("transform", YELLOW, `source changed, re-transforming ${localize(id)}`, { ssr });
+        log.gold("transform", `source changed, re-transforming ${localize(id)}`, { ssr });
         return transformCache(id, code);
       }
 
       if (accept(id)) {
-        log("transform", YELLOW, `transforming ${localize(id)}`, { ssr });
+        log.gold("transform", `transforming ${localize(id)}`, { ssr });
         return transformCache(id, code);
       }
 
@@ -155,7 +134,7 @@ function jsxPlugin(options: PluginOptions = {}): Plugin {
 
       if (!cached) return;
 
-      log("hmr", MAGENTA, `file changed: ${localize(file)}`, {
+      log.pink("hmr", `file changed: ${localize(file)}`, {
         moduleCount: modules.length,
       });
 
@@ -165,22 +144,22 @@ function jsxPlugin(options: PluginOptions = {}): Plugin {
       const codeChanged = cached.code !== result.code;
       const cssChanged = cached.css !== result.css;
 
-      log("hmr", MAGENTA, `changes detected`, { codeChanged, cssChanged });
+      log.pink("hmr", `changes detected`, { codeChanged, cssChanged });
 
       if (!codeChanged && !cssChanged) return [];
 
       // For client components, return modules so Vite sends HMR.
       // The new CSS hash in the import URL means the browser fetches fresh CSS.
       if (modules.length > 0) {
-        log("hmr", MAGENTA, `sending ${modules.length} module(s) for HMR`);
+        log.pink("hmr", `sending ${modules.length} module(s) for HMR`);
         return modules;
       }
 
       // Server components have no client modules — Waku handles RSC
       // re-render, but as a safety net, trigger full-reload if CSS changed.
       if (cssChanged && hot) {
-        log("hmr", MAGENTA, `server component CSS changed → full-reload`);
-        if(hot) hot.send!({ type: 'full-reload', path: '*' });
+        log.pink("hmr", `server component CSS changed → full-reload`);
+        hot?.send?.({ type: 'full-reload', path: '*' });
       }
 
       return [];
