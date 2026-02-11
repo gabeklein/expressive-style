@@ -293,11 +293,11 @@ it("will prioritize capitalized styles", async () => {
     .Something_15e {
       color: purple;
     }
-    .something_jsf {
-      color: red;
-    }
     .Something_tla {
       color: blue;
+    }
+    .something_jsf {
+      color: red;
     }
   `);
 });
