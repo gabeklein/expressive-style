@@ -1,7 +1,7 @@
 import { expect, it } from "vitest";
 import { parser } from "./adapter";
 
-it("will pass", async () => {
+it("will apply style to element with attribute", async () => {
   const output = await parser(`
     const Component = () => {
       hello: {
@@ -25,6 +25,20 @@ it("will pass", async () => {
       );
     };
   `);
+});
+
+it("will throw if label reuses the component name", async () => {
+  await expect(async () => {
+    await parser(`
+      const Component = () => {
+        Component: {
+          color: red;
+        }
+
+        return <div />
+      }
+    `);
+  }).rejects.toThrow(/conflicts with the component name/);
 });
 
 // deprecated test - jsx implicit return is no longer supported

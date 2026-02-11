@@ -10,6 +10,11 @@ export function handleLabel(path: NodePath<t.LabeledStatement>) {
   let { name } = path.node.label;
 
   if (body.isBlockStatement()) {
+    if (context.define["this"] === context && context.uid.startsWith(name + "_"))
+      throw path.buildCodeFrameError(
+        `Label "${name}" conflicts with the component name. Use a different name for this style scope.`
+      );
+
     context.define[name] = new Context(path, context, name);
     return;
   }
