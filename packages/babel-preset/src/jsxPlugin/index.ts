@@ -25,9 +25,11 @@ function Plugin(_compiler: any, options: Options): PluginObj<State> {
       parse.plugins.push("jsx");
     },
     visitor: {
-      Program(path, state) {
-        new RootContext(path, state, options);
-        Status.currentFile = state.file as any;
+      Program: {
+        enter(path, state) {
+          new RootContext(path, state, options);
+          Status.currentFile = state.file as any;
+        }
       },
       JSXElement: JSX,
       JSXFragment: JSX,
