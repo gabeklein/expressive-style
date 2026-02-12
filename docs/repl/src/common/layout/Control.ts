@@ -1,11 +1,11 @@
-import Model, { get, ref, set } from "@expressive/react";
+import State, { get, ref, set } from "@expressive/react";
 import React, { ReactNode } from "react";
 
 const AXIS = ["gridTemplateRows", "gridTemplateColumns"] as const;
 
 type DragEvent = () => (x: number, y: number) => void;
 
-export class Layout extends Model {
+export class Layout extends State {
   static managed = new WeakSet();
 
   container = ref(this.applyLayout);
@@ -28,10 +28,10 @@ export class Layout extends Model {
   items = [] as ReactNode[];
   space = [] as number[];
 
-  constructor(...args: Model.Args) {
-    super(...args, () => {
-      if (this.parent) this.separator = this.parent.separator;
-    });
+  new(){
+    if (this.parent) {
+      this.separator = this.parent.separator;
+    }
   }
 
   public applyLayout(element: HTMLElement) {

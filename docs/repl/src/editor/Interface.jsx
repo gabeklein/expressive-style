@@ -1,27 +1,27 @@
-import { Row } from 'common/layout/Layout';
-import { Document } from 'editor/Document';
-import React, { Component, createElement, Fragment } from 'react';
+import { Row } from "common/layout/Layout";
+import { Document } from "editor/Document";
 
-import { InputEditor, OutputJSX } from './Editors';
+import { InputEditor, OutputJSX } from "./Editors";
+import { Provider } from "@expressive/react";
+import { Main } from "./Main";
 
 export const Interface = () => {
-  <Row>
-    <Input />
-    <Output />
-    <Preview />
-  </Row>
-}
+  return (
+    <Provider for={{ Main }}>
+      <Row>
+        <Input />
+        <Output />
+        <Preview />
+      </Row>
+    </Provider>
+  );
+};
 
-export const Input = InputEditor.as(p => <div ref={p.ref} />)
-export const Output = OutputJSX.as(p => <div ref={p.ref} />)
+export const Input = InputEditor.as((p) => <div ref={p.ref} />);
+export const Output = OutputJSX.as((p) => <div ref={p.ref} />);
 
 const Preview = () => {
-  const {
-    key,
-    error,
-    onError,
-    Preview
-  } = Document.get();
+  const { key, error, onError, Preview } = Document.get();
 
   flex: 1;
   flexAlign: center;
@@ -36,13 +36,15 @@ const Preview = () => {
     color: $red;
   }
 
-  <this>
-    {error ? (
-      <issue>{error}</issue>
-    ) : Preview ? (
-      <Preview key={key} onError={onError} />
-    ) : (
-      <issue>Waiting for exports...</issue>
-    )}
-  </this>
-}
+  return (
+    <div>
+      {error ? (
+        <issue>{error}</issue>
+      ) : Preview ? (
+        <Preview key={key} onError={onError} />
+      ) : (
+        <issue>Waiting for exports...</issue>
+      )}
+    </div>
+  );
+};

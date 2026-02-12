@@ -1,8 +1,8 @@
 import "./editor.css";
 
-import { EditorState, Extension } from "@codemirror/state";
+import { EditorState, type Extension } from "@codemirror/state";
 import { EditorView } from "@codemirror/view";
-import { Model, ref, set } from "@expressive/mvc";
+import { State, ref, set } from "@expressive/mvc";
 
 import { onUpdate } from "./plugins";
 
@@ -14,7 +14,7 @@ export * from "./pluginsJSX";
 
 export { Extension };
 
-export abstract class Editor extends Model {
+export abstract class Editor extends State {
   view: EditorView = set();
   state: EditorState = set();
   ref = ref(this.createEditor);

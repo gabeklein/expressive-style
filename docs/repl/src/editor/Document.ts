@@ -1,4 +1,6 @@
-import Model from "@expressive/react";
+"use client";
+
+import State from "@expressive/react";
 
 import { toReact, PreviewComponent } from "./evaluate";
 import { hash, transform } from "./transform";
@@ -6,12 +8,12 @@ import { hash, transform } from "./transform";
 const DEFAULT_CODE = `export const Hi = () => {
   fontSize: 2.0;
 
-  <this>
+  <div>
     Hello World!
-  </this>
+  </div>
 }`;
 
-export class Document extends Model {
+export class Document extends State {
   input = "";
   output = "";
   error = "";
@@ -19,10 +21,8 @@ export class Document extends Model {
   key = 0;
   Preview?: PreviewComponent = undefined;
 
-  constructor() {
-    super(() => {
-      this.build(localStorage.getItem("REPL:file") || DEFAULT_CODE);
-    });
+  new(){
+    this.build(localStorage.getItem("REPL:file") || DEFAULT_CODE);
   }
 
   onError = (error: Error) => {

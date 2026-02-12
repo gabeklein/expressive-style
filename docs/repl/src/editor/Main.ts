@@ -1,4 +1,4 @@
-import Model, { has, use } from "@expressive/react";
+import State, { get, use } from "@expressive/react";
 import { Editor } from "@docs/editor";
 
 import { Document } from "./Document";
@@ -13,10 +13,10 @@ declare namespace Main {
   type Layout = "compact" | "fill" | "code" | "view";
 }
 
-class Main extends Model {
+class Main extends State {
   document = use(Document);
 
-  editors = has(Editor, (editor) => {
+  editors = get(Editor, (editor) => {
     const doc = this.document;
 
     switch (editor.constructor.name) {

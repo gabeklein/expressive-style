@@ -2,7 +2,8 @@
   "name": "@docs/repl",
   "version": "0.3.2",
   "private": true,
-  "module": "src/App.jsx",
+  "type": "module",
+  "main": "src/App.tsx",
   "scripts": {
     "dev": "vite",
     "build": "vite build"

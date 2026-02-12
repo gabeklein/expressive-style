@@ -1,7 +1,7 @@
 import { closeBrackets } from "@codemirror/autocomplete";
 import { history } from "@codemirror/commands";
 import { indentOnInput, syntaxHighlighting } from "@codemirror/language";
-import { EditorState, Extension } from "@codemirror/state";
+import { EditorState, type Extension } from "@codemirror/state";
 import {
   drawSelection,
   EditorView,

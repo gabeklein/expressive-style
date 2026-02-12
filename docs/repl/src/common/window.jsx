@@ -1,3 +1,19 @@
+export const Window = ({ children }) => {
+  height: vh(100);
+  boxSizing: borderBox
+  padding: 0, 10;
+  gridRows: min, minmax(0, "1fr"), min;
+  overflow: hidden;
+
+  return (
+    <div>
+      <Header />
+      {children}
+      <Footer />
+    </div>
+  );
+}
+
 export const Header = () => {
   height: 50;
   display: flex;
@@ -9,12 +25,14 @@ export const Header = () => {
     marginR: 10;
     marginT: 2;
   }
-  
-  <this>
-    <img src="/Logo.svg" />
-    Expressive JSX Demo
-  </this>
-}
+
+  return (
+    <div>
+      <img src="/Logo.svg" />
+      Expressive JSX Demo
+    </div>
+  );
+};
 
 export const Footer = () => {
   marginB: 5;
@@ -23,7 +41,7 @@ export const Footer = () => {
   textAlign: center;
   fontSize: 12;
 
-  <this>
-    Gabe Klein - MIT - {new Date().getFullYear()}
-  </this>
-}
+  return (
+    <div>Gabe Klein - MIT - {new Date().getFullYear()}</div>
+  );
+};
