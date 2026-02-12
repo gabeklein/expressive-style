@@ -13,6 +13,7 @@
   "dependencies": {
     "@fumadocs/ui": "16.5.0",
     "@expressive/vite-plugin": "workspace:*",
+    "@docs/repl": "workspace:*",
     "fumadocs-core": "16.5.0",
     "fumadocs-mdx": "14.2.6",
     "fumadocs-ui": "16.5.0",
