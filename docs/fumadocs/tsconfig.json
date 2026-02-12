@@ -19,7 +19,7 @@
     "paths": {
       "@/*": ["./src/*"],
       "fumadocs-mdx:collections/*": [".source/*"],
-      "@expressive/vite-plugin": ["../../packages/vite-plugin/src/index.ts"],
+      "@expressive/vite-plugin": ["../../packages/vite-plugin/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "dist"]
