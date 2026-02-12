@@ -12,6 +12,8 @@ const NOOP = Symbol("NOOP");
 export * from "./plugins";
 export * from "./pluginsJSX";
 
+export { Extension };
+
 export abstract class Editor extends Model {
   view: EditorView = set();
   state: EditorState = set();
