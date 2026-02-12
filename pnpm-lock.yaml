@@ -63,8 +63,8 @@ importers:
         specifier: workspace:*
         version: link:../../packages/babel-preset
       '@expressive/mvc':
-        specifier: ^0.51.0
-        version: 0.51.2
+        specifier: ^0.73.0
+        version: 0.73.0
       '@lezer/common':
         specifier: ^1.2.1
         version: 1.5.0
@@ -77,6 +77,9 @@ importers:
 
   docs/fumadocs:
     dependencies:
+      '@docs/repl':
+        specifier: workspace:*
+        version: link:../repl
       '@expressive/vite-plugin':
         specifier: workspace:*
         version: link:../../packages/vite-plugin
@@ -141,24 +144,27 @@ importers:
       '@babel/standalone':
         specifier: ^7.23.2
         version: 7.29.0
-      '@expressive/babel-preset':
-        specifier: workspace:*
-        version: link:../../packages/babel-preset
-      '@expressive/react':
-        specifier: ^0.51.0
-        version: 0.51.2(react@18.3.1)
       '@docs/editor':
         specifier: workspace:*
         version: link:../editor
+      '@expressive/babel-preset':
+        specifier: workspace:*
+        version: link:../../packages/babel-preset
+      '@expressive/mvc':
+        specifier: ^0.73.0
+        version: 0.73.0
+      '@expressive/react':
+        specifier: ^0.73.0
+        version: 0.73.0(react@19.2.4)
       prettier:
         specifier: ^2.8.8
         version: 2.8.8
       react:
-        specifier: ^18.2.0
-        version: 18.3.1
+        specifier: ^19.2.4
+        version: 19.2.4
       react-dom:
-        specifier: ^18.2.0
-        version: 18.3.1(react@18.3.1)
+        specifier: ^19.2.4
+        version: 19.2.4(react@19.2.4)
     devDependencies:
       '@expressive/vite-plugin':
         specifier: workspace:*
@@ -170,31 +176,31 @@ importers:
         specifier: ^2.7.3
         version: 2.7.3
       '@types/react':
-        specifier: ^18.2.37
-        version: 18.3.27
+        specifier: ^19.2.10
+        version: 19.2.10
       '@types/react-dom':
-        specifier: ^18.2.15
-        version: 18.3.7(@types/react@18.3.27)
+        specifier: ^19.2.3
+        version: 19.2.3(@types/react@19.2.10)
       '@vitejs/plugin-react':
         specifier: ^4.1.1
-        version: 4.7.0(vite@5.4.21(@types/node@25.2.1)(lightningcss@1.30.2)(terser@5.46.0))
+        version: 4.7.0(vite@7.3.1(@types/node@25.2.1)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.46.0)(tsx@4.21.0)(yaml@2.8.2))
       vite:
-        specifier: ^5.0.0
-        version: 5.4.21(@types/node@25.2.1)(lightningcss@1.30.2)(terser@5.46.0)
+        specifier: ^7.3.1
+        version: 7.3.1(@types/node@25.2.1)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.46.0)(tsx@4.21.0)(yaml@2.8.2)
       vite-tsconfig-paths:
         specifier: ^4.2.1
-        version: 4.3.2(typescript@5.9.3)(vite@5.4.21(@types/node@25.2.1)(lightningcss@1.30.2)(terser@5.46.0))
+        version: 4.3.2(typescript@5.9.3)(vite@7.3.1(@types/node@25.2.1)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.46.0)(tsx@4.21.0)(yaml@2.8.2))
 
   docs/waku:
     dependencies:
       react:
-        specifier: ~19.2.4
+        specifier: ^19.2.4
         version: 19.2.4
       react-dom:
-        specifier: ~19.2.4
+        specifier: ^19.2.4
         version: 19.2.4(react@19.2.4)
       react-server-dom-webpack:
-        specifier: ~19.2.4
+        specifier: ^19.2.4
         version: 19.2.4(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(webpack@5.104.1(@swc/core@1.15.11)(esbuild@0.27.2))
       waku:
         specifier: 1.0.0-alpha.3
@@ -207,7 +213,7 @@ importers:
         specifier: ^4.1.18
         version: 4.1.18(vite@7.3.1(@types/node@25.2.1)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.46.0)(tsx@4.21.0)(yaml@2.8.2))
       '@types/react':
-        specifier: ^19.2.9
+        specifier: ^19.2.10
         version: 19.2.10
       '@types/react-dom':
         specifier: ^19.2.3
@@ -231,8 +237,8 @@ importers:
   docs/website:
     dependencies:
       '@expressive/react':
-        specifier: ^0.72.0
-        version: 0.72.0(react@19.2.4)
+        specifier: ^0.73.0
+        version: 0.73.0(react@19.2.4)
       next:
         specifier: ^16.1.6
         version: 16.1.6(@babel/core@7.29.0)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
@@ -1453,19 +1459,11 @@ packages:
     resolution: {integrity: sha512-43/qtrDUokr7LJqoF2c3+RInu/t4zfrpYdoSDfYyhg52rwLV6TnOvdG4fXm7IkSB3wErkcmJS9iEhjVtOSEjjA==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
 
-  '@expressive/mvc@0.51.2':
-    resolution: {integrity: sha512-SVbVuKtwm3wGQjlPhpWWrP+fwhbWaZg2KDTpOR/rNtn6po2dzj9AOXIXilmzuJ6Sr82rA+Q/4yMs1UFIFdXXWQ==}
+  '@expressive/mvc@0.73.0':
+    resolution: {integrity: sha512-3GG824JowKVp/3efJuyPmLhGTQGb0/h3tngxRoJ+YqtaDKPypP3XIFFR7Sz5REDD9e6zFYiUUIqv7pIlZxo/lQ==}
 
-  '@expressive/mvc@0.72.0':
-    resolution: {integrity: sha512-PnXg6y0LtpG6mGHlWEl2T3TKXixgZKCH1+KeHHJb40Jy2x51tcUdK5byKRxsnzkgLyVFIuwSnJQkPXNrDk83SA==}
-
-  '@expressive/react@0.51.2':
-    resolution: {integrity: sha512-NVAQOduRYCahSXneLO+NhYMpB6zxB+zznr6ZkG+bBhcrLJYpa6oMGUDgoFw7KrjKMzHxUHNa1S6SzutlvBakJA==}
-    peerDependencies:
-      react: '>=16.8.0 <19.0.0'
-
-  '@expressive/react@0.72.0':
-    resolution: {integrity: sha512-qlrZ2NIFX09DuBX/TUftmoQf0U/sZWQ7QfAFKyK/HUriEabormGl6iw5cqRBYuesRnjkgq7WVKCPoNYtOQ9Ukg==}
+  '@expressive/react@0.73.0':
+    resolution: {integrity: sha512-Rh6UKilOdBGoEkZ1FGXmpSpvf20Fp2fXG+vD1L+cCyXe825YB2fP11JO62GI6p1qlV8o8DoHoWGc0ax+D8HZsg==}
     peerDependencies:
       react: '>=16.8.0 <20.0.0'
     peerDependenciesMeta:
@@ -3593,21 +3591,10 @@ packages:
   '@types/prettier@2.7.3':
     resolution: {integrity: sha512-+68kP9yzs4LMp7VNh8gdzMSPZFL44MLGqiHWvttYJe+6qnuVr4Ek9wSBQoveqY/r+LwjCcU29kNVkidwim+kYA==}
 
-  '@types/prop-types@15.7.15':
-    resolution: {integrity: sha512-F6bEyamV9jKGAFBEmlQnesRPGOQqS2+Uwi0Em15xenOxHaf2hv6L8YCVn3rPdPJOiJfPiCnLIRyvwVaqMY3MIw==}
-
-  '@types/react-dom@18.3.7':
-    resolution: {integrity: sha512-MEe3UeoENYVFXzoXEWsvcpg6ZvlrFNlOQ7EOsvhI3CfAXwzPfO8Qwuxd40nepsYKqyyVQnTdEfv68q91yLcKrQ==}
-    peerDependencies:
-      '@types/react': ^18.0.0
-
   '@types/react-dom@19.2.3':
     resolution: {integrity: sha512-jp2L/eY6fn+KgVVQAOqYItbF0VY/YApe5Mz2F0aykSO8gx31bYCZyvSeYxCHKvzHG5eZjc+zyaS5BrBWya2+kQ==}
     peerDependencies:
       '@types/react': ^19.2.0
-
-  '@types/react@18.3.27':
-    resolution: {integrity: sha512-cisd7gxkzjBKU2GgdYrTdtQx1SORymWyaAFhaxQPK9bYO9ot3Y5OikQRvY0VYQtvwjeQnizCINJAenh/V7MK2w==}
 
   '@types/react@19.2.10':
     resolution: {integrity: sha512-WPigyYuGhgZ/cTPRXB2EwUw+XvsRA3GqHlsP4qteqrnnjDrApbS7MxcGr/hke5iUoeB7E/gQtrs9I37zAJ0Vjw==}
@@ -5876,10 +5863,6 @@ packages:
   longest-streak@3.1.0:
     resolution: {integrity: sha512-9Ri+o0JYgehTaVBBDoMqIl8GXtbWg711O3srftcHhZ0dqnETqLaoIK0x17fUw9rFSlK/0NlsKe0Ahhyl5pXE2g==}
 
-  loose-envify@1.4.0:
-    resolution: {integrity: sha512-lyuxPGr/Wfhrlem2CL/UcnUc1zcqKAImBDzukY7Y5F/yQiNdko6+fRLevlw1HgMySw7f611UIY408EtxRSoK3Q==}
-    hasBin: true
-
   loupe@2.3.7:
     resolution: {integrity: sha512-zSMINGVYkdpYSOBmLi0D1Uo7JU9nVdQKrHxC8eYlV+9YKK9WePqAlL7lSlorG/U2Fw1w0hTBmaa/jrQ3UbPHtA==}
 
@@ -6854,11 +6837,6 @@ packages:
     peerDependencies:
       react: ^17.0.0 || ^18.0.0 || ^19.0.0 || ^0.0.0-experimental
 
-  react-dom@18.3.1:
-    resolution: {integrity: sha512-5m4nQKp+rZRb09LNH59GM4BxTh9251/ylbKIbpe7TpGxfJ+9kv6BLkLBXIjjspbgbnIBNqlI23tRnTWT0snUIw==}
-    peerDependencies:
-      react: ^18.3.1
-
   react-dom@19.2.4:
     resolution: {integrity: sha512-AXJdLo8kgMbimY95O2aKQqsz2iWi9jMgKJhRBAxECE4IFxfcazB2LmzloIoibJI3C12IlY20+KFaLv+71bUJeQ==}
     peerDependencies:
@@ -6918,10 +6896,6 @@ packages:
     peerDependenciesMeta:
       '@types/react':
         optional: true
-
-  react@18.3.1:
-    resolution: {integrity: sha512-wS+hAgJShR0KhEvPJArfuPVN1+Hz1t0Y6n5jLrGQbkb4urgPE/0Rve+1kMB1v/oWgHgm4WIcV+i7F2pTVj+2iQ==}
-    engines: {node: '>=0.10.0'}
 
   react@19.2.4:
     resolution: {integrity: sha512-9nfp2hYpCwOjAN+8TZFGhtWEwgvWHXqESH8qT89AT/lWklpLON22Lc8pEtnpsZz7VmawabSU0gCjnj8aC0euHQ==}
@@ -7163,9 +7137,6 @@ packages:
 
   safer-buffer@2.1.2:
     resolution: {integrity: sha512-YZo3K82SD7Riyi0E1EQPojLz7kpepnSQI9IyPbHHg1XXXevb5dJI7tpyN2ADxGcQbHG7vcyRHk0cbwqcQriUtg==}
-
-  scheduler@0.23.2:
-    resolution: {integrity: sha512-UOShsPwz7NrMUqhR6t0hWjFduvOzbtv7toDH1/hIrfRNIDBnnBWd0CwJTGvTpngVlmwGCdP9/Zl/tVrDqcuYzQ==}
 
   scheduler@0.27.0:
     resolution: {integrity: sha512-eNv+WrVbKu1f3vbYJT/xtiF5syA5HPIMtf9IgY/nKg0sWqzAUEvqY/xm7OcZc/qafLx/iO9FgOmeSAp4v5ti/Q==}
@@ -9259,18 +9230,11 @@ snapshots:
       '@eslint/core': 0.17.0
       levn: 0.4.1
 
-  '@expressive/mvc@0.51.2': {}
+  '@expressive/mvc@0.73.0': {}
 
-  '@expressive/mvc@0.72.0': {}
-
-  '@expressive/react@0.51.2(react@18.3.1)':
+  '@expressive/react@0.73.0(react@19.2.4)':
     dependencies:
-      '@expressive/mvc': 0.51.2
-      react: 18.3.1
-
-  '@expressive/react@0.72.0(react@19.2.4)':
-    dependencies:
-      '@expressive/mvc': 0.72.0
+      '@expressive/mvc': 0.73.0
     optionalDependencies:
       react: 19.2.4
 
@@ -11396,20 +11360,9 @@ snapshots:
 
   '@types/prettier@2.7.3': {}
 
-  '@types/prop-types@15.7.15': {}
-
-  '@types/react-dom@18.3.7(@types/react@18.3.27)':
-    dependencies:
-      '@types/react': 18.3.27
-
   '@types/react-dom@19.2.3(@types/react@19.2.10)':
     dependencies:
       '@types/react': 19.2.10
-
-  '@types/react@18.3.27':
-    dependencies:
-      '@types/prop-types': 15.7.15
-      csstype: 3.2.3
 
   '@types/react@19.2.10':
     dependencies:
@@ -11522,7 +11475,7 @@ snapshots:
 
   '@ungap/structured-clone@1.3.0': {}
 
-  '@vitejs/plugin-react@4.7.0(vite@5.4.21(@types/node@25.2.1)(lightningcss@1.30.2)(terser@5.46.0))':
+  '@vitejs/plugin-react@4.7.0(vite@7.3.1(@types/node@25.2.1)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.46.0)(tsx@4.21.0)(yaml@2.8.2))':
     dependencies:
       '@babel/core': 7.29.0
       '@babel/plugin-transform-react-jsx-self': 7.27.1(@babel/core@7.29.0)
@@ -11530,7 +11483,7 @@ snapshots:
       '@rolldown/pluginutils': 1.0.0-beta.27
       '@types/babel__core': 7.20.5
       react-refresh: 0.17.0
-      vite: 5.4.21(@types/node@25.2.1)(lightningcss@1.30.2)(terser@5.46.0)
+      vite: 7.3.1(@types/node@25.2.1)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.46.0)(tsx@4.21.0)(yaml@2.8.2)
     transitivePeerDependencies:
       - supports-color
 
@@ -13971,10 +13924,6 @@ snapshots:
 
   longest-streak@3.1.0: {}
 
-  loose-envify@1.4.0:
-    dependencies:
-      js-tokens: 4.0.0
-
   loupe@2.3.7:
     dependencies:
       get-func-name: 2.0.2
@@ -15397,12 +15346,6 @@ snapshots:
     dependencies:
       react: 19.2.4
 
-  react-dom@18.3.1(react@18.3.1):
-    dependencies:
-      loose-envify: 1.4.0
-      react: 18.3.1
-      scheduler: 0.23.2
-
   react-dom@19.2.4(react@19.2.4):
     dependencies:
       react: 19.2.4
@@ -15454,10 +15397,6 @@ snapshots:
       tslib: 2.8.1
     optionalDependencies:
       '@types/react': 19.2.10
-
-  react@18.3.1:
-    dependencies:
-      loose-envify: 1.4.0
 
   react@19.2.4: {}
 
@@ -15824,10 +15763,6 @@ snapshots:
   safe-buffer@5.2.1: {}
 
   safer-buffer@2.1.2: {}
-
-  scheduler@0.23.2:
-    dependencies:
-      loose-envify: 1.4.0
 
   scheduler@0.27.0: {}
 
@@ -16596,13 +16531,13 @@ snapshots:
       - tsx
       - yaml
 
-  vite-tsconfig-paths@4.3.2(typescript@5.9.3)(vite@5.4.21(@types/node@25.2.1)(lightningcss@1.30.2)(terser@5.46.0)):
+  vite-tsconfig-paths@4.3.2(typescript@5.9.3)(vite@7.3.1(@types/node@25.2.1)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.46.0)(tsx@4.21.0)(yaml@2.8.2)):
     dependencies:
       debug: 4.4.3
       globrex: 0.1.2
       tsconfck: 3.1.6(typescript@5.9.3)
     optionalDependencies:
-      vite: 5.4.21(@types/node@25.2.1)(lightningcss@1.30.2)(terser@5.46.0)
+      vite: 7.3.1(@types/node@25.2.1)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.46.0)(tsx@4.21.0)(yaml@2.8.2)
     transitivePeerDependencies:
       - supports-color
       - typescript
