@@ -3,10 +3,6 @@ import { NodePath, template, types as t } from "@babel/core";
 import { type Context } from "../jsxPlugin";
 import { State } from "..";
 
-const classNamesHelper = template.ast`
-  (...args) => args.filter(Boolean).join(" ");
-` as t.ExpressionStatement;
-
 export function getClassName(
   context: Context,
   module?: t.Expression
@@ -164,11 +160,13 @@ function ensureHelper(state: State): t.Identifier {
   const helper = program.scope.generateUidIdentifier("concat");
   state.classNameHelper = helper;
 
+  const declarator = template.ast`
+    const ${helper} = (...args) => args.filter(Boolean).join(" ");
+  ` as T.ExpressionStatement;
+
   program.unshiftContainer(
     "body",
-    t.variableDeclaration("const", [
-      t.variableDeclarator(helper, classNamesHelper.expression),
-    ])
+    declarator
   );
 
   return helper;
