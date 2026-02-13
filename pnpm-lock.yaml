@@ -63,8 +63,8 @@ importers:
         specifier: workspace:*
         version: link:../../packages/babel-preset
       '@expressive/mvc':
-        specifier: ^0.73.0
-        version: 0.73.0
+        specifier: ^0.73.1
+        version: 0.73.1
       '@lezer/common':
         specifier: ^1.2.1
         version: 1.5.0
@@ -150,12 +150,6 @@ importers:
       '@expressive/babel-preset':
         specifier: workspace:*
         version: link:../../packages/babel-preset
-      '@expressive/mvc':
-        specifier: ^0.73.0
-        version: 0.73.0
-      '@expressive/react':
-        specifier: ^0.73.0
-        version: 0.73.0(react@19.2.4)
       prettier:
         specifier: ^2.8.8
         version: 2.8.8
@@ -166,6 +160,9 @@ importers:
         specifier: ^19.2.4
         version: 19.2.4(react@19.2.4)
     devDependencies:
+      '@expressive/react':
+        specifier: ^0.73.1
+        version: 0.73.1(react@19.2.4)
       '@expressive/vite-plugin':
         specifier: workspace:*
         version: link:../../packages/vite-plugin
@@ -237,8 +234,8 @@ importers:
   docs/website:
     dependencies:
       '@expressive/react':
-        specifier: ^0.73.0
-        version: 0.73.0(react@19.2.4)
+        specifier: ^0.73.1
+        version: 0.73.1(react@19.2.4)
       next:
         specifier: ^16.1.6
         version: 16.1.6(@babel/core@7.29.0)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
@@ -271,7 +268,7 @@ importers:
   packages/babel-preset:
     dependencies:
       '@babel/core':
-        specifier: ^7.29.0
+        specifier: ^7.0.0
         version: 7.29.0
       chroma-js:
         specifier: ^2.0.3
@@ -1459,11 +1456,11 @@ packages:
     resolution: {integrity: sha512-43/qtrDUokr7LJqoF2c3+RInu/t4zfrpYdoSDfYyhg52rwLV6TnOvdG4fXm7IkSB3wErkcmJS9iEhjVtOSEjjA==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
 
-  '@expressive/mvc@0.73.0':
-    resolution: {integrity: sha512-3GG824JowKVp/3efJuyPmLhGTQGb0/h3tngxRoJ+YqtaDKPypP3XIFFR7Sz5REDD9e6zFYiUUIqv7pIlZxo/lQ==}
+  '@expressive/mvc@0.73.1':
+    resolution: {integrity: sha512-GjILPXwkyyU12BxUo8KTLJrs0Nh9CTRj0QuTfN5IGBodeq4mmqKLvWVpNCeMZvIob9sC3dRfJIShCK6fsixNZw==}
 
-  '@expressive/react@0.73.0':
-    resolution: {integrity: sha512-Rh6UKilOdBGoEkZ1FGXmpSpvf20Fp2fXG+vD1L+cCyXe825YB2fP11JO62GI6p1qlV8o8DoHoWGc0ax+D8HZsg==}
+  '@expressive/react@0.73.1':
+    resolution: {integrity: sha512-LbOIjISwSXYqta4eh/JFRoYFNM47ugJRvsbj0qUef78aghz03E6bAG8T2MLVcHpJbKNO6x6hDU4OVJKcG/aEKw==}
     peerDependencies:
       react: '>=16.8.0 <20.0.0'
     peerDependenciesMeta:
@@ -9230,11 +9227,11 @@ snapshots:
       '@eslint/core': 0.17.0
       levn: 0.4.1
 
-  '@expressive/mvc@0.73.0': {}
+  '@expressive/mvc@0.73.1': {}
 
-  '@expressive/react@0.73.0(react@19.2.4)':
+  '@expressive/react@0.73.1(react@19.2.4)':
     dependencies:
-      '@expressive/mvc': 0.73.0
+      '@expressive/mvc': 0.73.1
     optionalDependencies:
       react: 19.2.4
 

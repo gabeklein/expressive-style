@@ -31,9 +31,11 @@
     "preversion": "npm run build"
   },
   "dependencies": {
-    "@babel/core": "^7.29.0",
     "chroma-js": "^2.0.3",
     "easing-coordinates": "^2.0.2"
+  },
+  "peerDependencies": {
+    "@babel/core": "^7.0.0"
   },
   "devDependencies": {
     "@types/babel__core": "^7.20.5",
