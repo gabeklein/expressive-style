@@ -1,12 +1,13 @@
-import { NodePath, template, types as t } from "@babel/core";
+import type { NodePath, types as T } from "@babel/core";
 
+import { t, template } from "../babel";
 import { type Context } from "../jsxPlugin";
 import { State } from "..";
 
 export function getClassName(
   context: Context,
-  module?: t.Expression
-): t.Expression | undefined {
+  module?: T.Expression
+): T.Expression | undefined {
   if (!context.props.size && !context.children.size) return;
 
   const { condition, alternate, uid } = context;
@@ -41,8 +42,8 @@ export function getClassName(
 }
 
 export function addClassName(
-  path: NodePath<t.JSXElement>,
-  name: string | t.Expression,
+  path: NodePath<T.JSXElement>,
+  name: string | T.Expression,
   state: State
 ) {
   const existing = hasProp(path, "className");
@@ -97,7 +98,7 @@ export function addClassName(
   throw new Error("Could not insert className");
 }
 
-export function hasProp(path: NodePath<t.JSXElement>, name: string) {
+export function hasProp(path: NodePath<T.JSXElement>, name: string) {
   for (const attr of path.node.openingElement.attributes)
     if (t.isJSXAttribute(attr) && attr.name.name === name) {
       const { value } = attr;
@@ -110,7 +111,7 @@ export function hasProp(path: NodePath<t.JSXElement>, name: string) {
 }
 
 export function getComponentProp(path: NodePath, name: string) {
-  const func = path.find((x) => x.isFunction()) as NodePath<t.Function>;
+  const func = path.find((x) => x.isFunction()) as NodePath<T.Function>;
   let [props] = func.node.params;
 
   if (t.isObjectPattern(props)) {
@@ -118,7 +119,7 @@ export function getComponentProp(path: NodePath, name: string) {
 
     const prop = properties.find(
       (x) => t.isObjectProperty(x) && t.isIdentifier(x.key, { name })
-    ) as t.ObjectProperty | undefined;
+    ) as T.ObjectProperty | undefined;
 
     if (prop) return;
 
@@ -153,10 +154,10 @@ export function uniqueIdentifier(path: NodePath, name = "temp") {
   return t.identifier(uid);
 }
 
-function ensureHelper(state: State): t.Identifier {
+function ensureHelper(state: State): T.Identifier {
   if (state.classNameHelper) return state.classNameHelper as any;
 
-  const program = state.file.path as unknown as NodePath<t.Program>;
+  const program = state.file.path as unknown as NodePath<T.Program>;
   const helper = program.scope.generateUidIdentifier("concat");
   state.classNameHelper = helper;
 

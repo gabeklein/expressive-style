@@ -1,12 +1,13 @@
-import {
+import type {
   BabelFile,
   BabelFileMetadata,
   BabelFileResult,
   PluginPass,
   TransformOptions,
-  types as t,
+  types as T,
 } from "@babel/core";
 
+import { init } from "./babel";
 import { Plugin } from "./jsxPlugin";
 import { CSSPlugin } from "./cssPlugin";
 import * as DefaultMacros from "./macros";
@@ -33,7 +34,7 @@ export declare namespace Preset {
   }
   interface MetaData {
     readonly css: string;
-    readonly cssModuleId?: t.Identifier;
+    readonly cssModuleId?: T.Identifier;
     readonly styles: Map<string, Plugin.Context>;
   }
 
@@ -41,9 +42,11 @@ export declare namespace Preset {
 }
 
 export function Preset(
-  _compiler: unknown,
+  compiler: unknown,
   options: Preset.Options = {}
 ): TransformOptions {
+  init(compiler as any);
+
   const { macros = [] } = options;
 
   if (!macros.some((x) => x === false)) {

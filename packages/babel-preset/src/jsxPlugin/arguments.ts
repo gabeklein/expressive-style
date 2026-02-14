@@ -1,4 +1,6 @@
-import { NodePath, types as t } from "@babel/core";
+import type { NodePath, types as T } from "@babel/core";
+
+import { t } from "../babel";
 
 import { ParseErrors } from "./errors";
 
@@ -15,21 +17,21 @@ const Oops = ParseErrors({
   ElseNotSupported: "An else statement in an if modifier is not yet supported",
 });
 
-function isParenthesized(node: t.Expression) {
+function isParenthesized(node: T.Expression) {
   const { extra } = node as any;
   return extra ? extra.parenthesized === true : false;
 }
 
 type Argument =
   | [string, ...Argument[]]
-  | t.Expression
+  | T.Expression
   | string
   | number
   | boolean
   | null;
 
 export function parseArguments(
-  element: NodePath<t.ExpressionStatement>
+  element: NodePath<T.ExpressionStatement>
 ): Argument[] {
   const { node } = element.get("expression");
   const expressions = t.isSequenceExpression(node) ? node.expressions : [node];
@@ -37,7 +39,7 @@ export function parseArguments(
   return expressions.map((x) => parseExpression(x));
 }
 
-function parseExpression<T extends t.Expression>(element: T): any {
+function parseExpression<T extends T.Expression>(element: T): any {
   if (t.isIdentifier(element)) return element.name;
 
   if (t.isStringLiteral(element)) {
@@ -88,7 +90,7 @@ function parseExpression<T extends t.Expression>(element: T): any {
 
     return [
       operator,
-      parseExpression(element.left as t.Expression),
+      parseExpression(element.left as T.Expression),
       parseExpression(element.right),
     ];
   }

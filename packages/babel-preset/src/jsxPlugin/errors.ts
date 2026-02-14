@@ -1,4 +1,4 @@
-import { Node, NodePath } from "@babel/core";
+import type { Node, NodePath } from "@babel/core";
 
 type ParseError = <T extends Node>(
   node: NodePath<T> | T,

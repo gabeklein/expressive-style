@@ -1,6 +1,7 @@
-import { NodePath, PluginObj, types as t } from "@babel/core";
+import type { PluginObj } from "@babel/core";
 
 import { Preset, State } from "..";
+import { t } from "../babel";
 import { Context, getUsing } from "../jsxPlugin";
 import { toSelector, toStylesheet } from "./css";
 import {
