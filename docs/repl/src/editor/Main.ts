@@ -15,26 +15,11 @@ declare namespace Main {
 
 class Main extends State {
   document = use(Document);
-
-  editors = get(Editor, (editor) => {
-    const doc = this.document;
-
-    switch (editor.constructor.name) {
-      case "InputEditor":
-        doc.get((x) => {
-          editor.text = x.input;
-        });
-        break;
-      case "OutputJSX":
-        doc.get((x) => {
-          editor.text = x.output;
-        });
-        break;
-    }
-  });
+  editors = get(Editor, true);
 
   fontSize = 15;
   layout: Main.Layout = "compact";
+  
   options = {
     output: "jsx",
     printStyle: "pretty",

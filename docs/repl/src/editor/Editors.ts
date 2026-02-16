@@ -8,12 +8,14 @@ import {
   readOnly,
 } from "@docs/editor";
 
-import { Document } from "./Document";
 import { Main } from "./Main";
 
 export class InputEditor extends Editor {
-  doc = get(Document);
-  main = get(Main);
+  main = get(Main, (main) => {
+    main.document.get((doc) => {
+      this.text = doc.input;
+    });
+  });
 
   extends() {
     return [
@@ -27,7 +29,7 @@ export class InputEditor extends Editor {
           this.main.fontSize--;
         },
         s: () => {
-          this.doc.build(this.text);
+          this.main.document.build(this.text);
         },
       }),
     ];
@@ -35,6 +37,12 @@ export class InputEditor extends Editor {
 }
 
 export class OutputJSX extends Editor {
+  main = get(Main, (main) => {
+    main.document.get((doc) => {
+      this.text = doc.output;
+    });
+  });
+
   extends() {
     return [cssInJsx, readOnly];
   }

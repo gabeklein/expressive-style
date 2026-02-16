@@ -8,9 +8,11 @@ import { hash, transform } from "./transform";
 const DEFAULT_CODE = `export const Hi = () => {
   fontSize: 2.0;
 
-  <div>
-    Hello World!
-  </div>
+  return (
+    <div>
+      Hello World!
+    </div>
+  )
 }`;
 
 export class Document extends State {

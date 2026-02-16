@@ -2,7 +2,7 @@ import "./editor.css";
 
 import { EditorState, type Extension } from "@codemirror/state";
 import { EditorView } from "@codemirror/view";
-import { State, ref, set } from "@expressive/mvc";
+import { State, ref, set } from "@expressive/state";
 
 import { onUpdate } from "./plugins";
 
@@ -24,7 +24,7 @@ export abstract class Editor extends State {
   protected abstract extends(): (Extension | (() => Extension))[];
 
   protected createEditor(parent: HTMLDivElement) {
-    const state = (this.state = EditorState.create({
+    const state = EditorState.create({
       extensions: [
         onUpdate(({ docChanged, state }) => {
           if (docChanged) {
@@ -36,9 +36,12 @@ export abstract class Editor extends State {
           typeof ext === "function" ? ext() : ext
         ),
       ],
-    }));
+    })
 
-    const view = (this.view = new EditorView({ parent, state }));
+    const view = new EditorView({ parent, state })
+
+    this.view = view;
+    this.state = state;
 
     const done = this.get(({ text }, update) => {
       if (update.has(NOOP)) return;
