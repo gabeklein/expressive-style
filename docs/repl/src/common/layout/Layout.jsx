@@ -1,27 +1,19 @@
 import { Provider } from "@expressive/react";
-import { Layout as Control } from "./Control";
+import { Control } from "./Control";
 
-export const Layout = (props) => {
-  const { is: control, output, container } = Control.use(props);
+export const Layout = Control.as((props, self) => {
+  const { output, container } = self;
 
   grid: {
     display: grid;
   }
 
-  return (
-    <Provider for={control}>
-      <grid ref={container}>{output}</grid>
-    </Provider>
-  );
-};
+  return <div _grid ref={container}>{output}</div>;
+});
 
-export const Row = () => {
-  return <Layout this separator={Handle} row />;
-};
+export const Row = (props) => <Layout row separator={Handle} {...props} />;
 
-export const Column = () => {
-  return <Layout this separator={Handle} />;
-};
+export const Column = (props) => <Layout separator={Handle} {...props} />;
 
 export { Column as Col };
 
@@ -32,12 +24,10 @@ const Handle = ({ grab, pull, push, vertical, width }) => {
     position: absolute;
     radius: round;
     transition: "background 0.1s ease-out";
-  }
+    background: 0xFFFFFF03;
 
-  if (":hover")
-    bar: {
-      bg: $accentLight;
-    }
+    if(":hover") bg: $accentLight;
+  }
 
   if (vertical) {
     cursor: "col-resize";
@@ -59,7 +49,7 @@ const Handle = ({ grab, pull, push, vertical, width }) => {
 
   return (
     <div onMouseDown={grab}>
-      <bar />
+      <div _bar />
       <Corner onMouseDown={pull} style={{ left: -width, top: 0 }} />
       <Corner onMouseDown={push} style={{ right: -width, bottom: 0 }} />
     </div>

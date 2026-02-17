@@ -1,8 +1,8 @@
-export const Window = ({ children }) => {
-  height: vh(100);
-  boxSizing: borderBox
+function Window({ children }) {
+  height: "100vh";
+  boxSizing: borderBox;
   padding: 0, 10;
-  gridRows: min, minmax(0, "1fr"), min;
+  gridRows: min, 'minmax(0, 1fr)', min;
   overflow: hidden;
 
   return (
@@ -14,7 +14,7 @@ export const Window = ({ children }) => {
   );
 }
 
-export const Header = () => {
+export function Header() {
   height: 50;
   display: flex;
   alignItems: center;
@@ -32,9 +32,9 @@ export const Header = () => {
       Expressive JSX Demo
     </div>
   );
-};
+}
 
-export const Footer = () => {
+export function Footer() {
   marginB: 5;
   margin: 15, 0, 20;
   color: $textDark;
@@ -44,4 +44,6 @@ export const Footer = () => {
   return (
     <div>Gabe Klein - MIT - {new Date().getFullYear()}</div>
   );
-};
+}
+
+export default Window;
