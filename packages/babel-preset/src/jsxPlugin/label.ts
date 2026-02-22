@@ -1,15 +1,22 @@
-import { NodePath, types as t } from "@babel/core";
+import type { NodePath, types as T } from "@babel/core";
+
+import { t } from "../babel";
 
 import { parseArguments } from "./arguments";
 import { Context, hash } from "./context";
 import { macroError } from "./errors";
 
-export function handleLabel(path: NodePath<t.LabeledStatement>) {
+export function handleLabel(path: NodePath<T.LabeledStatement>) {
   const context = getContext(path);
   const body = path.get("body");
   let { name } = path.node.label;
 
   if (body.isBlockStatement()) {
+    if (context.define["this"] === context && context.uid.startsWith(name + "_"))
+      throw path.buildCodeFrameError(
+        `Label "${name}" conflicts with the component name. Use a different name for this style scope.`
+      );
+
     context.define[name] = new Context(path, context, name);
     return;
   }
@@ -89,7 +96,7 @@ function getAlternate(context: Context): Context {
   return context.alternate;
 }
 
-function createIfContext(path: NodePath<t.IfStatement>) {
+function createIfContext(path: NodePath<T.IfStatement>) {
   const test = path.node.test;
   const name = t.isIdentifier(test)
     ? test.name
@@ -110,7 +117,7 @@ function createIfContext(path: NodePath<t.IfStatement>) {
   return inner;
 }
 
-function createFunctionContext(path: NodePath<t.Function>) {
+function createFunctionContext(path: NodePath<T.Function>) {
   const context = getContext(path);
   const name = getComponentName(path);
   const component = new Context(path, context, name);
@@ -132,11 +139,11 @@ function getComponentName(path: NodePath): string {
       const { id } = path.node;
       return t.isIdentifier(id)
         ? id.name
-        : (path.parent as t.VariableDeclaration).kind;
+        : (path.parent as T.VariableDeclaration).kind;
     }
 
     if (path.isAssignmentExpression() || path.isAssignmentPattern()) {
-      const { left } = path.node as t.AssignmentExpression;
+      const { left } = path.node as T.AssignmentExpression;
       return t.isIdentifier(left) ? left.name : "assignment";
     }
 
@@ -171,7 +178,7 @@ function getComponentName(path: NodePath): string {
 
       const within = path.findParent((x) =>
         x.isFunction(),
-      ) as NodePath<t.Function>;
+      ) as NodePath<T.Function>;
 
       const { node } = within;
 
@@ -187,7 +194,7 @@ function getComponentName(path: NodePath): string {
 
         if (node.key.name != "render") return node.key.name;
 
-        const owner = within.parentPath.parentPath as NodePath<t.Class>;
+        const owner = within.parentPath.parentPath as NodePath<T.Class>;
 
         if (owner.node.id) return owner.node.id.name;
 

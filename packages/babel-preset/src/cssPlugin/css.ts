@@ -8,16 +8,17 @@ export function toStylesheet(styles: Map<string, Context>) {
     .join("\n");
 }
 
+function toDash(name: string) {
+  return name.replace(/([A-Z]+)/g, "-$1").toLowerCase();
+}
+
 function toBlock(define: Context) {
   if (define.props.size === 0) return "";
 
   const styles = [] as string[];
 
   for (let [name, value] of define.props) {
-    const property = name
-      .replace(/^\$/, "--")
-      .replace(/([A-Z]+)/g, "-$1")
-      .toLowerCase();
+    const property = toDash(name.replace(/^\$/, "--"));
 
     if (Array.isArray(value)) value = value.map(toValue);
 
@@ -33,10 +34,7 @@ function toBlock(define: Context) {
 function toValue(value: unknown) {
   if (typeof value == "string") {
     if (value.startsWith("$"))
-      return `var(--${value
-        .slice(1)
-        .replace(/([A-Z]+)/g, "-$1")
-        .toLowerCase()})`;
+      return `var(--${toDash(value.slice(1))})`;
 
     if (value.startsWith("0x")) return toColor(value);
   }
@@ -77,11 +75,12 @@ function toColor(raw: string) {
 export function toSelector(context: Context): string {
   let { parent, condition, uid } = context;
 
-  if (typeof condition === "string"){
+  if (typeof condition === "string") {
     const parent = toSelector(context.parent!);
 
-    if(condition.includes("&"))
+    if (condition.includes("&")) {
       return condition.replace(/&/g, parent);
+    }
 
     return parent + condition;
   }
@@ -101,19 +100,18 @@ export function toSelector(context: Context): string {
 
 function depth(context: Context, context2?: Context): number {
   const pos = context.position;
-  
-  if (typeof context.condition === "string")
-    context = context.parent!;
+
+  if (typeof context.condition === "string") context = context.parent!;
 
   let i = 0;
 
   do {
     if (context.path.isFunction()) break;
-    else if(/^[A-Z]/.test(context.uid) && !("this" in context.define)) i+= 2;
+    else if (/^[A-Z]/.test(context.uid) && !("this" in context.define)) i += 2;
     else i++;
-  } while (context = context.parent!);
+  } while ((context = context.parent!));
 
-  if(context2){
+  if (context2) {
     return i - depth(context2) || pos - context2.position;
   }
 

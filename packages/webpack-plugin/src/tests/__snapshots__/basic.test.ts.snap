@@ -95,15 +95,12 @@ var __webpack_exports__ = {};
 (() => {
   __webpack_require__.r(__webpack_exports__);
   var MODULE_0__ = __webpack_require__('./input.jsx.module.css');
-  const classNames = (...args) => args.filter(Boolean).join(' ');
+  const _concat = (...args) => args.filter(Boolean).join(' ');
   const Component = (props) => {
     return element(
       'div',
       {
-        className: classNames(
-          props.className,
-          MODULE_0__['default'].Component_22n
-        )
+        className: _concat(props.className, MODULE_0__['default'].Component_22n)
       },
       element('h1', null, 'Hello World'),
       'This is a test.'

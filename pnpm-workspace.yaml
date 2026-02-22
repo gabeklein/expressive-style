@@ -1,3 +1,12 @@
 packages:
-  - 'packages/*'
-  - 'docs/*'
+  - packages/*
+  - docs/*
+
+onlyBuiltDependencies:
+  - '@parcel/watcher'
+  - '@swc/core'
+  - esbuild
+  - lmdb
+  - msgpackr-extract
+  - nx
+  - sharp

@@ -1,16 +1,16 @@
-import Model, { get, ref, set } from "@expressive/react";
+import State, { get, ref, set } from "@expressive/react";
 import React, { ReactNode } from "react";
 
 const AXIS = ["gridTemplateRows", "gridTemplateColumns"] as const;
 
 type DragEvent = () => (x: number, y: number) => void;
 
-export class Layout extends Model {
+export class Control extends State {
   static managed = new WeakSet();
 
   container = ref(this.applyLayout);
 
-  parent = get(Layout, false);
+  parent = get(Control, false);
   output = set(this.getOutput);
 
   children = set<ReactNode>(undefined, (value) => {
@@ -28,10 +28,10 @@ export class Layout extends Model {
   items = [] as ReactNode[];
   space = [] as number[];
 
-  constructor(...args: Model.Args) {
-    super(...args, () => {
-      if (this.parent) this.separator = this.parent.separator;
-    });
+  new(){
+    if (this.parent) {
+      this.separator = this.parent.separator;
+    }
   }
 
   public applyLayout(element: HTMLElement) {
@@ -95,21 +95,24 @@ export class Layout extends Model {
     let push: ((value: any) => void) | undefined;
 
     if (parent) {
-      if (index > 1) pull = resize(move, () => parent.nudge(index - 1));
+      if (index > 1) {
+        pull = onDrag(move, () => parent.nudge(index - 1));
+      }
 
-      if (index < items.length - 1)
-        push = resize(move, () => parent.nudge(index + 1));
+      if (index < items.length - 1) {
+        push = onDrag(move, () => parent.nudge(index + 1));
+      }
     }
 
     return {
-      grab: resize(move),
+      grab: onDrag(move),
       pull,
       push,
     };
   }
 }
 
-function resize(...handle: DragEvent[]) {
+function onDrag(...handle: DragEvent[]) {
   return (event: MouseEvent) => {
     if (event.button !== 0) return;
 
@@ -117,40 +120,35 @@ function resize(...handle: DragEvent[]) {
     event.preventDefault();
 
     const move = handle.map((x) => x());
+    let previous = { x: event.x, y: event.y };
 
-    onDrag((dX, dY) => {
-      move.map((cb) => cb(dX, dY));
-    });
+    function onMove(event: MouseEvent) {
+      const dX = event.x - previous.x;
+      const dY = event.y - previous.y;
+
+      if (dX || dY) move.forEach((cb) => cb(dX, dY));
+
+      previous = event;
+    }
+
+    function onUp() {
+      document.removeEventListener("mousemove", onMove);
+      document.removeEventListener("mouseup", onUp);
+    }
+
+    document.addEventListener("mousemove", onMove);
+    document.addEventListener("mouseup", onUp);
   };
-}
-
-function onDrag(delta: (x: number, y: number) => void) {
-  let previous = {} as { x: number; y: number };
-
-  function resize(event: MouseEvent) {
-    const dX = event.x - previous.x || 0;
-    const dY = event.y - previous.y || 0;
-
-    if (dX || dY) delta(dX, dY);
-
-    previous = event;
-  }
-
-  const endResize = () => {
-    document.removeEventListener("mousemove", resize);
-    document.removeEventListener("mouseup", endResize);
-  };
-
-  document.addEventListener("mousemove", resize);
-  document.addEventListener("mouseup", endResize);
 }
 
 function Spacer({ index }: { index: number }) {
-  return Layout.get((layout) => {
+  return Control.get((layout) => {
     const { grab, pull, push } = layout.resize(index);
     const { separator, row, gap } = layout;
 
-    if (typeof separator == "string") return React.createElement(separator, {});
+    if (typeof separator == "string") {
+      return React.createElement(separator, {});
+    }
 
     return React.createElement(separator, {
       grab,

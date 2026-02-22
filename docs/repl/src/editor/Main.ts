@@ -1,5 +1,5 @@
-import Model, { has, use } from "@expressive/react";
-import { Editor } from "@website/editor";
+import State, { get, use } from "@expressive/react";
+import { Editor } from "@docs/editor";
 
 import { Document } from "./Document";
 
@@ -13,28 +13,13 @@ declare namespace Main {
   type Layout = "compact" | "fill" | "code" | "view";
 }
 
-class Main extends Model {
+class Main extends State {
   document = use(Document);
-
-  editors = has(Editor, (editor) => {
-    const doc = this.document;
-
-    switch (editor.constructor.name) {
-      case "InputEditor":
-        doc.get((x) => {
-          editor.text = x.input;
-        });
-        break;
-      case "OutputJSX":
-        doc.get((x) => {
-          editor.text = x.output;
-        });
-        break;
-    }
-  });
+  editors = get(Editor, true);
 
   fontSize = 15;
   layout: Main.Layout = "compact";
+  
   options = {
     output: "jsx",
     printStyle: "pretty",

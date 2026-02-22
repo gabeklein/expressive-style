@@ -1,9 +1,8 @@
-import type { NextConfig } from "next";
 import ExpressiveJSXPlugin, { Options } from "@expressive/webpack-plugin";
 
-export interface ExpressiveNextPluginOptions extends Options {
-  // Additional Next.js-specific options can go here
-}
+export interface ExpressiveNextPluginOptions extends Options {}
+
+type NextConfig = Record<string, any>;
 
 /**
  * Next.js plugin for Expressive JSX
@@ -14,17 +13,16 @@ export interface ExpressiveNextPluginOptions extends Options {
  * const withExpressive = require('@expressive/nextjs-plugin');
  *
  * module.exports = withExpressive({
- *   // Next.js config
+ *   // rest of your config
  * });
  * ```
  */
 function withExpressive(expressiveOptions: ExpressiveNextPluginOptions = {}) {
-  return (nextConfig: NextConfig = {}): NextConfig => {
-    // Check for Turbopack usage
+  return <T extends NextConfig>(nextConfig: T = {} as T): T => {
     const experimental = nextConfig.experimental || {};
     const usingTurbopack =
-      (experimental as any).turbo ||
-      (experimental as any).turbopack ||
+      experimental.turbo ||
+      experimental.turbopack ||
       process.env.TURBOPACK === "1";
 
     if (usingTurbopack) {
@@ -33,29 +31,25 @@ function withExpressive(expressiveOptions: ExpressiveNextPluginOptions = {}) {
           "   Turbopack is experimental and its plugin API is still unstable.\n" +
           "   Please disable Turbopack to use Expressive JSX:\n" +
           "   - Remove 'experimental.turbo' from next.config.js\n" +
-          "   - Or use: next dev (without --turbo flag)\n" +
-          "   GitHub issue: https://github.com/gabeklein/expressive-dsl/issues/XXX\n"
+          "   - Or use: next dev (without --turbo flag)\n"
       );
 
-      // Return config unmodified to avoid breaking Next.js build
       return nextConfig;
     }
 
     return {
       ...nextConfig,
 
-      webpack: (config, options) => {
-        // Add Expressive JSX webpack plugin
+      webpack: (config: any, options: any) => {
         config.plugins.push(new ExpressiveJSXPlugin(expressiveOptions));
 
-        // Call user's webpack config if provided
         if (typeof nextConfig.webpack === "function") {
           return nextConfig.webpack(config, options);
         }
 
         return config;
       },
-    };
+    } as T;
   };
 }
 

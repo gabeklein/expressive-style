@@ -1,4 +1,6 @@
-import { PluginObj, PluginPass, NodePath, types as t } from "@babel/core";
+import type { NodePath, PluginObj, PluginPass, types as T } from "@babel/core";
+
+import { t } from "../babel";
 
 import { Context, hash, RootContext } from "./context";
 import { Status } from "./errors";
@@ -25,9 +27,11 @@ function Plugin(_compiler: any, options: Options): PluginObj<State> {
       parse.plugins.push("jsx");
     },
     visitor: {
-      Program(path, state) {
-        new RootContext(path, state, options);
-        Status.currentFile = state.file as any;
+      Program: {
+        enter(path, state) {
+          new RootContext(path, state, options);
+          Status.currentFile = state.file as any;
+        }
       },
       JSXElement: JSX,
       JSXFragment: JSX,
@@ -79,7 +83,7 @@ function Plugin(_compiler: any, options: Options): PluginObj<State> {
   };
 }
 
-function JSX(path: NodePath<t.JSXElement> | NodePath<t.JSXFragment>) {
+function JSX(path: NodePath<T.JSXElement> | NodePath<T.JSXFragment>) {
   if (USING.has(path)) return;
 
   const { parentPath: parent } = path;
@@ -190,7 +194,7 @@ function JSX(path: NodePath<t.JSXElement> | NodePath<t.JSXFragment>) {
  * The function must have a name with a capital letter to be considered a component.
  */
 function isReturnedByComponent(
-  path: NodePath<t.JSXElement> | NodePath<t.JSXFragment>
+  path: NodePath<T.JSXElement> | NodePath<T.JSXFragment>
 ) {
   let parent = path.parentPath;
 

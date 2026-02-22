@@ -1,12 +1,12 @@
-import Style from '@expressive/nextjs-plugin';
+import Expressive from '@expressive/nextjs-plugin';
 import Nextra from 'nextra';
 
-const withStyle = Style();
+const withExpressive = Expressive();
 const withNextra = Nextra({
   contentDirBasePath: '/docs'
 });
 
-export default withStyle(
+export default withExpressive(
   withNextra({
     webpack: (config) => {
       config.module.rules.push({

@@ -1,48 +1,23 @@
-import { Row } from 'common/layout/Layout';
-import { Document } from 'editor/Document';
-import React, { Component, createElement, Fragment } from 'react';
+import { Col, Row } from "common/layout/Layout";
 
-import { InputEditor, OutputJSX } from './Editors';
+import { InputEditor, OutputJSX } from "./Editors";
+import { Provider } from "@expressive/react";
+import { Main } from "./Main";
+import { Preview } from "./Preview";
+
+export const Input = InputEditor.as((_, p) => <div ref={p.ref} />);
+export const Output = OutputJSX.as((_, p) => <div ref={p.ref} />);
 
 export const Interface = () => {
-  <Row>
-    <Input />
-    <Output />
-    <Preview />
-  </Row>
-}
-
-export const Input = InputEditor.as(p => <div ref={p.ref} />)
-export const Output = OutputJSX.as(p => <div ref={p.ref} />)
-
-const Preview = () => {
-  const {
-    key,
-    error,
-    onError,
-    Preview
-  } = Document.get();
-
-  flex: 1;
-  flexAlign: center;
-  border: dashed, 2, $borderLight;
-  background: $cmBackgroundDark;
-  radius: 8;
-  position: relative;
-  overflow: hidden;
-  color: $cmText;
-
-  issue: {
-    color: $red;
-  }
-
-  <this>
-    {error ? (
-      <issue>{error}</issue>
-    ) : Preview ? (
-      <Preview key={key} onError={onError} />
-    ) : (
-      <issue>Waiting for exports...</issue>
-    )}
-  </this>
-}
+  return (
+    <Provider for={{ Main }}>
+      <Row>
+        <Col>
+          <Input />
+          <Output />
+        </Col>
+        <Preview />
+      </Row>
+    </Provider>
+  );
+};

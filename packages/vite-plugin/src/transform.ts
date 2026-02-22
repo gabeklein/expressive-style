@@ -1,7 +1,9 @@
 import * as babel from "@babel/core";
 import BabelPreset from "@expressive/babel-preset";
 
-export type TransformOptions = BabelPreset.Options;
+export interface TransformOptions extends BabelPreset.Options {
+  test?: RegExp | ((uri: string) => boolean);
+}
 
 export interface TransformResult {
   code: string;
@@ -44,4 +46,15 @@ export async function transform(
     css,
     map,
   };
+}
+
+export function shouldTransform(options: TransformOptions) {
+  const { test } = options;
+
+  if (typeof test == "function") return test;
+
+  if (test instanceof RegExp) return (id: string) => test.test(id);
+
+  return (id: string) =>
+    !/node_modules/.test(id) && id.endsWith(".jsx");
 }

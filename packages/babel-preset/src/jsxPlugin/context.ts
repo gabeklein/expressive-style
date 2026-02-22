@@ -1,4 +1,5 @@
-import { PluginPass, NodePath, types as t } from "@babel/core";
+import type { NodePath, PluginPass, types as T } from "@babel/core";
+
 import { State } from ".";
 
 export type Macro = (
@@ -32,7 +33,7 @@ export class Context {
   props = new Map<string, any>();
   usedBy = new Set<NodePath>();
   children = new Set<Context>();
-  condition?: t.Expression | string;
+  condition?: T.Expression | string;
   alternate?: Context;
 
   static get(from: NodePath) {

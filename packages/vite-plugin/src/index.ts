@@ -1,88 +1,145 @@
 import { relative } from "path";
-import { ModuleGraph, Plugin } from "vite";
+import { HotChannel, Plugin } from "vite";
 
-import { transform, TransformOptions, TransformResult } from "./transform";
+import { log } from "./log";
+import {
+  shouldTransform,
+  transform,
+  TransformOptions,
+  TransformResult,
+} from "./transform";
 
-const VIRTUAL_CSS = "\0virtual:css:";
-const CSS_MODULE_IMPORT = "__EXPRESSIVE_CSS_MODULE__";
+const VIRTUAL_PREFIX = "virtual:css:";
+const RESOLVED_PREFIX = "\0" + VIRTUAL_PREFIX;
 
-const getCssId = (path: string) => VIRTUAL_CSS + localize(path) + ".css";
-const getCssModuleId = (path: string) => localize(path) + ".module.css";
+const getCssId = (path: string) => RESOLVED_PREFIX + localize(path) + ".css";
+const getCssImport = (path: string) => VIRTUAL_PREFIX + localize(path) + ".css";
+
 const localize = (path: string) => {
   const cwd = process.cwd();
   return path.startsWith(cwd) ? "/" + relative(cwd, path) : path;
 };
 
-const DEFAULT_SHOULD_TRANSFORM = (id: string) =>
-  !/node_modules/.test(id) && id.endsWith(".jsx");
+const stripQuery = (id: string) => id.split("?")[0];
 
-export interface Options {
-  test?: RegExp | ((uri: string) => boolean);
-  cssModules?: boolean;
-  transform?: TransformOptions;
+interface CacheEntry extends TransformResult {
+  source: string;
 }
 
-function jsxPlugin(options: Options = {}): Plugin {
-  const { test, cssModules } = options;
-  const transformOptions = options.transform || {};
+export interface PluginOptions extends TransformOptions {}
 
-  if (cssModules)
-    transformOptions.cssModule = CSS_MODULE_IMPORT;
+function jsxPlugin(options: PluginOptions = {}): Plugin {
+  const accept = shouldTransform(options);
 
-  const accept: (id: string) => boolean =
-    typeof test == "function"
-      ? test
-      : test instanceof RegExp
-      ? (id) => test.test(id)
-      : DEFAULT_SHOULD_TRANSFORM;
+  const CACHE = new Map<string, CacheEntry>();
+  let hot: HotChannel | undefined;
+  let cssVersion = 0;
 
-  const CACHE = new Map<string, TransformResult>();
-  let moduleGraph!: ModuleGraph;
+  async function transformCache(id: string, source: string) {
+    const result = await transform(id, source, options);
+    const cssId = getCssId(id);
 
-  async function transformCache(id: string, code: string) {
-    const result = await transform(id, code, transformOptions);
+    if (result.css) {
+      const cssImport = getCssImport(id) + `?v=${cssVersion++}`;
+      result.code += `\nimport "${cssImport}";`;
 
-    if (!cssModules && result.css)
-      result.code += `\nimport "__EXPRESSIVE_CSS__";`;
+      log.green("transform", `generated CSS for ${localize(id)}`, {
+        cssImport,
+        cssLength: result.css.length,
+        cssPreview: result.css.slice(0, 120),
+      });
+    } else {
+      log.dim("transform", `no CSS for ${localize(id)}`);
+    }
 
-    CACHE.set(id, result);
-    CACHE.set(cssModules ? getCssModuleId(id) : getCssId(id), result);
+    const entry: CacheEntry = { ...result, source };
 
-    return result;
+    CACHE.set(id, entry);
+    CACHE.set(cssId, entry);
+
+    return entry;
   }
 
   return {
     name: "expressive-jsx-plugin",
     enforce: "pre",
     configureServer(server) {
-      moduleGraph = server.moduleGraph;
+      hot = server.hot;
+      log.cyan("init", "configureServer called");
     },
-    resolveId(id, importer = "") {
-      if (id === "__EXPRESSIVE_CSS__") return getCssId(importer);
-      if (id === CSS_MODULE_IMPORT && importer) return getCssModuleId(importer);
-    },
-    load(path: string) {
-      const cached = CACHE.get(path);
+    resolveId(id, importer = "", options) {
+      const clean = stripQuery(id);
+      const ssr = !!(options as any)?.ssr;
 
-      if (!cached) return;
-
-      if (path.startsWith(VIRTUAL_CSS) || path.endsWith(".module.css"))
-        return cached.css;
-    },
-    async transform(code, id) {
-      if (id.startsWith(VIRTUAL_CSS)) {
-        const result = CACHE.get(id);
-        return result ? result.css : null;
+      if (clean.startsWith(VIRTUAL_PREFIX)) {
+        const resolved = RESOLVED_PREFIX + id.slice(VIRTUAL_PREFIX.length);
+        log.gold("resolveId", `"${id}" → resolved`, {
+          ssr,
+        });
+        return resolved;
       }
 
-      // Let Vite's CSS plugin handle CSS modules
-      if (id.endsWith(".module.css")) return null;
+      if (id === "__EXPRESSIVE_CSS__") {
+        const resolved = getCssId(importer);
+        log.gold("resolveId", `legacy __EXPRESSIVE_CSS__ → resolved`, {
+          importer: localize(importer),
+          ssr,
+        });
+        return resolved;
+      }
+    },
+    load(path: string, options) {
+      const clean = stripQuery(path);
+      if (!clean.includes(VIRTUAL_PREFIX)) return;
 
-      const result = CACHE.get(id);
+      const cached = CACHE.get(clean);
+      const ssr = !!(options as any)?.ssr;
 
-      if (result) return result;
+      if (cached && clean.endsWith(".css")) {
+        log.green("load", `serving CSS for ${localize(clean)}`, {
+          ssr,
+          cssLength: cached.css.length,
+        });
+        return cached.css;
+      }
 
-      if (accept(id)) return transformCache(id, code);
+      log.red("load", `CACHE MISS for ${clean.replace("\0", "\\0")}`, { ssr });
+    },
+    async transform(code, id, options) {
+      const ssr = !!(options as any)?.ssr;
+      const clean = stripQuery(id);
+
+      const cached = CACHE.get(clean);
+
+      if (cached) {
+        if (clean.endsWith(".css")) {
+          log.cyan("transform", `returning cached CSS for ${localize(clean)}`, {
+            ssr,
+          });
+          return cached.css;
+        }
+
+        if (cached.source === code) {
+          log.cyan(
+            "transform",
+            `returning cached code for ${localize(clean)}`,
+            { ssr },
+          );
+          return cached;
+        }
+
+        log.gold(
+          "transform",
+          `source changed, re-transforming ${localize(id)}`,
+          { ssr },
+        );
+        return transformCache(id, code);
+      }
+
+      if (accept(id)) {
+        log.gold("transform", `transforming ${localize(id)}`, { ssr });
+        return transformCache(id, code);
+      }
 
       return null;
     },
@@ -92,17 +149,35 @@ function jsxPlugin(options: Options = {}): Plugin {
 
       if (!cached) return;
 
+      log.pink("hmr", `file changed: ${localize(file)}`, {
+        moduleCount: modules.length,
+      });
+
       const source = await context.read();
       const result = await transformCache(file, source);
 
-      if (cached.code == result.code) modules.pop();
+      const codeChanged = cached.code !== result.code;
+      const cssChanged = cached.css !== result.css;
 
-      if (cached.css == result.css) return;
+      log.pink("hmr", `changes detected`, { codeChanged, cssChanged });
 
-      const cssId = cssModules ? getCssModuleId(file) : getCssId(file);
-      const cssMod = moduleGraph.getModuleById(cssId);
+      if (!codeChanged && !cssChanged) return [];
 
-      if (cssMod) modules.push(cssMod);
+      // For client components, return modules so Vite sends HMR.
+      // The new CSS hash in the import URL means the browser fetches fresh CSS.
+      if (modules.length > 0) {
+        log.pink("hmr", `sending ${modules.length} module(s) for HMR`);
+        return modules;
+      }
+
+      // Server components have no client modules — frameworks like Waku handle RSC
+      // re-render, but as a safety net, trigger full-reload if CSS changed.
+      if (cssChanged && hot) {
+        log.pink("hmr", `server component CSS changed → full-reload`);
+        hot?.send?.({ type: "full-reload", path: "*" });
+      }
+
+      return [];
     },
   };
 }

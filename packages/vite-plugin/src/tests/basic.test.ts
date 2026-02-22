@@ -55,13 +55,13 @@ it("will import concat helper", async () => {
     }
     /*$vite$:1*/
 
-    /** assets/index-qQnbajdO.js **/
+    /** assets/index-CpbWvC1F.js **/
     import "vite/modulepreload-polyfill";
     const l = (...e) => e.filter(Boolean).join(" "),
-      a = e => React.createElement("div", {
+      o = e => React.createElement("div", {
         className: l(e.className, "Hello_28b")
       }, "Hello!");
-    a();
+    o();
   `);
 });
 
@@ -85,16 +85,12 @@ it("will generate and import css module", async () => {
     }
     /*$vite$:1*/
 
-    /** assets/index-x-onU-NN.js **/
+    /** assets/index-nxU93rcT.js **/
     import "vite/modulepreload-polyfill";
-    const e = "_Hello_28b_1goqq_1",
-      o = {
-        Hello_28b: e
-      },
-      s = (...l) => l.filter(Boolean).join(" "),
-      c = l => React.createElement("div", {
-        className: s(l.className, o.Hello_28b)
+    const l = (...e) => e.filter(Boolean).join(" "),
+      o = e => React.createElement("div", {
+        className: l(e.className, "also_i3c Hello_28b")
       }, "Hello!");
-    c();
+    o();
   `);
 });

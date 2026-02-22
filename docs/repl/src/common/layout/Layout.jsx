@@ -1,32 +1,19 @@
 import { Provider } from "@expressive/react";
-import { Layout as Control } from "./Control";
-import { forwardRef } from "react";
+import { Control } from "./Control";
 
-export const Layout = (props) => {
-  const {
-    is: control,
-    output,
-    container
-  } = Control.use(props);
+export const Layout = Control.as((props, self) => {
+  const { output, container } = self;
 
   grid: {
     display: grid;
   }
 
-  <Provider for={control}>
-    <grid ref={container}>
-      {output}
-    </grid>
-  </Provider>
-}
+  return <div _grid ref={container}>{output}</div>;
+});
 
-export const Row = () => {
-  <Layout this separator={Handle} row />
-}
+export const Row = (props) => <Layout row separator={Handle} {...props} />;
 
-export const Column = () => {
-  <Layout this separator={Handle} />
-}
+export const Column = (props) => <Layout separator={Handle} {...props} />;
 
 export { Column as Col };
 
@@ -37,14 +24,12 @@ const Handle = ({ grab, pull, push, vertical, width }) => {
     position: absolute;
     radius: round;
     transition: "background 0.1s ease-out";
+    background: 0xFFFFFF03;
+
+    if(":hover") bg: $accentLight;
   }
 
-  if(":hover")
-    bar: {
-      bg: $accentLight;
-    }
-
-  if(vertical){
+  if (vertical) {
     cursor: "col-resize";
     bar: {
       top: 10;
@@ -52,8 +37,7 @@ const Handle = ({ grab, pull, push, vertical, width }) => {
       right: 3;
       left: 3;
     }
-  }
-  else {
+  } else {
     cursor: "row-resize";
     bar: {
       top: 3;
@@ -62,13 +46,15 @@ const Handle = ({ grab, pull, push, vertical, width }) => {
       left: 10;
     }
   }
-  
-  <this onMouseDown={grab}>
-    <bar />
-    <Corner onMouseDown={pull} style={{ left: -width, top: 0 }} />
-    <Corner onMouseDown={push} style={{ right: -width, bottom: 0 }} />
-  </this>
-}
+
+  return (
+    <div onMouseDown={grab}>
+      <div _bar />
+      <Corner onMouseDown={pull} style={{ left: -width, top: 0 }} />
+      <Corner onMouseDown={push} style={{ right: -width, bottom: 0 }} />
+    </div>
+  );
+};
 
 const Corner = (props) => {
   position: absolute;
@@ -79,11 +65,9 @@ const Corner = (props) => {
   borderStyle: solid;
   zIndex: 10;
 
-  if(":hover")
-    borderColor: $accentLight;
+  if (":hover") borderColor: $accentLight;
 
-  if(!props.onMouseDown)
-    return null;
-  
-  <this />
-}
+  if (!props.onMouseDown) return null;
+
+  return <div />;
+};

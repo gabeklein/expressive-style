@@ -1,5 +1,5 @@
 {
-  "name": "@website/editor",
+  "name": "@docs/editor",
   "version": "0.3.2",
   "private": true,
   "main": "src",
@@ -15,7 +15,7 @@
     "@codemirror/state": "^6.4.1",
     "@codemirror/view": "^6.26.3",
     "@expressive/babel-preset": "workspace:*",
-    "@expressive/mvc": "^0.51.0",
+    "@expressive/state": "^0.74.0",
     "@lezer/common": "^1.2.1",
     "@lezer/highlight": "^1.2.0",
     "@replit/codemirror-vscode-keymap": "^6.0.2"
