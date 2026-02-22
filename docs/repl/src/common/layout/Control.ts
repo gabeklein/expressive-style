@@ -13,16 +13,15 @@ export class Control extends State {
   parent = get(Control, false);
   output = set(this.getOutput);
 
-  children = set<ReactNode>(undefined, (value) => {
+  children = set(undefined, (value: ReactNode) => {
     this.items = flatten(value);
     this.space = this.items.map(() => 1);
   });
 
   index?: number = 0;
+  row?: boolean = undefined;
 
-  row = false;
   gap = 9;
-
   separator = "div";
 
   items = [] as ReactNode[];
@@ -31,6 +30,8 @@ export class Control extends State {
   new(){
     if (this.parent) {
       this.separator = this.parent.separator;
+      if(this.row === undefined)
+        this.row = !this.parent.row;
     }
   }
 
@@ -48,19 +49,17 @@ export class Control extends State {
   }
 
   protected getOutput() {
-    const { items } = this;
     const output: ReactNode[] = [];
 
-    items.forEach((child: any, i, array) => {
-      let index = i * 2;
+    this.items.forEach((child: any, i, array) => {
+      const index = i * 2;
 
       output.push(
-        React.cloneElement(child, { ...child.props, key: index, index })
+        React.cloneElement(child, { ...child.props, key: index, index, parent: this })
       );
 
       if (i + 1 < array.length) {
-        index++;
-        output.push(React.createElement(Spacer, { key: index, index }));
+        output.push(React.createElement(Spacer, { key: index + 1, index }));
       }
     });
 
@@ -78,7 +77,7 @@ export class Control extends State {
 
     return (x: number, y: number) => {
       const diff = row ? x : y;
-      const prior = (index - 1) / 2;
+      const prior = index / 2;
       const after = prior + 1;
 
       this.space[prior] += diff;
@@ -99,7 +98,7 @@ export class Control extends State {
         pull = onDrag(move, () => parent.nudge(index - 1));
       }
 
-      if (index < items.length - 1) {
+      if (index < parent.items.length - 1) {
         push = onDrag(move, () => parent.nudge(index + 1));
       }
     }

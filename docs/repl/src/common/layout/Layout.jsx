@@ -1,7 +1,6 @@
-import { Provider } from "@expressive/react";
 import { Control } from "./Control";
 
-export const Layout = Control.as((props, self) => {
+export const Panel = Control.as((props, self) => {
   const { output, container } = self;
 
   grid: {
@@ -11,9 +10,9 @@ export const Layout = Control.as((props, self) => {
   return <div _grid ref={container}>{output}</div>;
 });
 
-export const Row = (props) => <Layout row separator={Handle} {...props} />;
+export const Row = (props) => <Panel row separator={Handle} {...props} />;
 
-export const Column = (props) => <Layout separator={Handle} {...props} />;
+export const Column = (props) => <Panel separator={Handle} {...props} />;
 
 export { Column as Col };
 
