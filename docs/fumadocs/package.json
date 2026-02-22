@@ -24,6 +24,7 @@
     "waku": "1.0.0-alpha.3"
   },
   "devDependencies": {
+    "@expressive/typescript-plugin-jsx": "workspace:*",
     "@tailwindcss/vite": "^4.1.18",
     "@types/mdx": "^2.0.13",
     "@types/node": "^25.1.0",
