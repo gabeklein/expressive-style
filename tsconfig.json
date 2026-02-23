@@ -1,15 +1,18 @@
 {
   "compilerOptions": {
     "allowJs": true,
-    "baseUrl": ".",
+    "checkJs": true,
     "declaration": true,
-    "jsx": "react",
+    "esModuleInterop": true,
+    "jsx": "react-jsx",
     "lib": ["ES2020", "DOM"],
     "module": "ESNext",
     "moduleResolution": "bundler",
-    "esModuleInterop": true,
-    "skipLibCheck": true,
     "noEmit": true,
+    "paths": {
+      "@expressive/*": ["./packages/*/src"]
+    },
+    "skipLibCheck": true,
     "sourceMap": true,
     "strict": true,
     "target": "ES2020"

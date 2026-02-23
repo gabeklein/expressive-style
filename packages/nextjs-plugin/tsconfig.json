@@ -1,13 +1,7 @@
 {
   "extends": "../../tsconfig.json",
   "compilerOptions": {
-    "strict": true,
-    "outDir": "./dist",
-    "rootDir": "./src",
-    "declaration": true,
-    "declarationMap": true,
     "checkJs": true,
-    "jsx": "react-jsx",
     "plugins": [
       {
         "name": "@expressive/typescript-plugin-jsx"
@@ -17,9 +11,5 @@
   "include": [
     "src/**/*",
     "app/**/*"
-  ],
-  "exclude": [
-    "node_modules",
-    "dist"
   ]
 }

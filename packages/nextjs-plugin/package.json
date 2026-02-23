@@ -11,7 +11,7 @@
   "scripts": {
     "build": "tsup src/index.ts --dts",
     "prebuild": "rm -rf ./dist",
-    "dev": "next dev test --webpack"
+    "dev": "next dev demo --webpack"
   },
   "license": "MIT",
   "publishConfig": {
