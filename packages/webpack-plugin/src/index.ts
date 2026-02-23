@@ -34,7 +34,9 @@ class ExpressiveJSXPlugin {
 
     const target = compiler.options.target;
     const ssr =
-      target === "node" || (Array.isArray(target) && target.includes("node"));
+      typeof target === "string"
+        ? /node/.test(target)
+        : Array.isArray(target) && target.some(t => typeof t === "string" && /node/.test(t));
 
     virtual.apply(compiler);
 
@@ -50,16 +52,19 @@ class ExpressiveJSXPlugin {
       loader.tap("ExpressiveJSXPlugin", (_context: any, module) => {
         const { resource } = module;
 
-        if (handled.has(resource) || !accept(resource)) return;
+        if (!accept(resource)) return;
 
+        const firstTime = !handled.has(resource);
         handled.add(resource);
 
         const cssModule = resource + ".module.css";
 
         log.gold("loader", resource, { ssr });
 
-        // Pre-register so the path exists when webpack resolves the import
-        virtual.writeModule(cssModule, "");
+        if (firstTime) {
+          // Pre-register so the path exists when webpack resolves the import
+          virtual.writeModule(cssModule, "");
+        }
 
         function afterLoader({ metadata }: { metadata: JSXPreset.Meta }) {
           const { css } = metadata;
