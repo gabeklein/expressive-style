@@ -10,7 +10,7 @@
     "url": "https://github.com/gabeklein"
   },
   "scripts": {
-    "build": "tsup src/index.ts --dts",
+    "build": "tsup",
     "test": "vitest"
   },
   "license": "MIT",
@@ -22,12 +22,15 @@
     "expressive",
     "jsx"
   ],
-  "main": "index.js",
-  "module": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    }
+  },
   "files": [
-    "dist",
-    "index.js"
+    "dist"
   ],
   "dependencies": {
     "@expressive/babel-preset": "workspace:*",
