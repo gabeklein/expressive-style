@@ -10,7 +10,7 @@
   },
   "scripts": {
     "build": "tsup src/index.ts --format cjs,esm --dts",
-    "dev": "waku dev test",
+    "dev": "waku dev debug",
     "test": "vitest",
     "prebuild": "rm -rf ./dist",
     "prepublish": "npm run build"
