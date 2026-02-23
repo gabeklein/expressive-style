@@ -41,8 +41,15 @@ export function CSSPlugin(
         },
         exit(path, state) {
           const { styles, cssModuleId } = state.file.metadata;
+          let hasStyles = false;
 
-          if (!cssModuleId || !cssModule || !styles.size) return;
+          for (const context of styles.values())
+            if (context.props.size || context.children.size) {
+              hasStyles = true;
+              break;
+            }
+
+          if (!cssModuleId || !cssModule || !hasStyles) return;
 
           path.unshiftContainer(
             "body",
