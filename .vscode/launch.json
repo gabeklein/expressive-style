@@ -9,6 +9,19 @@
       "webRoot": "${workspaceFolder}/docs/repl"
     },
     {
+      "type": "node",
+      "request": "launch",
+      "name": "Debug Next.js Plugin",
+      "runtimeExecutable": "pnpm",
+      "runtimeArgs": ["dev"],
+      "cwd": "${workspaceFolder}/packages/nextjs-plugin",
+      "env": {
+        "NODE_OPTIONS": "--inspect",
+        "DEBUG": "expressive"
+      },
+      "console": "integratedTerminal"
+    },
+    {
       "name": "Debug Preset",
       "type": "node",
       "request": "launch",
