@@ -10,6 +10,7 @@
   },
   "scripts": {
     "build": "tsup src/index.ts --format cjs,esm --dts",
+    "dev": "waku dev test",
     "test": "vitest",
     "prebuild": "rm -rf ./dist",
     "prepublish": "npm run build"
@@ -44,11 +45,17 @@
     "@expressive/babel-preset": "workspace:*"
   },
   "devDependencies": {
+    "@types/react": "^19.2.10",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^5.1.0",
     "@types/babel__core": "^7.20.2",
     "prettier": "^2.8.8",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
     "tsup": "^8.0.1",
     "vite": "^7.0.0",
-    "vitest": "^1.5.0"
+    "vitest": "^1.5.0",
+    "waku": "1.0.0-alpha.3"
   },
   "peerDependencies": {
     "vite": ">=5.0.0"

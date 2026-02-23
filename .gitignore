@@ -8,5 +8,4 @@
 *.log
 node_modules
 */*/dist/
-v2/
-docs/waku
+**/*.gen.ts
