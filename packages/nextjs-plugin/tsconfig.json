@@ -1,15 +1,10 @@
 {
   "extends": "../../tsconfig.json",
   "compilerOptions": {
-    "checkJs": true,
     "plugins": [
       {
         "name": "@expressive/typescript-plugin-jsx"
       }
     ]
-  },
-  "include": [
-    "src/**/*",
-    "app/**/*"
-  ]
+  }
 }
