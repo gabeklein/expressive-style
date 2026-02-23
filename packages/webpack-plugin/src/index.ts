@@ -57,6 +57,20 @@ class ExpressiveJSXPlugin {
       loader.tap("ExpressiveJSXPlugin", (_context: any, module) => {
         const { resource } = module;
 
+        if (resource.endsWith(".jsx.module.css")) {
+          for (const entry of module.loaders) {
+            if (typeof entry.loader !== "string" || !entry.loader.includes("css-loader"))
+              continue;
+              
+              const { modules } = entry.options || {} as any;
+
+              if (modules) {
+                modules.getLocalIdent = (_ctx: any, _ident: string, localName: string) => localName;
+            }
+          }
+          return;
+        }
+
         if (!accept(resource)) return;
 
         const firstTime = !handled.has(resource);
