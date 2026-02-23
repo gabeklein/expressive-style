@@ -32,6 +32,9 @@ class ExpressiveJSXPlugin {
     // Persistent across compilations for change detection
     const cssCache = new Map<string, string>();
 
+    // Track latest compilation to ignore stale afterLoader callbacks
+    let currentCompilation: object | null = null;
+
     const target = compiler.options.target;
     const ssr =
       typeof target === "string"
@@ -43,8 +46,10 @@ class ExpressiveJSXPlugin {
     log.cyan("init", "plugin applied", { target, ssr });
 
     compiler.hooks.compilation.tap("ExpressiveJSXPlugin", (compilation) => {
-      // Scoped per-compilation so files are re-processed on HMR rebuilds
       const handled = new Set<string>();
+
+      // Mark this as the current compilation; stale ones will be ignored
+      currentCompilation = compilation;
 
       const { loader } =
         compiler.webpack.NormalModule.getCompilationHooks(compilation);
@@ -63,10 +68,19 @@ class ExpressiveJSXPlugin {
 
         if (firstTime) {
           // Pre-register so the path exists when webpack resolves the import
-          virtual.writeModule(cssModule, "");
+          // Use cached CSS if available to avoid blank flash during HMR
+          virtual.writeModule(cssModule, cssCache.get(resource) || "");
         }
 
+        // Capture reference to detect if this compilation becomes stale
+        const myCompilation = compilation;
+
         function afterLoader({ metadata }: { metadata: JSXPreset.Meta }) {
+          // Ignore callbacks from old compilations that fire late
+          if (myCompilation !== currentCompilation) return;
+
+          if (!firstTime) return;
+
           const { css } = metadata;
           const prev = cssCache.get(resource);
 
