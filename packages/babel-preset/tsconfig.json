@@ -4,5 +4,6 @@
     "outDir": "dist",
     "baseUrl": "src",
     "noEmit": true
-  }
+  },
+  "exclude": ["dist"]
 }
