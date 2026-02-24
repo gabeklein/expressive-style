@@ -17,7 +17,7 @@ const DocsLayout: React.FC<React.PropsWithChildren> = async ({ children }) => {
       }
       footer={
         <Footer>
-          <p>MIT 2024 © Gabe Klein</p>
+          <p>MIT 2026 © Gabe Klein</p>
         </Footer>
       }
     >
