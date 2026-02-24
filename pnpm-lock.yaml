@@ -215,6 +215,9 @@ importers:
       '@expressive/nextjs-plugin':
         specifier: workspace:*
         version: link:../../packages/nextjs-plugin
+      '@expressive/typescript-plugin-jsx':
+        specifier: workspace:*
+        version: link:../../packages/typescript-plugin-jsx
       '@svgr/webpack':
         specifier: ^8.1.0
         version: 8.1.0(typescript@5.9.3)
