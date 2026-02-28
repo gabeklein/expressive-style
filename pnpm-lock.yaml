@@ -193,6 +193,9 @@ importers:
 
   docs/website:
     dependencies:
+      '@docs/repl':
+        specifier: workspace:*
+        version: link:../repl
       '@expressive/react':
         specifier: ^0.74.1
         version: 0.74.1(react@19.2.4)

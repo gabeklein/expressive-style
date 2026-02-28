@@ -9,6 +9,7 @@
     "start": "next start --webpack"
   },
   "dependencies": {
+    "@docs/repl": "workspace:*",
     "@expressive/react": "^0.74.1",
     "next": "^16.1.6",
     "nextra": "^4.6.1",
