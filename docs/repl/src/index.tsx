@@ -1,8 +1,6 @@
-import './styles.css';
-
 import ReactDOM from 'react-dom/client';
 
-import Window from 'common/window';
+import Window from './common/window';
 import Interface from './App';
 
 window.addEventListener("load", () => {

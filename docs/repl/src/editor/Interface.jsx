@@ -1,4 +1,4 @@
-import { Col, Row } from "common/layout/Layout";
+import { Col, Row } from "../common/layout/Layout";
 
 import { InputEditor, OutputJSX } from "./Editors";
 import { Provider } from "@expressive/react";
