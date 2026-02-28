@@ -8,7 +8,9 @@ const withNextra = Nextra({
 
 export default withExpressive(
   withNextra({
+    reactStrictMode: false,
     webpack: (config) => {
+      config.cache = false;
       config.module.rules.push({
         test: /\.svg$/i,
         issuer: /\.[jt]sx?$|\.mdx$/,
