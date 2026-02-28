@@ -6,9 +6,7 @@ import paths from "vite-tsconfig-paths";
 export default defineConfig({
   plugins: [
     styles(),
-    react({
-      jsxImportSource: "@expressive/react",
-    }),
+    react(),
     paths(),
   ],
 });
