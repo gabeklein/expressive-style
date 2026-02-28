@@ -4,5 +4,11 @@ import { defineConfig } from "vite";
 import paths from "vite-tsconfig-paths";
 
 export default defineConfig({
-  plugins: [styles(), react(), paths()],
+  plugins: [
+    styles(),
+    react({
+      jsxImportSource: "@expressive/react",
+    }),
+    paths(),
+  ],
 });

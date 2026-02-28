@@ -8,16 +8,14 @@ import { Preview } from "./Preview";
 export const Input = InputEditor.as((_, p) => <div ref={p.ref} />);
 export const Output = OutputJSX.as((_, p) => <div ref={p.ref} />);
 
-export const Interface = () => {
-  return (
-    <Provider for={{ Main }}>
-      <Row>
-        <Col>
-          <Input />
-          <Output />
-        </Col>
-        <Preview />
-      </Row>
-    </Provider>
-  );
-};
+export const Interface = () => (
+  <Provider for={{ Main }}>
+    <Row>
+      <Col>
+        <Input />
+        <Output />
+      </Col>
+      <Preview />
+    </Row>
+  </Provider>
+)

@@ -9,8 +9,15 @@ import {
 } from "@docs/editor";
 
 import { Main } from "./Main";
+import { createElement } from "react";
 
-export class InputEditor extends Editor {
+abstract class Edit extends Editor {
+  render(){
+    return createElement("div", { ref: this.ref });
+  }
+}
+
+export class InputEditor extends Edit {
   main = get(Main, (main) => {
     main.document.get((doc) => {
       this.text = doc.input;
@@ -36,7 +43,7 @@ export class InputEditor extends Editor {
   }
 }
 
-export class OutputJSX extends Editor {
+export class OutputJSX extends Edit {
   main = get(Main, (main) => {
     main.document.get((doc) => {
       this.text = doc.output;

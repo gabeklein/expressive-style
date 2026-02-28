@@ -1,13 +1,22 @@
-import ReactDOM from 'react-dom/client';
+import "./styles.css";
 
-import Window from './common/window';
-import Interface from './App';
+import { Provider } from "@expressive/react";
 
-window.addEventListener("load", () => {
-  const container = document.getElementById('react-root')!;
-  ReactDOM.createRoot(container).render(
-    <Window>
-      <Interface />
-    </Window>
-  );
-});
+import { Col, Row } from "./common/layout/Layout";
+import { InputEditor, OutputJSX } from "./editor/Editors";
+import { Main } from "./editor/Main";
+import { Preview } from "./editor/Preview";
+
+const App: React.FC = () => (
+  <Provider for={Main}>
+    <Row>
+      <Col>
+        <InputEditor />
+        <OutputJSX />
+      </Col>
+      <Preview />
+    </Row>
+  </Provider>
+);
+
+export default App;

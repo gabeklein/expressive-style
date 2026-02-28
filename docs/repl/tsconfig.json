@@ -6,5 +6,6 @@
     "declaration": false,
     "types": ["react"],
     "jsx": "react-jsx",
+    "jsxImportSource": "@expressive/react"
   }
 }

@@ -4,8 +4,8 @@ import parserBabel from 'prettier/parser-babel';
 import Prettier from 'prettier/standalone';
 
 /** Generate preview JSX code from source. */
-export function transform(input_jsx: string){
-  const result = Babel.transform(input_jsx, {
+export function transform(input: string){
+  const result = Babel.transform(input, {
     filename: '/REPL.js',
     presets: [Preset]
   });

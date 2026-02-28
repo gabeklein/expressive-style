@@ -1,4 +1,4 @@
-function Window({ children }) {
+const Window = ({ children }) => {
   height: "100vh";
   boxSizing: borderBox;
   padding: 0, 10;
@@ -12,9 +12,11 @@ function Window({ children }) {
       <Footer />
     </div>
   );
-}
+};
 
-export function Header() {
+export default Window;
+
+const Header = () => {
   height: 50;
   display: flex;
   alignItems: center;
@@ -32,9 +34,9 @@ export function Header() {
       Expressive JSX Demo
     </div>
   );
-}
+};
 
-export function Footer() {
+const Footer = () => {
   marginB: 5;
   margin: 15, 0, 20;
   color: $textDark;
@@ -44,6 +46,4 @@ export function Footer() {
   return (
     <div>Gabe Klein - MIT - {new Date().getFullYear()}</div>
   );
-}
-
-export default Window;
+};

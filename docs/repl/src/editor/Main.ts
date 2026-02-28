@@ -1,4 +1,4 @@
-import State, { get, use } from "@expressive/react";
+import State, { get } from "@expressive/react";
 import { Editor } from "@docs/editor";
 
 import { Document } from "./Document";
@@ -14,7 +14,7 @@ declare namespace Main {
 }
 
 class Main extends State {
-  document = use(Document);
+  document = new Document();
   editors = get(Editor, true);
 
   fontSize = 15;
