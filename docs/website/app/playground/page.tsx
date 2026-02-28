@@ -1,20 +1,14 @@
 "use client";
 
-import { lazy, Suspense, useEffect, useState } from "react";
+import { Suspense } from "react";
 import { Window } from "./Window";
+import dynamic from "next/dynamic";
 
-const Repl = lazy(() => import("@docs/repl"));
+const Repl = dynamic(() => import("@docs/repl"), { ssr: false });
 
 export default function Playground() {
-  const [mounted, setMounted] = useState(false);
-  const fallback = <div className="h-screen w-screen" />;
-
-  useEffect(() => setMounted(true), []);
-
-  if (!mounted) return fallback;
-
   return (
-    <Suspense fallback={fallback}>
+    <Suspense fallback={<div className="h-screen w-screen" />}>
       <Window>
         <Repl />
       </Window>
