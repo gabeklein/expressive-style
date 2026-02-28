@@ -1,14 +1,12 @@
-import ReactDOM from 'react-dom/client';
+import ReactDOM from "react-dom/client";
 
-import App from '.';
+import App from ".";
 import Window from "./common/window";
 
 window.addEventListener("load", () => {
-  const container = document.getElementById('react-root');
-
-  ReactDOM.createRoot(container).render(
+  ReactDOM.createRoot(document.body).render(
     <Window>
       <App />
-    </Window>
+    </Window>,
   );
 });
