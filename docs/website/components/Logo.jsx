@@ -1,5 +1,3 @@
-// import Logo from "./logo.svg";
-
 export const SiteLogo = () => {
   fontWeight: bold;
   fontFamily: "Rubik";
@@ -7,7 +5,6 @@ export const SiteLogo = () => {
   alignItems: center;
   display: flex;
   gap: 10;
-  width: 100;
 
 
   return (
@@ -20,7 +17,8 @@ export const SiteLogo = () => {
 
 export const Svg = () => {
   color: 0x8150ce;
-  fontSize: 15;
+  size: 1.5;
+  fontSize: 24;
 
   return (
     <svg viewBox="0 0 1019 701" xmlns="http://www.w3.org/2000/svg">
