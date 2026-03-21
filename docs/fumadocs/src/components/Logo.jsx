@@ -8,13 +8,13 @@ export const Logo = () => {
 
   return (
     <div>
-      <Svg />
+      <Logo />
       <span>Expressive JSX</span>
     </div>
   );
 };
 
-export const Svg = () => {
+export const Logo = () => {
   color: 0x8150ce;
   size: 40;
   
