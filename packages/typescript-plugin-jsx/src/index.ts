@@ -9,92 +9,80 @@ import {
   isPositionInLabelStatement,
 } from "./util";
 
-function init(modules: { typescript: typeof ts }) {
+const factory: ts.server.PluginModuleFactory = (modules) => {
   const { ScriptElementKind } = modules.typescript;
 
-  function create(info: ts.server.PluginCreateInfo) {
-    const { languageService: service } = info;
-    const { logger } = info.project.projectService;
+  return {
+    create({ languageService: service, project }) {
+      const log = project.projectService.logger;
 
-    logger.info("Loaded Expressive JSX Typescript Plugin");
+      log.info("Loaded Expressive JSX Typescript Plugin");
 
-    const proxy: ts.LanguageService = Object.create(null);
+      const proxy = Object.assign({}, service);
 
-    for (const k of Object.keys(service) as Array<keyof ts.LanguageService>) {
-      const x = service[k]!;
-      // @ts-expect-error - JS runtime trickery which is tricky to type tersely
-      proxy[k] = (...args: Array<{}>) => x.apply(service, args);
-    }
+      proxy.getSuggestionDiagnostics = (fileName) => {
+        const issues = service.getSuggestionDiagnostics(fileName);
+        const sourceFile = service.getProgram()?.getSourceFile(fileName);
 
-    proxy.getSuggestionDiagnostics = (fileName) => {
-      const issues = service.getSuggestionDiagnostics(fileName);
-      const sourceFile = service.getProgram()?.getSourceFile(fileName);
+        if (!sourceFile) return issues;
 
-      if (!sourceFile) return issues;
+        return issues.filter((diagnostic) => {
+          return stylePropertyStatement(diagnostic) === false;
+        });
+      };
 
-      return issues.filter((diagnostic) => {
-        if (stylePropertyStatement(diagnostic)) return false;
+      proxy.getSemanticDiagnostics = (fileName) => {
+        const issues = service.getSemanticDiagnostics(fileName);
 
-        return true;
-      });
-    };
+        return issues.filter((diagnostic) => {
+          try {
+            if (isThisElement(diagnostic)) return false;
+            if (stylePropertyValue(diagnostic)) return false;
+            if (expressionInLabelStatement(diagnostic)) return false;
+            if (isStyleCondition(diagnostic)) return false;
+          } catch (e) {
+            log.info("Error in getSemanticDiagnostics: " + e);
+          }
 
-    proxy.getSemanticDiagnostics = (fileName) => {
-      const issues = service.getSemanticDiagnostics(fileName);
+          return true;
+        });
+      };
 
-      return issues.filter((diagnostic) => {
-        try {
-          if (isThisElement(diagnostic)) return false;
+      proxy.getQuickInfoAtPosition = (fileName, position) => {
+        const sourceFile = service.getProgram()?.getSourceFile(fileName);
 
-          if (stylePropertyValue(diagnostic)) return false;
+        if (sourceFile) {
+          const labelCheck = isPositionInLabelStatement(sourceFile, position);
 
-          if (expressionInLabelStatement(diagnostic)) return false;
+          if (labelCheck.isInLabel && labelCheck.identifierName) {
+            const identifierNode = findIdentifierNodeAtPosition(
+              sourceFile,
+              position,
+            );
 
-          if (isStyleCondition(diagnostic)) return false;
-        } catch (e) {
-          logger.info("Error in getSemanticDiagnostics: " + e);
-        }
-
-        return true;
-      });
-    };
-
-    proxy.getQuickInfoAtPosition = (fileName, position) => {
-      const sourceFile = service.getProgram()?.getSourceFile(fileName);
-
-      if (sourceFile) {
-        const labelCheck = isPositionInLabelStatement(sourceFile, position);
-
-        if (labelCheck.isInLabel && labelCheck.identifierName) {
-          const identifierNode = findIdentifierNodeAtPosition(
-            sourceFile,
-            position
-          );
-
-          if (identifierNode) {
-            return {
-              kind: ScriptElementKind.constElement,
-              kindModifiers: "declare",
-              textSpan: {
-                start: identifierNode.getStart(),
-                length: identifierNode.getWidth(),
-              },
-              displayParts: [
-                { text: `"${identifierNode.text}"`, kind: "stringLiteral" },
-              ],
-            };
+            if (identifierNode) {
+              return {
+                kind: ScriptElementKind.constElement,
+                kindModifiers: "declare",
+                textSpan: {
+                  start: identifierNode.getStart(),
+                  length: identifierNode.getWidth(),
+                },
+                displayParts: [
+                  { text: `"${identifierNode.text}"`, kind: "stringLiteral" },
+                ],
+              };
+            }
           }
         }
-      }
 
-      return service.getQuickInfoAtPosition(fileName, position);
-    };
+        return service.getQuickInfoAtPosition(fileName, position);
+      };
 
-    return proxy;
-  }
-
-  return { create };
-}
+      return proxy;
+    },
+  };
+};
 
 function isThisElement(diagnostic: ts.Diagnostic): boolean {
   const { code, messageText } = diagnostic;
@@ -137,4 +125,4 @@ function isStyleCondition(diagnostic: ts.Diagnostic): boolean {
   return false;
 }
 
-export = init;
+export = factory;
