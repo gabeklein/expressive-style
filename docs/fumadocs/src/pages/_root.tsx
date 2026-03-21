@@ -1,5 +1,5 @@
 import type { PropsWithChildren } from 'react';
-import { Provider } from '@/components/provider';
+import { RootProvider } from 'fumadocs-ui/provider/waku';
 import '@/styles/globals.css';
 
 export default async function RootElement({ children }: PropsWithChildren) {
@@ -14,7 +14,7 @@ export default async function RootElement({ children }: PropsWithChildren) {
         />
       </head>
       <body data-version="1.0">
-        <Provider>{children}</Provider>
+        <RootProvider>{children}</RootProvider>
       </body>
     </html>
   );

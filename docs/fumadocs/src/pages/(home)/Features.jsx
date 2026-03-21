@@ -76,8 +76,8 @@ const Feature = ({ icon, title, description }) => {
   transition: 'all 0.3s ease';
 
   if (':hover') {
-      transform: 'translateY(-4px)';
-      boxShadow: '0 8px 24px rgba(0, 0, 0, 0.1)';
+    transform: 'translateY(-4px)';
+    boxShadow: '0 8px 24px rgba(0, 0, 0, 0.1)';
   }
 
   icon: {

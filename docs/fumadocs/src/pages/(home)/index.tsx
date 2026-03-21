@@ -1,6 +1,14 @@
-import Hero from '@/components/homepage';
+import { Features } from './Features';
+import { Hero } from './Hero';
 
-export default Hero;
+export default function Home() {
+  return (
+    <>
+      <Hero />
+      <Features />
+    </>
+  );
+}
 
 export const getConfig = async () => {
   return {
