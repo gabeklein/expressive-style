@@ -12,6 +12,6 @@ export function baseOptions(): BaseLayoutProps {
         url: '/docs',
       },
     ],
-    githubUrl: 'https://github.com/gabeklein/expressive-jsx',
+    githubUrl: 'https://github.com/gabeklein/expressive-style',
   };
 }
