@@ -8,11 +8,12 @@ export default function DocPage({ slugs }: PageProps<'/docs/[...slugs]'>) {
 
   if (!page) return <NotFound />;
 
-  const MDX = page.data.body;
+  const { title, toc, description, body: MDX } = page.data;
+
   return (
-    <DocsPage toc={page.data.toc}>
-      <DocsTitle>{page.data.title}</DocsTitle>
-      <DocsDescription>{page.data.description}</DocsDescription>
+    <DocsPage toc={toc}>
+      <DocsTitle>{title}</DocsTitle>
+      <DocsDescription>{description}</DocsDescription>
       <DocsBody>
         <MDX
           components={{

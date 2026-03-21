@@ -2,7 +2,7 @@ import type { PropsWithChildren } from 'react';
 import { RootProvider } from 'fumadocs-ui/provider/waku';
 import '@/styles/globals.css';
 
-export default async function RootElement({ children }: PropsWithChildren) {
+export default function RootElement({ children }: PropsWithChildren) {
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
