@@ -1,7 +1,7 @@
 import type { PropsWithChildren } from 'react';
 import { DocsLayout } from 'fumadocs-ui/layouts/docs';
 import { source } from '@/lib/source';
-import { baseOptions } from '@/lib/layout.shared';
+import { baseOptions } from '@/lib/options';
 
 export default function Layout({ children }: PropsWithChildren) {
   return (
