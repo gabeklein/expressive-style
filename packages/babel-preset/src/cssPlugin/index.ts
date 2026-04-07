@@ -83,7 +83,10 @@ export function CSSPlugin(
           context.children.forEach((x) => using.add(x));
 
           const { styles } = state.file.metadata as Preset.MetaData;
-          const key = toSelector(context);
+          let key = toSelector(context);
+
+          if (context.media)
+            key += `@${context.media}`;
 
           styles.set(key, context);
         }

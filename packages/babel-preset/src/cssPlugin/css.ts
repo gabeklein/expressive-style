@@ -1,11 +1,28 @@
 import { Context } from "../jsxPlugin";
 
 export function toStylesheet(styles: Map<string, Context>) {
-  return Array.from(styles.values())
-    .sort(depth)
-    .map(toBlock)
-    .filter(Boolean)
-    .join("\n");
+  const sorted = Array.from(styles.values()).sort(depth);
+  const plain = [] as string[];
+  const mediaGroups = new Map<string, string[]>();
+
+  for (const define of sorted) {
+    const block = toBlock(define);
+    if (!block) continue;
+
+    const media = getMedia(define);
+
+    if (media) {
+      let group = mediaGroups.get(media);
+      if (!group) mediaGroups.set(media, group = []);
+      group.push(block);
+    }
+    else plain.push(block);
+  }
+
+  for (const [query, blocks] of mediaGroups)
+    plain.push(`@media ${query} {\n${blocks.join("\n")}\n}`);
+
+  return plain.join("\n");
 }
 
 function toDash(name: string) {
@@ -75,6 +92,9 @@ function toColor(raw: string) {
 export function toSelector(context: Context): string {
   let { parent, condition, uid } = context;
 
+  if (context.media && parent)
+    return toSelector(parent);
+
   if (typeof condition === "string") {
     const parent = toSelector(context.parent!);
 
@@ -96,6 +116,15 @@ export function toSelector(context: Context): string {
   }
 
   return (selector += "." + uid);
+}
+
+function getMedia(context: Context): string | undefined {
+  let current: Context | undefined = context;
+
+  while (current) {
+    if (current.media) return current.media;
+    current = current.parent;
+  }
 }
 
 function depth(context: Context, context2?: Context): number {

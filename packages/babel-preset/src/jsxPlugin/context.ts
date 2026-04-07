@@ -40,6 +40,7 @@ export class Context {
   condition?: T.Expression | string;
   alternate?: Context;
   instruction?: Instruction;
+  media?: string;
 
   static get(from: NodePath) {
     return CONTEXT.get(from);
