@@ -43,6 +43,13 @@ export function handleLabel(path: NodePath<T.LabeledStatement>) {
 
   const args = parseArguments(body);
 
+  if (args.length === 1 && t.isTemplateLiteral(args[0] as any)) {
+    const node = args[0] as unknown as T.TemplateLiteral;
+    const value = node.quasis.map(q => q.value.raw);
+    context.props.set(name, node.expressions.length ? [node] : value);
+    return;
+  }
+
   try {
     const queue = [{ name, args }];
 

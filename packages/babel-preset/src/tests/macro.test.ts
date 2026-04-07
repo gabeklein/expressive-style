@@ -88,6 +88,30 @@ it("will apply absolute", async () => {
   `);
 });
 
+it("will bypass macro for template literal", async () => {
+  function foo() {
+    throw new Error("macro should not be called");
+  }
+
+  const parse = parser({
+    macros: [{ foo }],
+  });
+
+  const output = await parse(`
+    const Component = () => {
+      foo: \`bar baz\`;
+
+      return <div />
+    }
+  `);
+
+  expect(output.css).toMatchInlineSnapshot(`
+    .Component_2iw {
+      foo: bar baz;
+    }
+  `);
+});
+
 it("will apply outline macro", async () => {
   const output = await parser(`
     const Component = () => {
