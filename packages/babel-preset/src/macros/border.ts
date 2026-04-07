@@ -1,5 +1,10 @@
 import { appendUnit } from "./appendUnit";
 
+const STYLES = new Set([
+  "solid", "dashed", "dotted", "double",
+  "groove", "ridge", "inset", "outset",
+]);
+
 interface BorderOutput {
   border?: string;
   borderTop?: string;
@@ -12,21 +17,27 @@ function _border(dir?: string) {
   let key: string = "border";
   if (dir) key += dir[0].toUpperCase() + dir.slice(1);
 
-  return (
-    color?: string | number,
-    width?: string | number,
-    style?: string,
-  ): BorderOutput => {
-    if (typeof color === "string" && / /.test(color))
-      return { [key]: color };
+  return (...args: (string | number)[]): BorderOutput => {
+    if (args.length === 1 && typeof args[0] === "string") {
+      const a = args[0];
+      if (a == "none" || a == "transparent" || / /.test(a))
+        return { [key]: a };
+    }
 
-    if (color == "none" || color == "transparent")
-      return {
-        [key]: color,
-      };
+    let color = "black";
+    let style = "solid";
+    let width: string | number = 1;
+
+    for (const arg of args)
+      if (typeof arg === "number")
+        width = arg;
+      else if (STYLES.has(arg))
+        style = arg;
+      else
+        color = arg;
 
     return {
-      [key]: [color || "black", style || "solid", appendUnit(width || 1)],
+      [key]: `${color} ${style} ${appendUnit(width)}`,
     };
   };
 }
