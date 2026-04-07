@@ -18,7 +18,7 @@ export function handleLabel(path: NodePath<T.LabeledStatement>) {
 
       if (!instruction)
         throw path.buildCodeFrameError(
-          `Unknown instruction "${key}". No instruction registered for $${key}.`
+          `Unknown instruction "${key}". No instruction registered for $${key}.`,
         );
 
       const inner = new Context(path, context, key);
@@ -28,9 +28,12 @@ export function handleLabel(path: NodePath<T.LabeledStatement>) {
       return;
     }
 
-    if (context.define["this"] === context && context.uid.startsWith(name + "_"))
+    if (
+      context.define["this"] === context &&
+      context.uid.startsWith(name + "_")
+    )
       throw path.buildCodeFrameError(
-        `Label "${name}" conflicts with the component name. Use a different name for this style scope.`
+        `Label "${name}" conflicts with the component name. Use a different name for this style scope.`,
       );
 
     context.define[name] = new Context(path, context, name);
@@ -45,7 +48,7 @@ export function handleLabel(path: NodePath<T.LabeledStatement>) {
 
   if (args.length === 1 && t.isTemplateLiteral(args[0] as any)) {
     const node = args[0] as unknown as T.TemplateLiteral;
-    const value = node.quasis.map(q => q.value.raw);
+    const value = node.quasis.map((q) => q.value.raw);
     context.props.set(name, node.expressions.length ? [node] : value);
     return;
   }

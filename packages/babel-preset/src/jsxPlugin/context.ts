@@ -68,7 +68,7 @@ export class Context {
   }
 }
 
-export class RootContext extends Context {
+export class Root extends Context {
   constructor(path: NodePath, state: State, public options: Options) {
     const { define = [], macros = [], instructions = [] } = options;
 

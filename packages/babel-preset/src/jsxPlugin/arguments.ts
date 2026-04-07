@@ -31,7 +31,7 @@ type Argument =
   | null;
 
 export function parseArguments(
-  element: NodePath<T.ExpressionStatement>
+  element: NodePath<T.ExpressionStatement>,
 ): Argument[] {
   const { node } = element.get("expression");
   const expressions = t.isSequenceExpression(node) ? node.expressions : [node];
@@ -42,9 +42,7 @@ export function parseArguments(
 function parseExpression<T extends T.Expression>(element: T): any {
   if (t.isIdentifier(element)) return element.name;
 
-  if (t.isStringLiteral(element)) {
-    return element.value === "" ? '""' : element.value;
-  }
+  if (t.isStringLiteral(element)) return element.value || '""';
 
   if (isParenthesized(element)) return element;
 
@@ -52,9 +50,7 @@ function parseExpression<T extends T.Expression>(element: T): any {
 
   if (t.isNullLiteral(element)) return null;
 
-  if (t.isTemplateLiteral(element)) {
-    return element;
-  }
+  if (t.isTemplateLiteral(element)) return element;
 
   if (t.isNumericLiteral(element)) {
     const { value, extra: { raw } = {} } = element as any;
@@ -70,7 +66,6 @@ function parseExpression<T extends T.Expression>(element: T): any {
       const value = parseExpression(argument);
 
       if (typeof value === "number") return -1 * value;
-
       if (typeof value === "string") return "-" + value;
     }
 
@@ -110,9 +105,8 @@ function parseExpression<T extends T.Expression>(element: T): any {
     return [callee.name, ...args];
   }
 
-  if (t.isArrowFunctionExpression(element)) {
+  if (t.isArrowFunctionExpression(element))
     throw Oops.ArrowNotImplemented(element);
-  }
 
   throw Oops.UnknownArgument(element);
 }

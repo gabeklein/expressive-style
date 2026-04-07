@@ -2,7 +2,7 @@ import type { NodePath, PluginObj, PluginPass, types as T } from "@babel/core";
 
 import { t } from "../babel";
 
-import { Context, hash, RootContext } from "./context";
+import { Context, Root } from "./context";
 import { Status } from "./errors";
 import { getContext, handleLabel } from "./label";
 
@@ -29,7 +29,7 @@ function Plugin(_compiler: any, options: Options): PluginObj<State> {
     visitor: {
       Program: {
         enter(path, state) {
-          new RootContext(path, state, options);
+          new Root(path, state, options);
           Status.currentFile = state.file as any;
         }
       },
