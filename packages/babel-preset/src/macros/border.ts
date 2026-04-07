@@ -12,12 +12,12 @@ function _border(dir?: string) {
   let key: string = "border";
   if (dir) key += dir[0].toUpperCase() + dir.slice(1);
 
-  return function (
+  return (
     color?: string | number,
     width?: string | number,
-    style?: string
-  ): BorderOutput {
-    if (arguments.length === 1 && typeof color === "string")
+    style?: string,
+  ): BorderOutput => {
+    if (typeof color === "string" && / /.test(color))
       return { [key]: color };
 
     if (color == "none" || color == "transparent")
@@ -26,7 +26,7 @@ function _border(dir?: string) {
       };
 
     return {
-      [key]: [color || "black", style || "solid", appendUnit(width || "1")],
+      [key]: [color || "black", style || "solid", appendUnit(width || 1)],
     };
   };
 }
