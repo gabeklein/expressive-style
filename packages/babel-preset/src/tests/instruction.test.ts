@@ -60,6 +60,63 @@ it("will apply $before as pseudo-element", async () => {
   `);
 });
 
+it("will apply $md breakpoint", async () => {
+  const output = await parser(`
+    const Component = () => {
+      fontSize: 14;
+
+      $md: {
+        fontSize: 18;
+      }
+
+      return <div />
+    }
+  `);
+
+  expect(output.css).toMatchInlineSnapshot(`
+    .Component_2dp {
+      font-size: 14px;
+    }
+    @media (min-width: 768px) {
+    .Component_2dp {
+      font-size: 18px;
+    }
+    }
+  `);
+});
+
+it("will combine breakpoint with pseudo", async () => {
+  const output = await parser(`
+    const Component = () => {
+      color: red;
+
+      $md: {
+        color: blue;
+
+        $hover: {
+          color: green;
+        }
+      }
+
+      return <div />
+    }
+  `);
+
+  expect(output.css).toMatchInlineSnapshot(`
+    .Component_169 {
+      color: red;
+    }
+    @media (min-width: 768px) {
+    .Component_169 {
+      color: blue;
+    }
+    .Component_169:hover {
+      color: green;
+    }
+    }
+  `);
+});
+
 it("will error on unknown instruction", async () => {
   await expect(parser(`
     const Component = () => {
