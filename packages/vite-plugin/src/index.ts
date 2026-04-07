@@ -9,11 +9,12 @@ import {
   TransformResult,
 } from "./transform";
 
-const VIRTUAL_PREFIX = "virtual:css:";
-const RESOLVED_PREFIX = "\0" + VIRTUAL_PREFIX;
+const VIRTUAL = "virtual:css:";
+const RESOLVED = "\0" + VIRTUAL;
 
-const getCssId = (path: string) => RESOLVED_PREFIX + localize(path) + ".css";
-const getCssImport = (path: string) => VIRTUAL_PREFIX + localize(path) + ".css";
+const ext = (module?: boolean) => module ? ".module.css" : ".css";
+const getCssId = (path: string, module?: boolean) => RESOLVED + localize(path) + ext(module);
+const getCssImport = (path: string, module?: boolean) => VIRTUAL + localize(path) + ext(module);
 
 const localize = (path: string) => {
   const cwd = process.cwd();
@@ -26,19 +27,27 @@ interface CacheEntry extends TransformResult {
   source: string;
 }
 
-export interface PluginOptions extends TransformOptions {}
+export interface PluginOptions extends TransformOptions {
+  cssModules?: boolean;
+}
 
 function jsxPlugin(options: PluginOptions = {}): Plugin {
+  const { cssModules, ...transformOptions } = options;
   const accept = shouldTransform(options);
 
   const CACHE = new Map<string, CacheEntry>();
   let hot: HotChannel | undefined;
-  async function transformCache(id: string, source: string) {
-    const result = await transform(id, source, options);
-    const cssId = getCssId(id);
 
-    if (result.css) {
-      const cssImport = getCssImport(id);
+  async function transformCache(id: string, source: string) {
+    const cssImport = getCssImport(id, cssModules);
+    const opts = cssModules
+      ? { ...transformOptions, cssModule: cssImport }
+      : transformOptions;
+
+    const result = await transform(id, source, opts);
+    const cssId = getCssId(id, cssModules);
+
+    if (result.css && !cssModules) {
       result.code += `\nimport "${cssImport}";`;
 
       log.green("transform", `generated CSS for ${localize(id)}`, {
@@ -67,11 +76,11 @@ function jsxPlugin(options: PluginOptions = {}): Plugin {
     },
     resolveId(id, importer = "", options) {
       const clean = stripQuery(id);
-      const ssr = !!(options as any)?.ssr;
+      const { ssr } = options || {};
 
-      if (clean.startsWith(VIRTUAL_PREFIX)) {
-        const resolved = RESOLVED_PREFIX + id.slice(VIRTUAL_PREFIX.length);
-        log.gold("resolveId", `"${id}" → resolved`, {
+      if (clean.startsWith(VIRTUAL)) {
+        const resolved = RESOLVED + id.slice(VIRTUAL.length);
+        log.gold("resolveId", `"${id}" → ${resolved}`, {
           ssr,
         });
         return resolved;
@@ -79,7 +88,7 @@ function jsxPlugin(options: PluginOptions = {}): Plugin {
 
       if (id === "__EXPRESSIVE_CSS__") {
         const resolved = getCssId(importer);
-        log.gold("resolveId", `legacy __EXPRESSIVE_CSS__ → resolved`, {
+        log.gold("resolveId", `legacy __EXPRESSIVE_CSS__ → ${resolved}`, {
           importer: localize(importer),
           ssr,
         });
@@ -88,7 +97,7 @@ function jsxPlugin(options: PluginOptions = {}): Plugin {
     },
     load(path: string, options) {
       const clean = stripQuery(path);
-      if (!clean.includes(VIRTUAL_PREFIX)) return;
+      if (!clean.includes(VIRTUAL)) return;
 
       const cached = CACHE.get(clean);
       const ssr = !!(options as any)?.ssr;
@@ -164,7 +173,7 @@ function jsxPlugin(options: PluginOptions = {}): Plugin {
       const hmrModules = codeChanged ? [...modules] : [];
 
       if (cssChanged) {
-        const cssId = getCssId(file);
+        const cssId = getCssId(file, cssModules);
         const cssMod = server.moduleGraph.getModuleById(cssId);
 
         if (cssMod) {
@@ -185,4 +194,5 @@ function jsxPlugin(options: PluginOptions = {}): Plugin {
   };
 }
 
+export type Options = PluginOptions;
 export { jsxPlugin as default, jsxPlugin };

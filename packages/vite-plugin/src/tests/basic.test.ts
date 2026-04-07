@@ -81,18 +81,22 @@ it("will generate and import css module", async () => {
   });
 
   expect(files).toMatchInlineSnapshot(`
-    /** assets/index-8qXBdxgs.css **/
-    .Hello_28b {
+    /** assets/index-Cajvt0uw.css **/
+    ._Hello_28b_1goqq_1 {
       color: red;
     }
     /*$vite$:1*/
 
-    /** assets/index-CpbWvC1F.js **/
+    /** assets/index-Ca9W-Jti.js **/
     import "vite/modulepreload-polyfill";
-    const l = (...e) => e.filter(Boolean).join(" "),
-      o = e => React.createElement("div", {
-        className: l(e.className, "Hello_28b")
+    const e = "_Hello_28b_1goqq_1",
+      o = {
+        Hello_28b: e
+      },
+      c = (...l) => l.filter(Boolean).join(" "),
+      t = l => React.createElement("div", {
+        className: c(l.className, o.Hello_28b)
       }, "Hello!");
-    o();
+    t();
   `);
 });
