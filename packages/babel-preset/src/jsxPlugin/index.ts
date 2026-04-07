@@ -168,8 +168,8 @@ function JSX(path: NodePath<T.JSXElement> | NodePath<T.JSXFragment>) {
   }
 
   if (
-    returned === false ||
-    context === false ||
+    !returned ||
+    !context ||
     context.define.this !== context ||
     context.props.size === 0 ||
     context.usedBy.size

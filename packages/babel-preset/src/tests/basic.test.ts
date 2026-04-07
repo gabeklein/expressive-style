@@ -6,6 +6,7 @@ it("will apply style to element with attribute", async () => {
     const Component = () => {
       hello: {
         color: red;
+        fontSize: 2.0;
       }
 
       return <div _hello />
@@ -15,6 +16,7 @@ it("will apply style to element with attribute", async () => {
   expect(output.css).toMatchInlineSnapshot(`
     .hello_tla {
       color: red;
+      font-size: 2.0;
     }
   `);
 
