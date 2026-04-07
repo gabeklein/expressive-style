@@ -339,7 +339,7 @@ it("will handle border correctly", async () => {
 
   expect(output.css).toMatchInlineSnapshot(`
     .Component_22h {
-      border: dashed var(--border-light) 2px;
+      border: var(--border-light) dashed 2px;
     }
   `);
 });

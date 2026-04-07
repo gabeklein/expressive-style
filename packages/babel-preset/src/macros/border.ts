@@ -37,7 +37,7 @@ function _border(dir?: string) {
         color = arg;
 
     return {
-      [key]: `${color} ${style} ${appendUnit(width)}`,
+      [key]: [color, style, appendUnit(width)],
     };
   };
 }
