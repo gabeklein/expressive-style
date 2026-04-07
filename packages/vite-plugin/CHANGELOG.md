@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.5.0](https://github.com/gabeklein/expressive-dsl/compare/v0.4.0...v0.5.0) (2026-04-07)
+
+
+### Bug Fixes
+
+* implemented css modules properly ([8844801](https://github.com/gabeklein/expressive-dsl/commit/88448018e972cc7dca59ec60c3555217f52481ec))
+* implemented proper HMR invalidation for stylesheet ([df6507a](https://github.com/gabeklein/expressive-dsl/commit/df6507a699ab2d8280a80b4ff4477af1a121dc62))
+* squash js updates where only css changed ([dc16ba0](https://github.com/gabeklein/expressive-dsl/commit/dc16ba0abcc6b5003981c12f0bdcc50b82d3fd88))
+
+
+
+
+
 # [0.4.0](https://github.com/gabeklein/expressive-dsl/compare/v0.3.2...v0.4.0) (2026-03-11)
 
 

@@ -3,6 +3,35 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.5.0](https://github.com/gabeklein/expressive-dsl/compare/v0.4.0...v0.5.0) (2026-04-07)
+
+
+### Bug Fixes
+
+* apply em to any raw value containing a point, rather than non-integer ([4e3e89b](https://github.com/gabeklein/expressive-dsl/commit/4e3e89b920839d87165370f70a0d51f7c62ae684))
+* correct component name from Svg to Logo in Logo.jsx ([0e801aa](https://github.com/gabeklein/expressive-dsl/commit/0e801aad2b9dde8684d76482491892817fd75ddf))
+* correct component usage in Logo.jsx by replacing Logo with Icon ([4eccd82](https://github.com/gabeklein/expressive-dsl/commit/4eccd8214734e7366641a63d7f0415180a300e89))
+* correct regex for unit detection in appendUnit function ([adff705](https://github.com/gabeklein/expressive-dsl/commit/adff705a914475d847d19a6a50e93c8f21c0e80d))
+* handle single string argument in some macros for ease of use ([abf8098](https://github.com/gabeklein/expressive-dsl/commit/abf8098a506d908cbe9a08d6b44b36a64f260004))
+* implemented css modules properly ([8844801](https://github.com/gabeklein/expressive-dsl/commit/88448018e972cc7dca59ec60c3555217f52481ec))
+* implemented proper HMR invalidation for stylesheet ([df6507a](https://github.com/gabeklein/expressive-dsl/commit/df6507a699ab2d8280a80b4ff4477af1a121dc62))
+* remove async from RootElement and destructure page data in DocPage for clarity ([41b7e98](https://github.com/gabeklein/expressive-dsl/commit/41b7e98bb8c53849e6c3c39a24e3071fed887c78))
+* squash js updates where only css changed ([dc16ba0](https://github.com/gabeklein/expressive-dsl/commit/dc16ba0abcc6b5003981c12f0bdcc50b82d3fd88))
+* update GitHub URL in baseOptions for correct repository link ([fbe403f](https://github.com/gabeklein/expressive-dsl/commit/fbe403f8a83e9722532c86aecec4b04fe5499b34))
+* update import paths for baseOptions in layout files ([142245f](https://github.com/gabeklein/expressive-dsl/commit/142245f742471fc4dc1be08cc3975380c1bdb9aa))
+
+
+### Features
+
+* add breakpoint instructions (sm, md, lg, xl) ([3dafb1d](https://github.com/gabeklein/expressive-dsl/commit/3dafb1d97e8efd0218a3f4c6aeb5ffeb9f08764e))
+* add media query support to CSS output ([f384285](https://github.com/gabeklein/expressive-dsl/commit/f38428536de846d36362eaf3016f3bba136def95))
+* implement global macro bypass using template literals ([cfb0843](https://github.com/gabeklein/expressive-dsl/commit/cfb08434fe9d2c3ff3d7c53f52dcf0954d4ac685))
+* implemented instructions with $ prefix (like $hover) ([cf3b6d3](https://github.com/gabeklein/expressive-dsl/commit/cf3b6d357ae3d387ff98a889226b297e96b1a03d))
+
+
+
+
+
 # [0.4.0](https://github.com/gabeklein/expressive-dsl/compare/v0.3.2...v0.4.0) (2026-03-11)
 
 

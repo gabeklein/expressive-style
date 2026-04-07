@@ -3,6 +3,27 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.5.0](https://github.com/gabeklein/expressive-dsl/compare/v0.4.0...v0.5.0) (2026-04-07)
+
+
+### Bug Fixes
+
+* apply em to any raw value containing a point, rather than non-integer ([4e3e89b](https://github.com/gabeklein/expressive-dsl/commit/4e3e89b920839d87165370f70a0d51f7c62ae684))
+* correct regex for unit detection in appendUnit function ([adff705](https://github.com/gabeklein/expressive-dsl/commit/adff705a914475d847d19a6a50e93c8f21c0e80d))
+* handle single string argument in some macros for ease of use ([abf8098](https://github.com/gabeklein/expressive-dsl/commit/abf8098a506d908cbe9a08d6b44b36a64f260004))
+
+
+### Features
+
+* add breakpoint instructions (sm, md, lg, xl) ([3dafb1d](https://github.com/gabeklein/expressive-dsl/commit/3dafb1d97e8efd0218a3f4c6aeb5ffeb9f08764e))
+* add media query support to CSS output ([f384285](https://github.com/gabeklein/expressive-dsl/commit/f38428536de846d36362eaf3016f3bba136def95))
+* implement global macro bypass using template literals ([cfb0843](https://github.com/gabeklein/expressive-dsl/commit/cfb08434fe9d2c3ff3d7c53f52dcf0954d4ac685))
+* implemented instructions with $ prefix (like $hover) ([cf3b6d3](https://github.com/gabeklein/expressive-dsl/commit/cf3b6d357ae3d387ff98a889226b297e96b1a03d))
+
+
+
+
+
 # [0.4.0](https://github.com/gabeklein/expressive-dsl/compare/v0.3.2...v0.4.0) (2026-03-11)
 
 
