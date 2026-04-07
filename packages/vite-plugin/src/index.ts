@@ -48,7 +48,7 @@ function jsxPlugin(options: PluginOptions = {}): Plugin {
     const cssId = getCssId(id, cssModules);
 
     if (result.css && !cssModules) {
-      result.code += `\nimport "${cssImport}";`;
+      result.code = `import "${cssImport}";\n` + result.code;
 
       log.green("transform", `generated CSS for ${localize(id)}`, {
         cssImport,
