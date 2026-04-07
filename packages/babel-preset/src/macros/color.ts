@@ -1,4 +1,7 @@
 export function background(...args: unknown[]) {
+  if (args.length === 1 && typeof args[0] === "string")
+    return { background: args };
+
   if (Array.isArray(args[0])) {
     const [head, r, g, b, a = 1] = args[0];
 
