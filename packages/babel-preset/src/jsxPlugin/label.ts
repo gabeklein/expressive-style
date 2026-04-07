@@ -12,6 +12,22 @@ export function handleLabel(path: NodePath<T.LabeledStatement>) {
   let { name } = path.node.label;
 
   if (body.isBlockStatement()) {
+    if (name.startsWith("$")) {
+      const key = name.slice(1);
+      const instruction = context.instructions[key];
+
+      if (!instruction)
+        throw path.buildCodeFrameError(
+          `Unknown instruction "${key}". No instruction registered for $${key}.`
+        );
+
+      const inner = new Context(path, context, key);
+      inner.uid = context.uid;
+      context.children.add(inner);
+      inner.instruction = instruction;
+      return;
+    }
+
     if (context.define["this"] === context && context.uid.startsWith(name + "_"))
       throw path.buildCodeFrameError(
         `Label "${name}" conflicts with the component name. Use a different name for this style scope.`

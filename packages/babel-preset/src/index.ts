@@ -11,11 +11,13 @@ import { init } from "./babel";
 import { Plugin } from "./jsxPlugin";
 import { CSSPlugin } from "./cssPlugin";
 import * as DefaultMacros from "./macros";
+import { DefaultInstructions } from "./instructions";
 
 export interface Options {
   cssModule?: string;
   macros?: (Record<string, Plugin.Macro> | false)[];
   define?: Record<string, Plugin.Context>[];
+  instructions?: Record<string, Plugin.Instruction>[];
 }
 
 export interface State extends PluginPass {
@@ -47,15 +49,17 @@ export function Preset(
 ): TransformOptions {
   init(compiler as any);
 
-  const { macros = [] } = options;
+  const { macros = [], instructions = [] } = options;
 
   if (!macros.some((x) => x === false)) {
     macros.push(DefaultMacros);
   }
 
+  instructions.push(DefaultInstructions);
+
   return {
     plugins: [
-      [Plugin, { ...options, macros }],
+      [Plugin, { ...options, macros, instructions }],
       [CSSPlugin, options],
     ],
   };

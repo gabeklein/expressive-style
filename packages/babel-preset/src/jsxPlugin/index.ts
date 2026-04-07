@@ -6,7 +6,7 @@ import { Context, hash, RootContext } from "./context";
 import { Status } from "./errors";
 import { getContext, handleLabel } from "./label";
 
-import type { Macro, Options } from "./context";
+import type { Instruction, Macro, Options } from "./context";
 
 const USING = new WeakMap<NodePath, Set<Context>>();
 const SCOPE = new WeakMap<NodePath, Set<Context>>();
@@ -18,7 +18,7 @@ type State = PluginPass & {
 };
 
 declare namespace Plugin {
-  export { Context, Macro, Options };
+  export { Context, Instruction, Macro, Options };
 }
 
 function Plugin(_compiler: any, options: Options): PluginObj<State> {
@@ -48,6 +48,11 @@ function Plugin(_compiler: any, options: Options): PluginObj<State> {
         },
         exit(path) {
           if (IGNORED.has(path)) return;
+
+          const context = Context.get(path);
+          if (context && context.instruction)
+            context.instruction.call(context);
+
           path.remove();
         },
       },
@@ -232,4 +237,4 @@ function getUsing(path: NodePath) {
   return new Set(USING.get(path));
 }
 
-export { Context, getUsing, Macro, Options, Plugin, State };
+export { Context, getUsing, Instruction, Macro, Options, Plugin, State };

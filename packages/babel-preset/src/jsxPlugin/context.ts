@@ -7,9 +7,12 @@ export type Macro = (
   ...args: any[]
 ) => Record<string, any> | void;
 
+export type Instruction = (this: Context) => void;
+
 export interface Options {
   macros?: Record<string, Macro>[];
   define?: Record<string, Context>[];
+  instructions?: Record<string, Instruction>[];
 }
 
 export type BabelState = PluginPass & {
@@ -26,6 +29,7 @@ export class Context {
 
   readonly define: Record<string, Context> = {};
   readonly macros: Record<string, Macro> = {};
+  readonly instructions: Record<string, Instruction> = {};
 
   uid: string;
 
@@ -35,6 +39,7 @@ export class Context {
   children = new Set<Context>();
   condition?: T.Expression | string;
   alternate?: Context;
+  instruction?: Instruction;
 
   static get(from: NodePath) {
     return CONTEXT.get(from);
@@ -52,6 +57,7 @@ export class Context {
     this.uid = name + "_" + hash(parent.uid);
     this.define = Object.create(parent.define);
     this.macros = Object.create(parent.macros);
+    this.instructions = Object.create(parent.instructions);
 
     do
       if (parent.condition) {
@@ -63,12 +69,13 @@ export class Context {
 
 export class RootContext extends Context {
   constructor(path: NodePath, state: State, public options: Options) {
-    const { define = [], macros = [] } = options;
+    const { define = [], macros = [], instructions = [] } = options;
 
     super(path);
     this.uid = hash(state.filename!);
     Object.assign(this.define, ...define);
     Object.assign(this.macros, ...macros);
+    Object.assign(this.instructions, ...instructions);
   }
 }
 
