@@ -6,7 +6,7 @@ export function appendUnit(val: number | string, unit?: string) {
   if (typeof val != "number") return val;
 
   if (!unit)
-    if (/\d+.\d+/.test(String(val))) unit = "em";
+    if (/\d+\.\d+/.test(String(val))) unit = "em";
     else unit = "px";
 
   return val + unit;

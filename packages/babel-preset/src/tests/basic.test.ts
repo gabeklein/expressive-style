@@ -7,6 +7,7 @@ it("will apply style to element with attribute", async () => {
       hello: {
         color: red;
         fontSize: 2.0;
+        padding: 128, 24;
       }
 
       return <div _hello />
@@ -17,6 +18,7 @@ it("will apply style to element with attribute", async () => {
     .hello_tla {
       color: red;
       font-size: 2.0;
+      padding: 128px 24px;
     }
   `);
 
