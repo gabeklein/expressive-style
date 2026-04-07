@@ -33,14 +33,12 @@ function jsxPlugin(options: PluginOptions = {}): Plugin {
 
   const CACHE = new Map<string, CacheEntry>();
   let hot: HotChannel | undefined;
-  let cssVersion = 0;
-
   async function transformCache(id: string, source: string) {
     const result = await transform(id, source, options);
     const cssId = getCssId(id);
 
     if (result.css) {
-      const cssImport = getCssImport(id) + `?v=${cssVersion++}`;
+      const cssImport = getCssImport(id);
       result.code += `\nimport "${cssImport}";`;
 
       log.green("transform", `generated CSS for ${localize(id)}`, {
@@ -144,7 +142,7 @@ function jsxPlugin(options: PluginOptions = {}): Plugin {
       return null;
     },
     async handleHotUpdate(context) {
-      const { file, modules } = context;
+      const { file, modules, server } = context;
       const cached = CACHE.get(file);
 
       if (!cached) return;
@@ -163,21 +161,26 @@ function jsxPlugin(options: PluginOptions = {}): Plugin {
 
       if (!codeChanged && !cssChanged) return [];
 
-      // For client components, return modules so Vite sends HMR.
-      // The new CSS hash in the import URL means the browser fetches fresh CSS.
-      if (modules.length > 0) {
-        log.pink("hmr", `sending ${modules.length} module(s) for HMR`);
-        return modules;
+      const hmrModules = [...modules];
+
+      if (cssChanged) {
+        const cssId = getCssId(file);
+        const cssMod = server.moduleGraph.getModuleById(cssId);
+
+        if (cssMod) {
+          log.pink("hmr", `server component CSS changed → invalidating module`, {
+            cssId: localize(cssId),
+          });
+          server.moduleGraph.invalidateModule(cssMod);
+          hmrModules.push(cssMod);
+        }
+        else if (hot) {
+          log.pink("hmr", `server component CSS changed → full-reload`);
+          hot?.send?.({ type: "full-reload", path: "*" });
+        }
       }
 
-      // Server components have no client modules — frameworks like Waku handle RSC
-      // re-render, but as a safety net, trigger full-reload if CSS changed.
-      if (cssChanged && hot) {
-        log.pink("hmr", `server component CSS changed → full-reload`);
-        hot?.send?.({ type: "full-reload", path: "*" });
-      }
-
-      return [];
+      return hmrModules;
     },
   };
 }
