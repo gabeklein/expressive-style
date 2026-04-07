@@ -7,6 +7,7 @@ it("will generate css asset", async () => {
     export const Hello = () => {
       hi: {
         color: red;
+        fontSize: 2.0;
       }
 
       return (
@@ -20,13 +21,14 @@ it("will generate css asset", async () => {
   `);
 
   expect(files).toMatchInlineSnapshot(`
-    /** assets/index-Dd1yYKZ9.css **/
+    /** assets/index-52hSgm6E.css **/
     .hi_i3c {
       color: red;
+      font-size: 2;
     }
     /*$vite$:1*/
 
-    /** assets/index-DKAFy4QA.js **/
+    /** assets/index-B3Kz8xRN.js **/
     import "vite/modulepreload-polyfill";
     const a = e => React.createElement("div", {
       className: e.className
@@ -79,17 +81,17 @@ it("will generate and import css module", async () => {
   });
 
   expect(files).toMatchInlineSnapshot(`
-    /** assets/index-Cajvt0uw.css **/
-    ._Hello_28b_1goqq_1 {
+    /** assets/index-8qXBdxgs.css **/
+    .Hello_28b {
       color: red;
     }
     /*$vite$:1*/
 
-    /** assets/index-nxU93rcT.js **/
+    /** assets/index-CpbWvC1F.js **/
     import "vite/modulepreload-polyfill";
     const l = (...e) => e.filter(Boolean).join(" "),
       o = e => React.createElement("div", {
-        className: l(e.className, "also_i3c Hello_28b")
+        className: l(e.className, "Hello_28b")
       }, "Hello!");
     o();
   `);
