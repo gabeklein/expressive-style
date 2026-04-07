@@ -161,7 +161,7 @@ function jsxPlugin(options: PluginOptions = {}): Plugin {
 
       if (!codeChanged && !cssChanged) return [];
 
-      const hmrModules = [...modules];
+      const hmrModules = codeChanged ? [...modules] : [];
 
       if (cssChanged) {
         const cssId = getCssId(file);
