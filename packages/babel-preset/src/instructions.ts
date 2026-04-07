@@ -50,6 +50,13 @@ function toKebab(name: string) {
   return name.replace(/[A-Z]/g, m => "-" + m.toLowerCase());
 }
 
+const BREAKPOINTS: Record<string, number> = {
+  sm: 640,
+  md: 768,
+  lg: 1024,
+  xl: 1280,
+};
+
 export const DefaultInstructions: Record<string, Instruction> = {};
 
 for (const name of PSEUDO_SELECTORS) {
@@ -58,5 +65,11 @@ for (const name of PSEUDO_SELECTORS) {
 
   DefaultInstructions[name] = function () {
     this.condition = separator + css;
+  };
+}
+
+for (const [name, min] of Object.entries(BREAKPOINTS)) {
+  DefaultInstructions[name] = function () {
+    this.media = `(min-width: ${min}px)`;
   };
 }
