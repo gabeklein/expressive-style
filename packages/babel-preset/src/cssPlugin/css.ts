@@ -19,8 +19,10 @@ export function toStylesheet(styles: Map<string, Context>) {
     else plain.push(block);
   }
 
-  for (const [query, blocks] of mediaGroups)
-    plain.push(`@media ${query} {\n${blocks.join("\n")}\n}`);
+  for (const [query, blocks] of mediaGroups) {
+    const indented = blocks.map(b => b.replace(/^/gm, "  ")).join("\n");
+    plain.push(`@media ${query} {\n${indented}\n}`);
+  }
 
   return plain.join("\n");
 }

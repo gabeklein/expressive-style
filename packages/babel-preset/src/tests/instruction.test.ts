@@ -78,9 +78,9 @@ it("will apply $md breakpoint", async () => {
       font-size: 14px;
     }
     @media (min-width: 768px) {
-    .Component_2dp {
-      font-size: 18px;
-    }
+      .Component_2dp {
+        font-size: 18px;
+      }
     }
   `);
 });
@@ -107,12 +107,12 @@ it("will combine breakpoint with pseudo", async () => {
       color: red;
     }
     @media (min-width: 768px) {
-    .Component_169 {
-      color: blue;
-    }
-    .Component_169:hover {
-      color: green;
-    }
+      .Component_169 {
+        color: blue;
+      }
+      .Component_169:hover {
+        color: green;
+      }
     }
   `);
 });
@@ -178,9 +178,9 @@ it("will apply $dark media query", async () => {
       color: black;
     }
     @media (prefers-color-scheme: dark) {
-    .Component_2eq {
-      color: white;
-    }
+      .Component_2eq {
+        color: white;
+      }
     }
   `);
 });
@@ -224,19 +224,19 @@ describe("advanced", () => {
         font-size: 14px;
       }
       @media (min-width: 640px) {
-      .Component_14m {
-        font-size: 16px;
-      }
+        .Component_14m {
+          font-size: 16px;
+        }
       }
       @media (min-width: 768px) {
-      .Component_14m {
-        font-size: 18px;
-      }
+        .Component_14m {
+          font-size: 18px;
+        }
       }
       @media (min-width: 1024px) {
-      .Component_14m {
-        font-size: 22px;
-      }
+        .Component_14m {
+          font-size: 22px;
+        }
       }
     `);
   });
@@ -261,9 +261,9 @@ describe("advanced", () => {
         font-size: 24px;
       }
       @media (min-width: 768px) {
-      .title_tla {
-        font-size: 36px;
-      }
+        .title_tla {
+          font-size: 36px;
+        }
       }
     `);
   });
@@ -338,9 +338,9 @@ describe("advanced", () => {
         color: blue;
       }
       @media (min-width: 768px) {
-      .active_tla {
-        color: navy;
-      }
+        .active_tla {
+          color: navy;
+        }
       }
     `);
   });
@@ -375,12 +375,12 @@ describe("advanced", () => {
         font-size: 14px;
       }
       @media (min-width: 1024px) {
-      .header_tla {
-        font-size: 32px;
-      }
-      .body_tla {
-        font-size: 18px;
-      }
+        .header_tla {
+          font-size: 32px;
+        }
+        .body_tla {
+          font-size: 18px;
+        }
       }
     `);
   });
