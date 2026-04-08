@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.6.0](https://github.com/gabeklein/expressive-dsl/compare/v0.5.0...v0.6.0) (2026-04-08)
+
+
+### Bug Fixes
+
+* inject CSS import statement at top of file ([2e165b2](https://github.com/gabeklein/expressive-dsl/commit/2e165b2bebc18ab9f2b1e119db7c08d5e6f26e5e))
+
+
+
+
+
 # [0.5.0](https://github.com/gabeklein/expressive-dsl/compare/v0.4.0...v0.5.0) (2026-04-07)
 
 

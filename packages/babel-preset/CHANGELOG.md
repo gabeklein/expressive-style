@@ -3,6 +3,24 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.6.0](https://github.com/gabeklein/expressive-dsl/compare/v0.5.0...v0.6.0) (2026-04-08)
+
+
+### Bug Fixes
+
+* add px to default border ([fd10c4b](https://github.com/gabeklein/expressive-dsl/commit/fd10c4ba92593ef2ff73a802cda108e8f8b1b300))
+* indent media query blocks for improved readability ([612f60a](https://github.com/gabeklein/expressive-dsl/commit/612f60a5ba003d104bd708f3faa7a9adfb7b143a))
+* keep border output as array for proper value resolution ([dc48756](https://github.com/gabeklein/expressive-dsl/commit/dc4875613f464d8212692a7045e26534c034146c))
+
+
+### Features
+
+* add support for $children, $even, $odd, and $dark instructions ([8581c4f](https://github.com/gabeklein/expressive-dsl/commit/8581c4fa4476a16df31947d2b3109f77d7e21e45))
+
+
+
+
+
 # [0.5.0](https://github.com/gabeklein/expressive-dsl/compare/v0.4.0...v0.5.0) (2026-04-07)
 
 
