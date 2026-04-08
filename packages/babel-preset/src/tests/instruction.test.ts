@@ -117,6 +117,74 @@ it("will combine breakpoint with pseudo", async () => {
   `);
 });
 
+it("will apply $children selector", async () => {
+  const output = await parser(`
+    const Component = () => {
+      $children: {
+        color: red;
+      }
+
+      return <div />
+    }
+  `);
+
+  expect(output.css).toMatchInlineSnapshot(`
+    .Component_2em > * {
+      color: red;
+    }
+  `);
+});
+
+it("will apply $even and $odd", async () => {
+  const output = await parser(`
+    const Component = () => {
+      $even: {
+        backgroundColor: gray;
+      }
+
+      $odd: {
+        backgroundColor: white;
+      }
+
+      return <div />
+    }
+  `);
+
+  expect(output.css).toMatchInlineSnapshot(`
+    .Component_23e:nth-child(even) {
+      background-color: gray;
+    }
+    .Component_23e:nth-child(odd) {
+      background-color: white;
+    }
+  `);
+});
+
+it("will apply $dark media query", async () => {
+  const output = await parser(`
+    const Component = () => {
+      color: black;
+
+      $dark: {
+        color: white;
+      }
+
+      return <div />
+    }
+  `);
+
+  expect(output.css).toMatchInlineSnapshot(`
+    .Component_2eq {
+      color: black;
+    }
+    @media (prefers-color-scheme: dark) {
+    .Component_2eq {
+      color: white;
+    }
+    }
+  `);
+});
+
 it("will error on unknown instruction", async () => {
   await expect(parser(`
     const Component = () => {

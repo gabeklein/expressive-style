@@ -73,3 +73,23 @@ for (const [name, min] of Object.entries(BREAKPOINTS)) {
     this.media = `(min-width: ${min}px)`;
   };
 }
+
+DefaultInstructions.children = function () {
+  this.condition = " > *";
+};
+
+DefaultInstructions.even = function () {
+  this.condition = ":nth-child(even)";
+};
+
+DefaultInstructions.odd = function () {
+  this.condition = ":nth-child(odd)";
+};
+
+DefaultInstructions.dark = function () {
+  this.media = "(prefers-color-scheme: dark)";
+};
+
+DefaultInstructions.light = function () {
+  this.media = "(prefers-color-scheme: light)";
+};
