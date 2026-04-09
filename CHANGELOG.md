@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.6.2](https://github.com/gabeklein/expressive-dsl/compare/v0.6.1...v0.6.2) (2026-04-09)
+
+
+### Bug Fixes
+
+* add type definitions to vite-plugin which passes @expressive/css ([d000b12](https://github.com/gabeklein/expressive-dsl/commit/d000b128eb08fa73e9fe04b027678de41aef0208))
+
+
+
+
+
 ## [0.6.1](https://github.com/gabeklein/expressive-dsl/compare/v0.6.0...v0.6.1) (2026-04-09)
 
 
