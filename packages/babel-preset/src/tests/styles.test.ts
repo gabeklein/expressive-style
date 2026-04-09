@@ -328,18 +328,3 @@ it("will use classnames from module", async () => {
   `);
 });
 
-it("will handle border correctly", async () => {
-  const output = await parser(`
-    const Component = () => {
-      border: dashed, 2, $borderLight;
-    
-      return <div />;
-    }
-  `);
-
-  expect(output.css).toMatchInlineSnapshot(`
-    .Component_22h {
-      border: var(--border-light) dashed 2px;
-    }
-  `);
-});

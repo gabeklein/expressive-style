@@ -10,7 +10,6 @@ import type {
 import { init } from "./babel";
 import { Plugin } from "./jsxPlugin";
 import { CSSPlugin } from "./cssPlugin";
-import * as DefaultMacros from "./macros";
 import { DefaultInstructions } from "./instructions";
 
 export interface Options {
@@ -50,10 +49,6 @@ export function Preset(
   init(compiler as any);
 
   const { macros = [], instructions = [] } = options;
-
-  if (!macros.some((x) => x === false)) {
-    macros.push(DefaultMacros);
-  }
 
   instructions.push(DefaultInstructions);
 

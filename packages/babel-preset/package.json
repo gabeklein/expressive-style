@@ -30,10 +30,7 @@
     "prepublish": "npm run build",
     "preversion": "npm run build"
   },
-  "dependencies": {
-    "chroma-js": "^2.0.3",
-    "easing-coordinates": "^2.0.2"
-  },
+  "dependencies": {},
   "peerDependencies": {
     "@babel/core": "^7.0.0"
   },

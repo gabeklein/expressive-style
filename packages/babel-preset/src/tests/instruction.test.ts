@@ -75,11 +75,11 @@ it("will apply $md breakpoint", async () => {
 
   expect(output.css).toMatchInlineSnapshot(`
     .Component_2dp {
-      font-size: 14px;
+      font-size: 14;
     }
     @media (min-width: 768px) {
       .Component_2dp {
-        font-size: 18px;
+        font-size: 18;
       }
     }
   `);
@@ -221,21 +221,21 @@ describe("advanced", () => {
 
     expect(output.css).toMatchInlineSnapshot(`
       .Component_14m {
-        font-size: 14px;
+        font-size: 14;
       }
       @media (min-width: 640px) {
         .Component_14m {
-          font-size: 16px;
+          font-size: 16;
         }
       }
       @media (min-width: 768px) {
         .Component_14m {
-          font-size: 18px;
+          font-size: 18;
         }
       }
       @media (min-width: 1024px) {
         .Component_14m {
-          font-size: 22px;
+          font-size: 22;
         }
       }
     `);
@@ -258,11 +258,11 @@ describe("advanced", () => {
 
     expect(output.css).toMatchInlineSnapshot(`
       .title_tla {
-        font-size: 24px;
+        font-size: 24;
       }
       @media (min-width: 768px) {
         .title_tla {
-          font-size: 36px;
+          font-size: 36;
         }
       }
     `);
@@ -369,17 +369,17 @@ describe("advanced", () => {
 
     expect(output.css).toMatchInlineSnapshot(`
       .header_tla {
-        font-size: 20px;
+        font-size: 20;
       }
       .body_tla {
-        font-size: 14px;
+        font-size: 14;
       }
       @media (min-width: 1024px) {
         .header_tla {
-          font-size: 32px;
+          font-size: 32;
         }
         .body_tla {
-          font-size: 18px;
+          font-size: 18;
         }
       }
     `);

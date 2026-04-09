@@ -28,7 +28,7 @@ it("will convert numbers to px", async () => {
 
   expect(output.css).toMatchInlineSnapshot(`
     .Component_25s {
-      font-size: 12px;
+      font-size: 12;
     }
   `);
 });
@@ -44,7 +44,7 @@ it("will convert decimal to em", async () => {
 
   expect(output.css).toMatchInlineSnapshot(`
     .Component_2hp {
-      font-size: 1.5em;
+      font-size: 1.5;
     }
   `);
 });

@@ -42,7 +42,8 @@
   ],
   "dependencies": {
     "@babel/core": "^7.22.20",
-    "@expressive/babel-preset": "workspace:*"
+    "@expressive/babel-preset": "workspace:*",
+    "@expressive/css": "workspace:*"
   },
   "devDependencies": {
     "@types/babel__core": "^7.20.2",

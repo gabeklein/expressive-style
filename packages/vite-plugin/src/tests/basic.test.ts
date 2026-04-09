@@ -1,4 +1,4 @@
-import { expect, it } from "vitest";
+import { expect, it, describe } from "vitest";
 
 import { bundle } from "./adapter";
 
@@ -21,14 +21,14 @@ it("will generate css asset", async () => {
   `);
 
   expect(files).toMatchInlineSnapshot(`
-    /** assets/index-52hSgm6E.css **/
+    /** assets/index-ChYPse7Y.css **/
     .hi_i3c {
       color: red;
-      font-size: 2;
+      font-size: 2em;
     }
     /*$vite$:1*/
 
-    /** assets/index-B3Kz8xRN.js **/
+    /** assets/index-CEPF_5f7.js **/
     import "vite/modulepreload-polyfill";
     const a = e => React.createElement("div", {
       className: e.className

@@ -1,0 +1,53 @@
+{
+  "name": "@expressive/css",
+  "version": "0.6.0",
+  "description": "CSS macros and type definitions for Expressive JSX",
+  "repository": "https://github.com/gabeklein/expressive-dsl",
+  "author": {
+    "name": "Gabe Klein",
+    "email": "gabe@expressive.dev",
+    "url": "https://github.com/gabeklein"
+  },
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  },
+  "keywords": [
+    "css",
+    "expressive",
+    "jsx",
+    "macros"
+  ],
+  "type": "module",
+  "types": "types/index.d.ts",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      }
+    }
+  },
+  "files": [
+    "dist",
+    "types"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "test": "vitest"
+  },
+  "dependencies": {
+    "chroma-js": "^2.0.3",
+    "easing-coordinates": "^2.0.2"
+  },
+  "devDependencies": {
+    "tsup": "^8.0.1",
+    "vitest": "^1.5.0"
+  }
+}

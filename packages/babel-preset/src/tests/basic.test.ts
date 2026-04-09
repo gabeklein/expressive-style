@@ -18,7 +18,7 @@ it("will apply style to element with attribute", async () => {
     .hello_tla {
       color: red;
       font-size: 2.0;
-      padding: 128px 24px;
+      padding: 128 24;
     }
   `);
 
@@ -56,27 +56,13 @@ it("should throw error for implicit JSX return", async () => {
   }).rejects.toThrow();
 });
 
-it("will drop default macros", async () => {
-  const sanityCheck = await parser(`
-    const Component = () => {
-      absolute: fill;
-
-      return <div />
-    }
-  `);
-
-  expect(sanityCheck.css).toMatchInlineSnapshot(`
-    .Component_14i {
-      bottom: 0;
-      right: 0;
-      left: 0;
-      top: 0;
-      position: absolute;
-    }
-  `);
+it("will apply macros passed via options", async () => {
+  function absolute() {
+    return { position: "absolute", top: 0, left: 0 };
+  }
 
   const parse = parser({
-    macros: [false],
+    macros: [{ absolute }],
   });
 
   const output = await parse(`
@@ -88,7 +74,25 @@ it("will drop default macros", async () => {
   `);
 
   expect(output.css).toMatchInlineSnapshot(`
-    .Component_14i {
+    .Component_290 {
+      left: 0;
+      top: 0;
+      position: absolute;
+    }
+  `);
+});
+
+it("will passthrough unknown labels as CSS", async () => {
+  const output = await parser(`
+    const Component = () => {
+      absolute: fill;
+
+      return <div />
+    }
+  `);
+
+  expect(output.css).toMatchInlineSnapshot(`
+    .Component_15j {
       absolute: fill;
     }
   `);

@@ -1,5 +1,6 @@
 import * as babel from "@babel/core";
 import BabelPreset from "@expressive/babel-preset";
+import * as CSSMacros from "@expressive/css";
 
 export interface TransformOptions extends BabelPreset.Options {
   test?: RegExp | ((uri: string) => boolean);
@@ -16,6 +17,10 @@ export async function transform(
   input: string,
   presetOptions: BabelPreset.Options = {}
 ): Promise<TransformResult> {
+  const { macros = [], ...rest } = presetOptions;
+
+  if (!macros.some((x) => x === false)) macros.push(CSSMacros);
+
   const result = await babel.transformAsync(input, {
     root: process.cwd(),
     filename: id,
@@ -28,7 +33,10 @@ export async function transform(
     generatorOpts: {
       decoratorsBeforeExport: true,
     },
-    presets: [[BabelPreset, presetOptions]],
+    presets: [[BabelPreset, {
+      ...rest,
+      macros
+    }]],
   });
 
   if (!result) throw new Error("No result");
