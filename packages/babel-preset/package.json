@@ -1,6 +1,6 @@
 {
   "name": "@expressive/babel-preset",
-  "version": "0.6.0",
+  "version": "0.6.1",
   "description": "Web preset for expressive JSX.",
   "repository": "https://github.com/gabeklein/expressive-dsl",
   "author": {
@@ -30,7 +30,6 @@
     "prepublish": "npm run build",
     "preversion": "npm run build"
   },
-  "dependencies": {},
   "peerDependencies": {
     "@babel/core": "^7.0.0"
   },
