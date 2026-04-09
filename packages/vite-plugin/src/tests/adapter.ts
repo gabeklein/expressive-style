@@ -17,11 +17,6 @@ expect.addSnapshotSerializer({
   print: (output: any) => {
     return Object.entries(output)
       .map(([key, value]) => {
-        if (key.endsWith(".css"))
-          value = format(value as string, {
-            parser: "css",
-          });
-
         return `/** ${key} **/\n${value}`;
       })
       .join("\n");
@@ -42,6 +37,10 @@ export async function bundle(input: Record<string, string> | string = "", option
     },
     plugins: [VirtualFiles(input, output), MyPlugin(options)],
   });
+
+  for (const key in output)
+    if (key.endsWith(".css"))
+      output[key] = await format(output[key], { parser: "css" });
 
   return output;
 }
