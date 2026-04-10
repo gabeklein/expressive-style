@@ -1,9 +1,9 @@
 import ts from "typescript/lib/tsserverlibrary";
 
-import { semanticDiagnostics } from "./diagnostics";
+import { semanticDiagnostics } from "./semanticDiagnostics";
 import { createCompletionsProxy } from "./completions";
 import { log, setLogger } from "./logger";
-import { suggestionDiagnostics } from "./stylePropertyStatement";
+import { suggestionDiagnostics } from "./suggestionDiagnostics";
 import {
   findIdentifierNodeAtPosition,
   isPositionInLabelStatement,

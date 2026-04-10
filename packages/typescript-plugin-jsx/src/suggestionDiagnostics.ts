@@ -1,6 +1,15 @@
 import ts from "typescript/lib/tsserverlibrary";
 import { labelContainsNormalControlFlow } from "./util";
 
+export function suggestionDiagnostics(diagnostic: ts.Diagnostic): boolean {
+  if (diagnostic.code !== 7028) return true;
+  const sourceFile = diagnostic.file;
+  if (!sourceFile) return true;
+  const label = findLabeledStatementNode(sourceFile, diagnostic.start!);
+  if (!label || labelContainsNormalControlFlow(label)) return true;
+  return false
+}
+
 function findLabeledStatementNode(
   sourceFile: ts.SourceFile,
   position: number
@@ -16,13 +25,4 @@ function findLabeledStatementNode(
     return ts.forEachChild(node, find);
   }
   return find(sourceFile);
-}
-
-export function suggestionDiagnostics(diagnostic: ts.Diagnostic): boolean {
-  if (diagnostic.code !== 7028) return true;
-  const sourceFile = diagnostic.file;
-  if (!sourceFile) return true;
-  const label = findLabeledStatementNode(sourceFile, diagnostic.start!);
-  if (!label || labelContainsNormalControlFlow(label)) return true;
-  return false
 }
