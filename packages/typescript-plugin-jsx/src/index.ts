@@ -1,6 +1,7 @@
 import ts from "typescript/lib/tsserverlibrary";
 
 import { diagnostics } from "./diagnostics";
+import { createCompletionsProxy } from "./completions";
 import { log, setLogger } from "./logger";
 import { stylePropertyStatement } from "./stylePropertyStatement";
 import {
@@ -21,6 +22,11 @@ const factory: ts.server.PluginModuleFactory = (modules) => {
       log("Loaded Expressive JSX Typescript Plugin");
 
       const proxy = Object.assign({}, service);
+      const { getCompletionEntryDetails, getCompletionsAtPosition } =
+        createCompletionsProxy(service, ScriptElementKind);
+
+      proxy.getCompletionsAtPosition = getCompletionsAtPosition;
+      proxy.getCompletionEntryDetails = getCompletionEntryDetails;
 
       proxy.getSuggestionDiagnostics = (fileName) => {
         const issues = service.getSuggestionDiagnostics(fileName);
