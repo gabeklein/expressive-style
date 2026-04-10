@@ -2,7 +2,8 @@ import ts from "typescript/lib/tsserverlibrary";
 
 import init from "..";
 
-// Ambient JSX needed to exercise JSX attribute filtering.
+// Ambient types needed for tests: JSX for attribute filtering,
+// Expressive for label hover/completion lookups.
 const env = {
   "jsx.d.ts": `
     declare namespace JSX {
@@ -15,18 +16,23 @@ const env = {
       }
     }
   `,
+  "expressive.d.ts": `
+    declare namespace Expressive {
+      interface Properties {
+        /** Sets the text color */
+        color(value: string | number): void;
+        /** Sets the display type */
+        display(value: string): void;
+      }
+      interface Instructions {
+        /** Applies styles on hover */
+        hover(): void;
+      }
+    }
+  `,
 };
 
-/**
- * Creates an in-memory TypeScript LanguageService with the plugin enabled.
- * @param code The TypeScript/TSX code to check.
- * @param fileName The virtual file name (default: 'file.tsx').
- * @returns The diagnostics emitted by TypeScript with the plugin applied.
- */
-export function getDiagnosticsWithPlugin(
-  code: string,
-  fileName = "file.tsx",
-): ts.Diagnostic[] {
+function createHarness(code: string, fileName = "file.tsx") {
   const files = { ...env, [fileName]: code } as Record<string, string>;
   const compilerOptions: ts.CompilerOptions = {
     jsx: ts.JsxEmit.Preserve,
@@ -53,7 +59,6 @@ export function getDiagnosticsWithPlugin(
   };
 
   const languageService = ts.createLanguageService(host);
-
   const plugin = init({ typescript: ts });
   const logger = { info: () => {}, log: () => {}, error: () => {} };
   const proxy = plugin.create({
@@ -61,5 +66,47 @@ export function getDiagnosticsWithPlugin(
     project: { projectService: { logger } },
   } as any);
 
-  return proxy.getSemanticDiagnostics(fileName);
+  return { proxy, fileName };
+}
+
+/**
+ * Runs the plugin against `code` and returns semantic diagnostics.
+ */
+export function getDiagnosticsWithPlugin(
+  code: string,
+  fileName = "file.tsx",
+): ts.Diagnostic[] {
+  const { proxy, fileName: name } = createHarness(code, fileName);
+  return proxy.getSemanticDiagnostics(name);
+}
+
+/**
+ * Runs the plugin against `code` containing a `|` marker and returns
+ * quick info at the marker's position. The marker is stripped before
+ * the source is handed to TypeScript.
+ */
+export function getQuickInfoWithPlugin(
+  code: string,
+  fileName = "file.tsx",
+): ts.QuickInfo | undefined {
+  const position = code.indexOf("|");
+  if (position < 0) throw new Error("getQuickInfoWithPlugin: missing | marker");
+
+  const stripped = code.slice(0, position) + code.slice(position + 1);
+  const { proxy, fileName: name } = createHarness(stripped, fileName);
+  return proxy.getQuickInfoAtPosition!(name, position);
+}
+
+/**
+ * Joins a QuickInfo's displayParts into a plain string for easy assertion.
+ */
+export function displayText(info: ts.QuickInfo | undefined): string {
+  return info?.displayParts?.map(p => p.text).join("") ?? "";
+}
+
+/**
+ * Joins a QuickInfo's documentation into a plain string.
+ */
+export function docText(info: ts.QuickInfo | undefined): string {
+  return info?.documentation?.map(p => p.text).join("") ?? "";
 }
