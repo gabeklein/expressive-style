@@ -1,6 +1,7 @@
 import ts from "typescript/lib/tsserverlibrary";
 
 import { expressionInLabelStatement } from "./expressionInLabelStatement";
+import { log, setLogger } from "./logger";
 import { stylePropertyStatement } from "./stylePropertyStatement";
 import { stylePropertyValue } from "./stylePropertyValue";
 import {
@@ -14,9 +15,9 @@ const factory: ts.server.PluginModuleFactory = (modules) => {
 
   return {
     create({ languageService: service, project }) {
-      const log = project.projectService.logger;
+      setLogger(project.projectService.logger);
 
-      log.info("Loaded Expressive JSX Typescript Plugin");
+      log("Loaded Expressive JSX Typescript Plugin");
 
       const proxy = Object.assign({}, service);
 
@@ -41,7 +42,7 @@ const factory: ts.server.PluginModuleFactory = (modules) => {
             if (expressionInLabelStatement(diagnostic)) return false;
             if (isStyleCondition(diagnostic)) return false;
           } catch (e) {
-            log.info("Error in getSemanticDiagnostics: " + e);
+            log("Error in getSemanticDiagnostics: " + e);
           }
 
           return true;
