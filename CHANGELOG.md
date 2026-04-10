@@ -3,6 +3,28 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.7.0](https://github.com/gabeklein/expressive-dsl/compare/v0.6.2...v0.7.0) (2026-04-10)
+
+
+### Bug Fixes
+
+* consolidate exports and Expressive namespace in one types file ([6f53e60](https://github.com/gabeklein/expressive-dsl/commit/6f53e603f84f53e927ce1e0e8813a7f936b1a005))
+
+
+### Features
+
+* add comprehensive diagnostics tests for JSX attributes and type errors ([1e6acde](https://github.com/gabeklein/expressive-dsl/commit/1e6acde85c25c5113a932d0acf88c171631d888e))
+* add semantic and suggestion diagnostics modules ([6deed57](https://github.com/gabeklein/expressive-dsl/commit/6deed57becb503643086bfdaa12859de41c3b027))
+* add tests for underscore attribute hover functionality ([6bef680](https://github.com/gabeklein/expressive-dsl/commit/6bef680b0f1f9196a451356163d7f1c2f95b25e7))
+* added hover info to css labels and attributes ([8749748](https://github.com/gabeklein/expressive-dsl/commit/8749748e93176ef3f09200abf502706e79579023))
+* implement completion proxy for autocomplete ([806a36e](https://github.com/gabeklein/expressive-dsl/commit/806a36e3b8ec55957e6f57eb91c6814b1b647829))
+* implement quick info tests for label name and value hover functionality ([a81623d](https://github.com/gabeklein/expressive-dsl/commit/a81623d2956ad2289550b2c35e6979e4274693f9))
+* separate logger for TypeScript plugin ([2302512](https://github.com/gabeklein/expressive-dsl/commit/2302512619d33b14f862ca62f18f4fa5edc4bd5c))
+
+
+
+
+
 ## [0.6.2](https://github.com/gabeklein/expressive-dsl/compare/v0.6.1...v0.6.2) (2026-04-09)
 
 
