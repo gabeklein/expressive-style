@@ -5,9 +5,11 @@ import { log, setLogger } from "./logger";
 import { stylePropertyStatement } from "./stylePropertyStatement";
 import {
   findIdentifierNodeAtPosition,
-  findNodeAtPosition,
   isPositionInLabelStatement,
 } from "./util";
+import { expressiveAttributeInfo } from "./getAttributeInfo";
+import { expressiveLabelInfo, labelIdentifierInfo } from "./getPropertyInfo";
+
 
 const factory: ts.server.PluginModuleFactory = (modules) => {
   const { ScriptElementKind } = modules.typescript;
@@ -34,41 +36,39 @@ const factory: ts.server.PluginModuleFactory = (modules) => {
       proxy.getSemanticDiagnostics = (fileName) =>
         service.getSemanticDiagnostics(fileName).filter(diagnostics);
 
-
-      proxy.getQuickInfoAtPosition = (fileName, position) => {
-        const sourceFile = service.getProgram()?.getSourceFile(fileName);
-
-        if (sourceFile) {
-          const labelCheck = isPositionInLabelStatement(sourceFile, position);
-
-          if (labelCheck.isInLabel && labelCheck.identifierName) {
-            const identifierNode = findIdentifierNodeAtPosition(
-              sourceFile,
-              position,
-            );
-
-            if (identifierNode) {
-              return {
-                kind: ScriptElementKind.constElement,
-                kindModifiers: "declare",
-                textSpan: {
-                  start: identifierNode.getStart(),
-                  length: identifierNode.getWidth(),
-                },
-                displayParts: [
-                  { text: `"${identifierNode.text}"`, kind: "stringLiteral" },
-                ],
-              };
-            }
-          }
-        }
-
-        return service.getQuickInfoAtPosition(fileName, position);
-      };
+      proxy.getQuickInfoAtPosition = (fileName, position) =>
+        customQuickInfo(service, fileName, position) ||
+        service.getQuickInfoAtPosition(fileName, position);
 
       return proxy;
     },
   };
 };
+
+function customQuickInfo(
+  service: ts.LanguageService,
+  fileName: string,
+  position: number,
+): ts.QuickInfo | undefined {
+  const program = service.getProgram();
+
+  if (!program) return;
+
+  const sourceFile = program.getSourceFile(fileName);
+
+  if (!sourceFile) return;
+
+  const node = findIdentifierNodeAtPosition(sourceFile, position);
+
+  if (!node) return;
+
+  const info =
+    expressiveLabelInfo(node, program) || expressiveAttributeInfo(node);
+
+  if (info) return info;
+
+  if (isPositionInLabelStatement(sourceFile, position).isInLabel)
+    return labelIdentifierInfo(node);
+}
 
 export = factory;
