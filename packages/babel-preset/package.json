@@ -41,5 +41,8 @@
     "tsup": "^8.0.1",
     "vite-tsconfig-paths": "^5.1.4",
     "vitest": "^1.5.0"
+  },
+  "dependencies": {
+    "@babel/preset-typescript": "^7.28.5"
   }
 }

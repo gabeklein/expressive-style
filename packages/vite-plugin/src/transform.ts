@@ -64,5 +64,5 @@ export function shouldTransform(options: TransformOptions) {
   if (test instanceof RegExp) return (id: string) => test.test(id);
 
   return (id: string) =>
-    !/node_modules/.test(id) && id.endsWith(".jsx");
+    !/node_modules/.test(id) && /\.[jt]sx?$/.test(id);
 }

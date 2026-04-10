@@ -7,6 +7,9 @@ import type {
   types as T,
 } from "@babel/core";
 
+// @ts-ignore - no types
+import TypeScriptPreset from "@babel/preset-typescript";
+
 import { init } from "./babel";
 import { Plugin } from "./jsxPlugin";
 import { CSSPlugin } from "./cssPlugin";
@@ -56,6 +59,9 @@ export function Preset(
     plugins: [
       [Plugin, { ...options, macros, instructions }],
       [CSSPlugin, options],
+    ],
+    presets: [
+      TypeScriptPreset,
     ],
   };
 }
