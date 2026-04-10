@@ -1,16 +1,15 @@
 import ts from "typescript/lib/tsserverlibrary";
 
-import { diagnostics } from "./diagnostics";
+import { semanticDiagnostics } from "./diagnostics";
 import { createCompletionsProxy } from "./completions";
 import { log, setLogger } from "./logger";
-import { stylePropertyStatement } from "./stylePropertyStatement";
+import { suggestionDiagnostics } from "./stylePropertyStatement";
 import {
   findIdentifierNodeAtPosition,
   isPositionInLabelStatement,
 } from "./util";
 import { expressiveAttributeInfo } from "./getAttributeInfo";
 import { expressiveLabelInfo, labelIdentifierInfo } from "./getPropertyInfo";
-
 
 const factory: ts.server.PluginModuleFactory = (modules) => {
   const { ScriptElementKind } = modules.typescript;
@@ -28,19 +27,11 @@ const factory: ts.server.PluginModuleFactory = (modules) => {
       proxy.getCompletionsAtPosition = getCompletionsAtPosition;
       proxy.getCompletionEntryDetails = getCompletionEntryDetails;
 
-      proxy.getSuggestionDiagnostics = (fileName) => {
-        const issues = service.getSuggestionDiagnostics(fileName);
-        const sourceFile = service.getProgram()?.getSourceFile(fileName);
-
-        if (!sourceFile) return issues;
-
-        return issues.filter((diagnostic) => {
-          return stylePropertyStatement(diagnostic) === false;
-        });
-      };
+      proxy.getSuggestionDiagnostics = (fileName) =>
+        service.getSuggestionDiagnostics(fileName).filter(suggestionDiagnostics);
 
       proxy.getSemanticDiagnostics = (fileName) =>
-        service.getSemanticDiagnostics(fileName).filter(diagnostics);
+        service.getSemanticDiagnostics(fileName).filter(semanticDiagnostics);
 
       proxy.getQuickInfoAtPosition = (fileName, position) =>
         customQuickInfo(service, fileName, position) ||

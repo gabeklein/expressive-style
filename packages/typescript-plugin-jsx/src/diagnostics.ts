@@ -7,7 +7,7 @@ import {
   isPositionInLabelStatement,
 } from "./util";
 
-export function diagnostics(diagnostic: ts.Diagnostic): boolean {
+export function semanticDiagnostics(diagnostic: ts.Diagnostic): boolean {
   try {
     if (stylePropertyValue(diagnostic)) return false;
     if (expressionInLabelStatement(diagnostic)) return false;

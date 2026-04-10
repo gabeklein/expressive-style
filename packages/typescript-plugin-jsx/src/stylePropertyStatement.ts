@@ -18,11 +18,11 @@ function findLabeledStatementNode(
   return find(sourceFile);
 }
 
-export function stylePropertyStatement(diagnostic: ts.Diagnostic): boolean {
-  if (diagnostic.code !== 7028) return false;
+export function suggestionDiagnostics(diagnostic: ts.Diagnostic): boolean {
+  if (diagnostic.code !== 7028) return true;
   const sourceFile = diagnostic.file;
-  if (!sourceFile) return false;
+  if (!sourceFile) return true;
   const label = findLabeledStatementNode(sourceFile, diagnostic.start!);
-  if (!label || labelContainsNormalControlFlow(label)) return false;
-  return true;
+  if (!label || labelContainsNormalControlFlow(label)) return true;
+  return false
 }
