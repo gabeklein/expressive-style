@@ -2,6 +2,21 @@ import ts from "typescript/lib/tsserverlibrary";
 
 import init from "..";
 
+// Ambient JSX needed to exercise JSX attribute filtering.
+const env = {
+  "jsx.d.ts": `
+    declare namespace JSX {
+      interface Element {}
+      interface IntrinsicAttributes {}
+      interface IntrinsicElements {
+        div: { children?: any; content?: string };
+        span: { children?: any };
+        input: {};
+      }
+    }
+  `,
+};
+
 /**
  * Creates an in-memory TypeScript LanguageService with the plugin enabled.
  * @param code The TypeScript/TSX code to check.
@@ -10,10 +25,9 @@ import init from "..";
  */
 export function getDiagnosticsWithPlugin(
   code: string,
-  fileName = "file.tsx"
+  fileName = "file.tsx",
 ): ts.Diagnostic[] {
-  // Create a virtual file system
-  const files = { [fileName]: code };
+  const files = { ...env, [fileName]: code } as Record<string, string>;
   const compilerOptions: ts.CompilerOptions = {
     jsx: ts.JsxEmit.Preserve,
     target: ts.ScriptTarget.ESNext,
@@ -21,7 +35,6 @@ export function getDiagnosticsWithPlugin(
     strict: true,
   };
 
-  // Host mocks
   const host: ts.LanguageServiceHost = {
     getScriptFileNames: () => Object.keys(files),
     getScriptVersion: () => "1",
@@ -39,10 +52,8 @@ export function getDiagnosticsWithPlugin(
     readDirectory: () => Object.keys(files),
   };
 
-  // Create the base language service
   const languageService = ts.createLanguageService(host);
 
-  // Set up the plugin
   const plugin = init({ typescript: ts });
   const logger = { info: () => {}, log: () => {}, error: () => {} };
   const proxy = plugin.create({
@@ -50,6 +61,5 @@ export function getDiagnosticsWithPlugin(
     project: { projectService: { logger } },
   } as any);
 
-  // Get diagnostics with the plugin
   return proxy.getSemanticDiagnostics(fileName);
 }
