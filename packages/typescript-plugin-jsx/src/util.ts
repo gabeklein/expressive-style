@@ -145,33 +145,6 @@ export function labelContainsNormalControlFlow(
   return containsNormalConstruct;
 }
 
-export function isInJsxElement(
-  sourceFile: ts.SourceFile,
-  position?: number
-): boolean {
-  if (position === undefined) return false;
-
-  const node = findNodeAtPosition(sourceFile, position);
-  if (!node) return false;
-
-  // Walk up the tree to find if we're in a JSX element
-  let current: ts.Node | undefined = node;
-  while (current) {
-    // Check for JSX attribute or JSX element
-    if (
-      current.kind === ts.SyntaxKind.JsxAttribute ||
-      current.kind === ts.SyntaxKind.JsxElement ||
-      current.kind === ts.SyntaxKind.JsxSelfClosingElement ||
-      current.kind === ts.SyntaxKind.JsxOpeningElement
-    ) {
-      return true;
-    }
-    current = current.parent;
-  }
-
-  return false;
-}
-
 export function flattenMessage(
   messageText: string | ts.DiagnosticMessageChain
 ): string {

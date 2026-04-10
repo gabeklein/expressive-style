@@ -1,9 +1,8 @@
 import ts from "typescript/lib/tsserverlibrary";
 
-import { expressionInLabelStatement } from "./expressionInLabelStatement";
+import { diagnostics } from "./diagnostics";
 import { log, setLogger } from "./logger";
 import { stylePropertyStatement } from "./stylePropertyStatement";
-import { stylePropertyValue } from "./stylePropertyValue";
 import {
   findIdentifierNodeAtPosition,
   findNodeAtPosition,
@@ -32,22 +31,9 @@ const factory: ts.server.PluginModuleFactory = (modules) => {
         });
       };
 
-      proxy.getSemanticDiagnostics = (fileName) => {
-        const issues = service.getSemanticDiagnostics(fileName);
+      proxy.getSemanticDiagnostics = (fileName) =>
+        service.getSemanticDiagnostics(fileName).filter(diagnostics);
 
-        return issues.filter((diagnostic) => {
-          try {
-            if (isThisElement(diagnostic)) return false;
-            if (stylePropertyValue(diagnostic)) return false;
-            if (expressionInLabelStatement(diagnostic)) return false;
-            if (isStyleCondition(diagnostic)) return false;
-          } catch (e) {
-            log("Error in getSemanticDiagnostics: " + e);
-          }
-
-          return true;
-        });
-      };
 
       proxy.getQuickInfoAtPosition = (fileName, position) => {
         const sourceFile = service.getProgram()?.getSourceFile(fileName);
@@ -84,46 +70,5 @@ const factory: ts.server.PluginModuleFactory = (modules) => {
     },
   };
 };
-
-function isThisElement(diagnostic: ts.Diagnostic): boolean {
-  const { code, messageText } = diagnostic;
-
-  if (code === 2604 || code === 2786) {
-    const error =
-      typeof messageText === "string" ? messageText : messageText.messageText;
-    return error.includes("'this'");
-  }
-  return false;
-}
-
-function isStyleCondition(diagnostic: ts.Diagnostic): boolean {
-  if (diagnostic.code !== 2872) return false;
-
-  const file = diagnostic.file!;
-
-  if (!file) return false;
-
-  const node = findNodeAtPosition(file, diagnostic.start);
-
-  if (!node) return false;
-
-  const { kind, parent } = node;
-
-  if (kind !== ts.SyntaxKind.StringLiteral) return false;
-
-  if (!parent || parent.kind !== ts.SyntaxKind.IfStatement) return false;
-
-  const { thenStatement } = parent as ts.IfStatement;
-
-  if (thenStatement.kind === ts.SyntaxKind.LabeledStatement) return true;
-  else if (thenStatement.kind === ts.SyntaxKind.Block) {
-    const { statements } = thenStatement as ts.Block;
-
-    for (const child of statements)
-      if (child.kind === ts.SyntaxKind.LabeledStatement) return true;
-  }
-
-  return false;
-}
 
 export = factory;
