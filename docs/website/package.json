@@ -12,7 +12,6 @@
   },
   "dependencies": {
     "@fumadocs/ui": "16.5.0",
-    "@expressive/vite-plugin": "workspace:*",
     "@docs/repl": "workspace:*",
     "fumadocs-core": "16.5.0",
     "fumadocs-mdx": "14.2.6",
@@ -24,6 +23,7 @@
     "waku": "1.0.0-alpha.3"
   },
   "devDependencies": {
+    "@expressive/vite-plugin": "workspace:*",
     "@expressive/typescript-plugin-jsx": "workspace:*",
     "@tailwindcss/vite": "^4.1.18",
     "@types/mdx": "^2.0.13",
