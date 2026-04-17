@@ -1,6 +1,6 @@
 import ts from "typescript/lib/tsserverlibrary";
 import { log } from "./logger";
-import { findNodeAtPosition } from "./util";
+import { findNodeAtPosition, labelContainsNormalControlFlow } from "./util";
 
 const PROPERTY_COMPLETIONS_CACHE = new Map<string, ts.CompletionEntry[]>();
 const INSTRUCTION_COMPLETIONS_CACHE = new Map<string, ts.CompletionEntry[]>();
@@ -79,7 +79,7 @@ function getInstructionCompletions(
   return entries;
 }
 
-function isInComponentBody(
+function isInLabelBody(
   sourceFile: ts.SourceFile,
   position: number,
 ): boolean {
@@ -89,26 +89,41 @@ function isInComponentBody(
   let current: ts.Node | undefined = node;
 
   while (current) {
-    if (
-      current.kind === ts.SyntaxKind.ArrowFunction ||
-      current.kind === ts.SyntaxKind.FunctionDeclaration ||
-      current.kind === ts.SyntaxKind.FunctionExpression
-    ) {
-      return true;
-    }
+    if (current.kind === ts.SyntaxKind.LabeledStatement)
+      return !labelContainsNormalControlFlow(current as ts.LabeledStatement);
 
     if (
       current.kind === ts.SyntaxKind.JsxElement ||
       current.kind === ts.SyntaxKind.JsxSelfClosingElement ||
       current.kind === ts.SyntaxKind.JsxOpeningElement
-    ) {
+    )
       return false;
-    }
+
+    // Function body blocks are the termination point
+    if (
+      current.kind === ts.SyntaxKind.Block &&
+      current.parent &&
+      (current.parent.kind === ts.SyntaxKind.FunctionDeclaration ||
+       current.parent.kind === ts.SyntaxKind.FunctionExpression ||
+       current.parent.kind === ts.SyntaxKind.ArrowFunction)
+    )
+      return containsJSX(current);
 
     current = current.parent;
   }
 
   return false;
+}
+
+function containsJSX(node: ts.Node): boolean {
+  if (
+    node.kind === ts.SyntaxKind.JsxElement ||
+    node.kind === ts.SyntaxKind.JsxSelfClosingElement ||
+    node.kind === ts.SyntaxKind.JsxFragment
+  )
+    return true;
+
+  return ts.forEachChild(node, containsJSX) || false;
 }
 
 export function createCompletionsProxy(
@@ -123,7 +138,7 @@ export function createCompletionsProxy(
     const program = service.getProgram();
     const sourceFile = program?.getSourceFile(fileName);
 
-    if (!sourceFile || !program || !isInComponentBody(sourceFile, position))
+    if (!sourceFile || !program || !isInLabelBody(sourceFile, position))
       return service.getCompletionsAtPosition(fileName, position, options);
 
     const checker = program.getTypeChecker();

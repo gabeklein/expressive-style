@@ -57,3 +57,61 @@ describe("completions inside label block", () => {
     expect(names(result)).toContain("color");
   });
 });
+
+describe("completions excluded outside label context", () => {
+  it("does not offer completions in a function that returns no JSX", () => {
+    const result = getCompletionsWithPlugin(`
+      function helper() {
+        |
+        return 42;
+      }
+    `);
+    expect(names(result)).not.toContain("color");
+    expect(names(result)).not.toContain("$hover");
+  });
+
+  it("does not offer completions in a nested non-label block", () => {
+    const result = getCompletionsWithPlugin(`
+      const Component = () => {
+        if (true) {
+          |
+        }
+        return <div />;
+      };
+    `);
+    expect(names(result)).not.toContain("color");
+  });
+
+  it("does not offer completions inside JSX", () => {
+    const result = getCompletionsWithPlugin(`
+      const Component = () => {
+        return <div |/>;
+      };
+    `);
+    expect(names(result)).not.toContain("color");
+  });
+
+  it("does not offer completions inside a for-loop label", () => {
+    const result = getCompletionsWithPlugin(`
+      const Component = () => {
+        outer: for (let i = 0; i < 10; i++) {
+          |
+        }
+        return <div />;
+      };
+    `);
+    expect(names(result)).not.toContain("color");
+  });
+
+  it("does not offer completions in an inner function", () => {
+    const result = getCompletionsWithPlugin(`
+      const Component = () => {
+        const helper = () => {
+          |
+        };
+        return <div />;
+      };
+    `);
+    expect(names(result)).not.toContain("color");
+  });
+});
