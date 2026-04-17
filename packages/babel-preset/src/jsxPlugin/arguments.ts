@@ -17,11 +17,6 @@ const Oops = ParseErrors({
   ElseNotSupported: "An else statement in an if modifier is not yet supported",
 });
 
-function isParenthesized(node: T.Expression) {
-  const { extra } = node as any;
-  return extra ? extra.parenthesized === true : false;
-}
-
 type Argument =
   | [string, ...Argument[]]
   | T.Expression
@@ -40,17 +35,12 @@ export function parseArguments(
 }
 
 function parseExpression<T extends T.Expression>(element: T): any {
-  if (t.isIdentifier(element)) return element.name;
-
-  if (t.isStringLiteral(element)) return element.value || '""';
-
-  if (isParenthesized(element)) return element;
-
-  if (t.isBooleanLiteral(element)) return element.value;
-
-  if (t.isNullLiteral(element)) return null;
-
+  if (inParenthesis(element)) return element;
   if (t.isTemplateLiteral(element)) return element;
+  if (t.isIdentifier(element)) return element.name;
+  if (t.isStringLiteral(element)) return element.value || '""';
+  if (t.isBooleanLiteral(element)) return element.value;
+  if (t.isNullLiteral(element)) return null;
 
   if (t.isNumericLiteral(element)) {
     const { value, extra: { raw } = {} } = element as any;
@@ -109,4 +99,9 @@ function parseExpression<T extends T.Expression>(element: T): any {
     throw Oops.ArrowNotImplemented(element);
 
   throw Oops.UnknownArgument(element);
+}
+
+function inParenthesis(node: T.Expression) {
+  const { extra } = node as any;
+  return extra ? extra.parenthesized === true : false;
 }

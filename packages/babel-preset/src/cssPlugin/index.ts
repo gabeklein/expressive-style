@@ -41,6 +41,9 @@ export function CSSPlugin(
         },
         exit(path, state) {
           const { styles, cssModuleId } = state.file.metadata;
+
+          if (!cssModuleId || !cssModule) return;
+
           let hasStyles = false;
 
           for (const context of styles.values())
@@ -49,7 +52,7 @@ export function CSSPlugin(
               break;
             }
 
-          if (!cssModuleId || !cssModule || !hasStyles) return;
+          if (!hasStyles) return;
 
           path.unshiftContainer(
             "body",

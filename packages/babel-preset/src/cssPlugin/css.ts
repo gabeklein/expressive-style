@@ -27,7 +27,7 @@ export function toStylesheet(styles: Map<string, Context>) {
   return plain.join("\n");
 }
 
-function toDash(name: string) {
+function toDashcase(name: string) {
   return name.replace(/([A-Z]+)/g, "-$1").toLowerCase();
 }
 
@@ -37,7 +37,7 @@ function toBlock(define: Context) {
   const styles = [] as string[];
 
   for (let [name, value] of define.props) {
-    const property = toDash(name.replace(/^\$/, "--"));
+    const property = toDashcase(name.replace(/^\$/, "--"));
 
     if (Array.isArray(value)) value = value.map(toValue);
 
@@ -53,7 +53,7 @@ function toBlock(define: Context) {
 function toValue(value: unknown) {
   if (typeof value == "string") {
     if (value.startsWith("$"))
-      return `var(--${toDash(value.slice(1))})`;
+      return `var(--${toDashcase(value.slice(1))})`;
 
     if (value.startsWith("0x")) return toColor(value);
   }
