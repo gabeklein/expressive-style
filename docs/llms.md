@@ -346,10 +346,37 @@ Macros are functions that return `{ cssProperty: value }` objects.
 
 ### Props & className Forwarding
 
-The plugin automatically handles className forwarding. You don't need to manage it:
-- If you use `props` param → `props.className` is forwarded
-- If you destructure → `className` is added to destructuring
-- If you have no params → `props` is injected
+When a component has expressive styles, the plugin automatically forwards `className` from props onto the root element. This makes components composable - a parent can apply styles to a child component, and the generated className flows through without any manual wiring.
+
+**How it works by param style:**
+- Destructured params → `className` is added to the destructuring
+- `props` identifier → `props.className` is appended to the root element
+- No params → a `props` param is injected to access `className`
+
+**Only applies when the component has styles.** A plain component with no expressive styles will not be modified.
+
+```jsx
+const Card = ({ children }) => {
+  padding: 20;
+  borderRadius: 8;
+  background: white;
+
+  return <div>{children}</div>;
+};
+
+// Parent applies styles to Card - they compose automatically
+const Dashboard = () => {
+  card: {
+    marginBottom: 16;
+    border: 0xeee;
+  }
+
+  return <Card _card>Content</Card>;
+};
+// Card's root div receives both its own className AND the parent's
+```
+
+If `className` is already declared in the component's params, the plugin assumes you're handling it yourself and won't inject forwarding.
 
 ### Fragment Wrapping
 
