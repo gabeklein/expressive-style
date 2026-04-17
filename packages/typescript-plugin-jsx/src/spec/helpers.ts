@@ -98,6 +98,23 @@ export function getQuickInfoWithPlugin(
 }
 
 /**
+ * Runs the plugin against `code` containing a `|` marker and returns
+ * completions at the marker's position. The marker is stripped before
+ * the source is handed to TypeScript.
+ */
+export function getCompletionsWithPlugin(
+  code: string,
+  fileName = "file.tsx",
+): ts.CompletionInfo | undefined {
+  const position = code.indexOf("|");
+  if (position < 0) throw new Error("getCompletionsWithPlugin: missing | marker");
+
+  const stripped = code.slice(0, position) + code.slice(position + 1);
+  const { proxy, fileName: name } = createHarness(stripped, fileName);
+  return proxy.getCompletionsAtPosition!(name, position, undefined);
+}
+
+/**
  * Joins a QuickInfo's displayParts into a plain string for easy assertion.
  */
 export function displayText(info: ts.QuickInfo | undefined): string {
