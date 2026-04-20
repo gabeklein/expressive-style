@@ -129,9 +129,6 @@ importers:
       '@docs/repl':
         specifier: workspace:*
         version: link:../repl
-      '@expressive/vite-plugin':
-        specifier: workspace:*
-        version: link:../../packages/vite-plugin
       '@fumadocs/ui':
         specifier: 16.5.0
         version: 16.5.0(@types/react@19.2.10)(fumadocs-core@16.5.0(@types/react@19.2.10)(lucide-react@0.563.0(react@19.2.4))(next@16.1.6(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(react-dom@19.2.4(react@19.2.4))(react-router@7.13.1(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(react@19.2.4)(waku@1.0.0-alpha.3(@types/node@25.2.1)(jiti@2.6.1)(lightningcss@1.30.2)(react-dom@19.2.4(react@19.2.4))(react-server-dom-webpack@19.2.4(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(webpack@5.104.1(@swc/core@1.15.11)(esbuild@0.27.2)))(react@19.2.4)(terser@5.46.0)(tsx@4.21.0)(yaml@2.8.2))(zod@4.3.6))(next@16.1.6(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(tailwindcss@4.1.18)
@@ -163,6 +160,9 @@ importers:
       '@expressive/typescript-plugin-jsx':
         specifier: workspace:*
         version: link:../../packages/typescript-plugin-jsx
+      '@expressive/vite-plugin':
+        specifier: workspace:*
+        version: link:../../packages/vite-plugin
       '@tailwindcss/vite':
         specifier: ^4.1.18
         version: 4.1.18(vite@7.3.1(@types/node@25.2.1)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.46.0)(tsx@4.21.0)(yaml@2.8.2))

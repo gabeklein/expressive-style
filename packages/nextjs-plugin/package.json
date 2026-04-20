@@ -1,6 +1,6 @@
 {
   "name": "@expressive/nextjs-plugin",
-  "version": "0.7.0",
+  "version": "0.8.0",
   "description": "Next.js plugin for Expressive JSX",
   "repository": "https://github.com/gabeklein/expressive-dsl",
   "author": {
