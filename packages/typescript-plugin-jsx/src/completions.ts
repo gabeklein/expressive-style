@@ -92,9 +92,32 @@ function getInstructionCompletions(
   return entries;
 }
 
-const EXPR_CONTINUATION_KEYWORDS = new Set([
+function oneOf<T>(items: T[]) {
+  const set = new Set(items);
+  return (item: T | undefined) => item !== undefined && set.has(item);
+}
+
+const isExprContinuationKeyword = oneOf([
   "as", "satisfies", "return", "throw", "yield", "await",
   "typeof", "keyof", "instanceof", "new", "void", "delete",
+]);
+
+const isFunction = oneOf([
+  ts.SyntaxKind.FunctionDeclaration,
+  ts.SyntaxKind.FunctionExpression,
+  ts.SyntaxKind.ArrowFunction,
+]);
+
+const isJSX = oneOf([
+  ts.SyntaxKind.JsxElement,
+  ts.SyntaxKind.JsxSelfClosingElement,
+  ts.SyntaxKind.JsxOpeningElement,
+  ts.SyntaxKind.JsxFragment,
+]);
+
+const isTraversable = oneOf([
+  ts.SyntaxKind.Identifier,
+  ts.SyntaxKind.ExpressionStatement,
 ]);
 
 function precedingTokenIsExpressionContinuation(
@@ -105,7 +128,7 @@ function precedingTokenIsExpressionContinuation(
   const match = window.match(/([a-zA-Z]+|[=,([?])\s*$/);
   if (!match) return false;
   const token = match[1];
-  return token.length === 1 || EXPR_CONTINUATION_KEYWORDS.has(token);
+  return token.length === 1 || isExprContinuationKeyword(token);
 }
 
 function isInLabelBody(sourceFile: ts.SourceFile, position: number): boolean {
@@ -121,29 +144,16 @@ function isInLabelBody(sourceFile: ts.SourceFile, position: number): boolean {
     const kind = current.kind;
     const parent: ts.Node | undefined = current.parent;
 
-    if (
-      kind === ts.SyntaxKind.JsxElement ||
-      kind === ts.SyntaxKind.JsxSelfClosingElement ||
-      kind === ts.SyntaxKind.JsxOpeningElement
-    )
-      return false;
+    if (isJSX(kind)) return false;
 
     if (kind === ts.SyntaxKind.LabeledStatement)
       return !labelContainsNormalControlFlow(current as ts.LabeledStatement);
 
     if (kind === ts.SyntaxKind.Block) {
       const pk = parent?.kind;
-      if (
-        pk === ts.SyntaxKind.FunctionDeclaration ||
-        pk === ts.SyntaxKind.FunctionExpression ||
-        pk === ts.SyntaxKind.ArrowFunction
-      )
-        return containsJSX(current);
+      if (isFunction(pk)) return containsJSX(current);
       if (pk !== ts.SyntaxKind.LabeledStatement) return false;
-    } else if (
-      kind !== ts.SyntaxKind.Identifier &&
-      kind !== ts.SyntaxKind.ExpressionStatement
-    ) {
+    } else if (!isTraversable(kind)) {
       return false;
     }
 
@@ -154,13 +164,7 @@ function isInLabelBody(sourceFile: ts.SourceFile, position: number): boolean {
 }
 
 function containsJSX(node: ts.Node): boolean {
-  if (
-    node.kind === ts.SyntaxKind.JsxElement ||
-    node.kind === ts.SyntaxKind.JsxSelfClosingElement ||
-    node.kind === ts.SyntaxKind.JsxFragment
-  )
-    return true;
-
+  if (isJSX(node.kind)) return true;
   return ts.forEachChild(node, containsJSX) || false;
 }
 
