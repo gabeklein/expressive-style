@@ -18,12 +18,15 @@ export function resolveInterfaceMembers(
   if (cached) return cached;
 
   for (const sourceFile of program.getSourceFiles()) {
-    const symbols = checker.getSymbolsInScope(sourceFile, ts.SymbolFlags.Namespace);
-    const ns = symbols.find(s => s.name === namespaceName);
+    const symbols = checker.getSymbolsInScope(
+      sourceFile,
+      ts.SymbolFlags.Namespace,
+    );
+    const ns = symbols.find((s) => s.name === namespaceName);
     if (!ns) continue;
 
     const exports = checker.getExportsOfModule(ns);
-    const iface = exports.find(s => s.name === interfaceName);
+    const iface = exports.find((s) => s.name === interfaceName);
     if (!iface) continue;
 
     const ifaceType = checker.getDeclaredTypeOfSymbol(iface);
@@ -42,10 +45,15 @@ function getPropertyCompletions(
   const cached = PROPERTY_COMPLETIONS_CACHE.get(key);
   if (cached) return cached;
 
-  const members = resolveInterfaceMembers(checker, program, "Expressive", "Properties");
+  const members = resolveInterfaceMembers(
+    checker,
+    program,
+    "Expressive",
+    "Properties",
+  );
   if (!members) return [];
 
-  const entries: ts.CompletionEntry[] = members.map(member => ({
+  const entries: ts.CompletionEntry[] = members.map((member) => ({
     name: member.name,
     kind: ScriptElementKind.memberVariableElement,
     sortText: "0",
@@ -65,10 +73,15 @@ function getInstructionCompletions(
   const cached = INSTRUCTION_COMPLETIONS_CACHE.get(key);
   if (cached) return cached;
 
-  const members = resolveInterfaceMembers(checker, program, "Expressive", "Instructions");
+  const members = resolveInterfaceMembers(
+    checker,
+    program,
+    "Expressive",
+    "Instructions",
+  );
   if (!members) return [];
 
-  const entries: ts.CompletionEntry[] = members.map(member => ({
+  const entries: ts.CompletionEntry[] = members.map((member) => ({
     name: "$" + member.name,
     kind: ScriptElementKind.memberVariableElement,
     sortText: "1",
@@ -79,37 +92,62 @@ function getInstructionCompletions(
   return entries;
 }
 
-function isInLabelBody(
-  sourceFile: ts.SourceFile,
+const EXPR_CONTINUATION_KEYWORDS = new Set([
+  "as", "satisfies", "return", "throw", "yield", "await",
+  "typeof", "keyof", "instanceof", "new", "void", "delete",
+]);
+
+function precedingTokenIsExpressionContinuation(
+  text: string,
   position: number,
 ): boolean {
+  const window = text.slice(Math.max(0, position - 32), position);
+  const match = window.match(/([a-zA-Z]+|[=,([?])\s*$/);
+  if (!match) return false;
+  const token = match[1];
+  return token.length === 1 || EXPR_CONTINUATION_KEYWORDS.has(token);
+}
+
+function isInLabelBody(sourceFile: ts.SourceFile, position: number): boolean {
+  if (precedingTokenIsExpressionContinuation(sourceFile.text, position))
+    return false;
+
   const node = findNodeAtPosition(sourceFile, position);
   if (!node) return false;
 
   let current: ts.Node | undefined = node;
 
   while (current) {
-    if (current.kind === ts.SyntaxKind.LabeledStatement)
-      return !labelContainsNormalControlFlow(current as ts.LabeledStatement);
+    const kind = current.kind;
+    const parent: ts.Node | undefined = current.parent;
 
     if (
-      current.kind === ts.SyntaxKind.JsxElement ||
-      current.kind === ts.SyntaxKind.JsxSelfClosingElement ||
-      current.kind === ts.SyntaxKind.JsxOpeningElement
+      kind === ts.SyntaxKind.JsxElement ||
+      kind === ts.SyntaxKind.JsxSelfClosingElement ||
+      kind === ts.SyntaxKind.JsxOpeningElement
     )
       return false;
 
-    // Function body blocks are the termination point
-    if (
-      current.kind === ts.SyntaxKind.Block &&
-      current.parent &&
-      (current.parent.kind === ts.SyntaxKind.FunctionDeclaration ||
-       current.parent.kind === ts.SyntaxKind.FunctionExpression ||
-       current.parent.kind === ts.SyntaxKind.ArrowFunction)
-    )
-      return containsJSX(current);
+    if (kind === ts.SyntaxKind.LabeledStatement)
+      return !labelContainsNormalControlFlow(current as ts.LabeledStatement);
 
-    current = current.parent;
+    if (kind === ts.SyntaxKind.Block) {
+      const pk = parent?.kind;
+      if (
+        pk === ts.SyntaxKind.FunctionDeclaration ||
+        pk === ts.SyntaxKind.FunctionExpression ||
+        pk === ts.SyntaxKind.ArrowFunction
+      )
+        return containsJSX(current);
+      if (pk !== ts.SyntaxKind.LabeledStatement) return false;
+    } else if (
+      kind !== ts.SyntaxKind.Identifier &&
+      kind !== ts.SyntaxKind.ExpressionStatement
+    ) {
+      return false;
+    }
+
+    current = parent;
   }
 
   return false;
@@ -150,12 +188,26 @@ export function createCompletionsProxy(
     const isInstruction = prefix.startsWith("$");
 
     try {
-      const prior = service.getCompletionsAtPosition(fileName, position, options);
+      const prior = service.getCompletionsAtPosition(
+        fileName,
+        position,
+        options,
+      );
 
-      const properties = getPropertyCompletions(checker, program, ScriptElementKind);
-      const instructions = getInstructionCompletions(checker, program, ScriptElementKind);
+      const properties = getPropertyCompletions(
+        checker,
+        program,
+        ScriptElementKind,
+      );
+      const instructions = getInstructionCompletions(
+        checker,
+        program,
+        ScriptElementKind,
+      );
 
-      const extra = isInstruction ? instructions : [...properties, ...instructions];
+      const extra = isInstruction
+        ? instructions
+        : [...properties, ...instructions];
 
       if (!extra.length) return prior;
 
@@ -195,11 +247,24 @@ export function createCompletionsProxy(
 
       const sourceFile = program.getSourceFile(fileName);
       if (!sourceFile) {
-        return service.getCompletionEntryDetails(fileName, position, entryName, formatOptions, source, preferences, data);
+        return service.getCompletionEntryDetails(
+          fileName,
+          position,
+          entryName,
+          formatOptions,
+          source,
+          preferences,
+          data,
+        );
       }
 
-      const members = resolveInterfaceMembers(checker, program, "Expressive", interfaceName);
-      const member = members?.find(m => m.name === lookupName);
+      const members = resolveInterfaceMembers(
+        checker,
+        program,
+        "Expressive",
+        interfaceName,
+      );
+      const member = members?.find((m) => m.name === lookupName);
 
       if (member) {
         const memberType = checker.getTypeOfSymbol(member);
@@ -214,11 +279,12 @@ export function createCompletionsProxy(
           parts.push({ text: ": ", kind: "punctuation" });
           parts.push({
             text: params
-              .map(p => {
+              .map((p) => {
                 const pType = checker.getTypeOfSymbol(p);
                 const typeStr = checker.typeToString(pType);
                 const decl = p.getDeclarations()?.[0];
-                const optional = decl && ts.isParameter(decl) && !!decl.questionToken;
+                const optional =
+                  decl && ts.isParameter(decl) && !!decl.questionToken;
                 return `${p.name}${optional ? "?" : ""}: ${typeStr}`;
               })
               .join(", "),

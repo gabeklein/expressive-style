@@ -114,4 +114,63 @@ describe("completions excluded outside label context", () => {
     `);
     expect(names(result)).not.toContain("color");
   });
+
+  it("does not offer completions in a type assertion", () => {
+    const result = getCompletionsWithPlugin(`
+      const Component = () => {
+        const x = {} as |
+        return <div />;
+      };
+    `);
+    expect(names(result)).not.toContain("color");
+  });
+
+  it("does not offer completions in a variable initializer", () => {
+    const result = getCompletionsWithPlugin(`
+      const Component = () => {
+        const x = |
+        return <div />;
+      };
+    `);
+    expect(names(result)).not.toContain("color");
+  });
+
+  it("does not offer completions in an object literal argument", () => {
+    const result = getCompletionsWithPlugin(`
+      const Component = () => {
+        foo({ | })
+        return <div />;
+      };
+    `);
+    expect(names(result)).not.toContain("color");
+  });
+
+  it("does not offer completions in a satisfies expression", () => {
+    const result = getCompletionsWithPlugin(`
+      const Component = () => {
+        const x = {} satisfies |
+        return <div />;
+      };
+    `);
+    expect(names(result)).not.toContain("color");
+  });
+
+  it("does not offer completions in a return expression", () => {
+    const result = getCompletionsWithPlugin(`
+      const Component = () => {
+        return |
+      };
+    `);
+    expect(names(result)).not.toContain("color");
+  });
+
+  it("does not offer completions in a type annotation", () => {
+    const result = getCompletionsWithPlugin(`
+      const Component = () => {
+        const x: | = 5;
+        return <div />;
+      };
+    `);
+    expect(names(result)).not.toContain("color");
+  });
 });
