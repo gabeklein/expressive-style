@@ -98,8 +98,18 @@ function oneOf<T>(items: T[]) {
 }
 
 const isExprContinuationKeyword = oneOf([
-  "as", "satisfies", "return", "throw", "yield", "await",
-  "typeof", "keyof", "instanceof", "new", "void", "delete",
+  "as",
+  "satisfies",
+  "return",
+  "throw",
+  "yield",
+  "await",
+  "typeof",
+  "keyof",
+  "instanceof",
+  "new",
+  "void",
+  "delete",
 ]);
 
 const isFunction = oneOf([
@@ -248,8 +258,8 @@ export function createCompletionsProxy(
       const isInstruction = entryName.startsWith("$");
       const lookupName = isInstruction ? entryName.slice(1) : entryName;
       const interfaceName = isInstruction ? "Instructions" : "Properties";
-
       const sourceFile = program.getSourceFile(fileName);
+
       if (!sourceFile) {
         return service.getCompletionEntryDetails(
           fileName,
@@ -279,21 +289,23 @@ export function createCompletionsProxy(
           const sig = signatures[0];
           const params = sig.getParameters();
 
-          parts.push({ text: entryName, kind: "propertyName" });
-          parts.push({ text: ": ", kind: "punctuation" });
-          parts.push({
-            text: params
-              .map((p) => {
-                const pType = checker.getTypeOfSymbol(p);
-                const typeStr = checker.typeToString(pType);
-                const decl = p.getDeclarations()?.[0];
-                const optional =
-                  decl && ts.isParameter(decl) && !!decl.questionToken;
-                return `${p.name}${optional ? "?" : ""}: ${typeStr}`;
-              })
-              .join(", "),
-            kind: "text",
-          });
+          parts.push(
+            { text: entryName, kind: "propertyName" },
+            { text: ": ", kind: "punctuation" },
+            {
+              text: params
+                .map((p) => {
+                  const pType = checker.getTypeOfSymbol(p);
+                  const typeStr = checker.typeToString(pType);
+                  const decl = p.getDeclarations()?.[0];
+                  const optional =
+                    decl && ts.isParameter(decl) && !!decl.questionToken;
+                  return `${p.name}${optional ? "?" : ""}: ${typeStr}`;
+                })
+                .join(", "),
+              kind: "text",
+            },
+          );
         }
 
         const jsDoc = member.getJsDocTags();
