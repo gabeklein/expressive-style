@@ -1,6 +1,6 @@
 # Expressive JSX — Agent Context
 
-This file is for AI agents contributing to **this codebase** (the Expressive JSX build toolchain). For how to *use* Expressive JSX in a consumer project, see [docs/llm.md](docs/llms.md).
+This file is for AI agents contributing to **this codebase** (the Expressive JSX build toolchain). The canonical agent documentation lives in [skills/SKILL.md](skills/SKILL.md) and linked files under [skills/references/](skills/references/).
 
 ---
 
