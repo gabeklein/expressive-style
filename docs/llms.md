@@ -49,6 +49,59 @@ const withExpressive = require('@expressive/nextjs-plugin');
 module.exports = withExpressive({ /* next config */ });
 ```
 
+### Bun
+```bash
+bun add -d @expressive/bun-plugin
+```
+
+For the Bun dev server (HTML/static/fullstack), register the plugin in `bunfig.toml`:
+```toml
+[serve.static]
+plugins = ["@expressive/bun-plugin"]
+```
+```sh
+bun ./src/index.html
+```
+
+To pass options, create a wrapper module (bunfig plugin entries are strings):
+```ts
+// expressive.bun.ts
+import { expressiveJSX } from "@expressive/bun-plugin";
+
+export default expressiveJSX({
+  test: /\.[jt]sx?$/,
+  cssModules: false,
+});
+```
+```toml
+[serve.static]
+plugins = ["./expressive.bun.ts"]
+```
+
+For production builds, use the JS API (Bun's CLI plugin config is still evolving):
+```ts
+import { expressiveJSX } from "@expressive/bun-plugin";
+
+await Bun.build({
+  entrypoints: ["./src/index.html"],
+  outdir: "./dist",
+  target: "browser",
+  plugins: [expressiveJSX()],
+});
+```
+
+Or use the bundled CLI, which mirrors `bun build` flags with the plugin pre-registered:
+```sh
+bunx @expressive/bun-plugin ./src/index.html
+```
+
+Options:
+- `test`: `RegExp` or `(uri: string) => boolean` filter. Defaults to non-`node_modules` `.js/.jsx/.ts/.tsx`.
+- `cssModules`: when `true`, generated CSS is exposed via a virtual `.module.css` import.
+- Other options pass through to `@expressive/babel-preset`.
+
+Requires Bun 1.3+. Note: this is a Bun-native plugin, not a Vite-compat shim; source maps are best-effort.
+
 ### TypeScript IDE Support
 ```bash
 npm install --save-dev @expressive/typescript-plugin-jsx
