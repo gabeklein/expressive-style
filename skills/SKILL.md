@@ -1,5 +1,5 @@
 ---
-name: expressive-jsx
+name: expressive-style
 description: Work on the Expressive JSX monorepo safely and idiomatically. Use when modifying, debugging, reviewing, or extending the Expressive JSX Babel plugin, Babel preset, CSS generation, macros, build-tool integrations, TypeScript language service plugin, ESLint plugin, tests, or docs for this repository.
 ---
 
