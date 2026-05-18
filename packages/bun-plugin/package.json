@@ -25,6 +25,7 @@
     "jsx"
   ],
   "type": "module",
+  "bin": "dist/cli.js",
   "types": "dist/index.d.ts",
   "exports": {
     ".": {
