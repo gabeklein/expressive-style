@@ -39,7 +39,7 @@ function Plugin(_compiler: any, options: Options): PluginObj<State> {
         enter(path) {
           const body = path.get("body");
 
-          if (body.isFor() || body.isWhile() || body.isDoWhileStatement()){
+          if (!body.isBlockStatement() && !body.isExpressionStatement()) {
             IGNORED.add(path);
             return;
           }
