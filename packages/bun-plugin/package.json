@@ -1,0 +1,55 @@
+{
+  "name": "@expressive/bun-plugin",
+  "version": "0.8.0",
+  "description": "Expressive JSX Bun Plugin",
+  "repository": "https://github.com/gabeklein/expressive-dsl",
+  "author": {
+    "name": "Gabe Klein",
+    "email": "gabe@expressive.dev",
+    "url": "https://github.com/gabeklein"
+  },
+  "scripts": {
+    "build": "tsup",
+    "test": "vitest",
+    "prebuild": "rm -rf ./dist",
+    "prepublish": "npm run build"
+  },
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  },
+  "keywords": [
+    "bun",
+    "react",
+    "expressive",
+    "jsx"
+  ],
+  "type": "module",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      }
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "dependencies": {
+    "@babel/core": "^7.22.20",
+    "@expressive/babel-preset": "workspace:*",
+    "@expressive/css": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/babel__core": "^7.20.2",
+    "@types/bun": "latest",
+    "tsup": "^8.0.1",
+    "vitest": "^1.5.0"
+  }
+}

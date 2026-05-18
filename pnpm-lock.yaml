@@ -222,6 +222,31 @@ importers:
         specifier: ^1.5.0
         version: 1.6.1(@types/node@20.19.30)(lightningcss@1.30.2)(terser@5.46.0)
 
+  packages/bun-plugin:
+    dependencies:
+      '@babel/core':
+        specifier: ^7.22.20
+        version: 7.29.0
+      '@expressive/babel-preset':
+        specifier: workspace:*
+        version: link:../babel-preset
+      '@expressive/css':
+        specifier: workspace:*
+        version: link:../css
+    devDependencies:
+      '@types/babel__core':
+        specifier: ^7.20.2
+        version: 7.20.5
+      '@types/bun':
+        specifier: latest
+        version: 1.3.14
+      tsup:
+        specifier: ^8.0.1
+        version: 8.5.1(@swc/core@1.15.11)(jiti@2.6.1)(postcss@8.5.6)(tsx@4.21.0)(typescript@5.9.3)(yaml@2.8.2)
+      vitest:
+        specifier: ^1.5.0
+        version: 1.6.1(@types/node@25.2.1)(lightningcss@1.30.2)(terser@5.46.0)
+
   packages/css:
     dependencies:
       chroma-js:
@@ -2638,6 +2663,9 @@ packages:
   '@types/babel__traverse@7.28.0':
     resolution: {integrity: sha512-8PvcXf70gTDZBgt9ptxJ8elBeBjcLOAcOtoO/mPJjtji1+CdGbHgm77om1GrsPxsiE+uXIpNSK64UYaIwQXd4Q==}
 
+  '@types/bun@1.3.14':
+    resolution: {integrity: sha512-h1hFqFVcvAvD9j9K7ZW7vd82aSA+rTdznZa+5bwvCwqSB1jmmfLcbIWhOLx1/+boy/xmjgCs/OMUL8hRJSmnPw==}
+
   '@types/chai@5.2.3':
     resolution: {integrity: sha512-Mw558oeA9fFbv65/y4mHtXDs9bPnFMZAL/jxdPFUpOHHIXX91mcgEHbS5Lahr+pwZFR8A7GQleRWeI6cGFC2UA==}
 
@@ -3102,6 +3130,9 @@ packages:
 
   buffer@5.7.1:
     resolution: {integrity: sha512-EHcyIPBQ4BSGlvjB16k5KgAJ27CIsHY/2JBmCRReo48y9rQ3MaUzWX3KVlBa4U7MyX02HdVj0K7C3WaB3ju7FQ==}
+
+  bun-types@1.3.14:
+    resolution: {integrity: sha512-4N0ig0fEomHt5R0KCFWjovxow98rIoRwKolrYdCcknNwMekCXRnWEUvgu5soYV8QXtVsrUD8B95MBOZGPvr6KQ==}
 
   bundle-require@5.1.0:
     resolution: {integrity: sha512-3WrrOuZiyaaZPWiEt4G3+IffISVC9HYlWueJEBWED4ZH4aIAC2PnkdnuRrR94M+w6yGWn4AglWtJtBI8YqvgoA==}
@@ -8640,6 +8671,10 @@ snapshots:
     dependencies:
       '@babel/types': 7.29.0
 
+  '@types/bun@1.3.14':
+    dependencies:
+      bun-types: 1.3.14
+
   '@types/chai@5.2.3':
     dependencies:
       '@types/deep-eql': 4.0.2
@@ -9192,6 +9227,10 @@ snapshots:
     dependencies:
       base64-js: 1.5.1
       ieee754: 1.2.1
+
+  bun-types@1.3.14:
+    dependencies:
+      '@types/node': 20.19.30
 
   bundle-require@5.1.0(esbuild@0.27.2):
     dependencies:
