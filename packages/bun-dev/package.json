@@ -27,8 +27,7 @@
     "prebuild": "rm -rf ./dist"
   },
   "files": [
-    "dist",
-    "runtime"
+    "dist"
   ],
   "dependencies": {
     "@expressive/bun-style-plugin": "workspace:*"
