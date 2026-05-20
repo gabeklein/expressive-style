@@ -1,8 +1,6 @@
 import { existsSync } from "node:fs";
 import { join } from "node:path";
 
-import type { AppConfig } from "./index";
-
 export interface Resolved {
   cwd: string;
   appPath: string;
@@ -37,13 +35,4 @@ export async function resolveProject(cwd: string): Promise<Resolved> {
   const htmlPath = existsSync(indexHtml) ? indexHtml : undefined;
 
   return { cwd, appPath, configPath, htmlPath };
-}
-
-export async function loadConfig(configPath: string | undefined): Promise<AppConfig> {
-  if (!configPath) return {};
-  const mod = await import(configPath);
-  const config = mod.default ?? mod;
-  if (typeof config !== "object" || config === null)
-    throw new Error(`${configPath} must default-export an AppConfig object.`);
-  return config as AppConfig;
 }

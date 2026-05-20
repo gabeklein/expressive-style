@@ -16,5 +16,5 @@
       "@expressive/*": ["../../*/src"]
     }
   },
-  "include": ["src"]
+  "include": ["src", "runtime"]
 }

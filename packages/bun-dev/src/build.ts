@@ -5,7 +5,7 @@ import { writeScaffold } from "./scaffold";
 
 export async function runBuild(cwd = process.cwd()): Promise<void> {
   const resolved = await resolveProject(cwd);
-  const { htmlPath } = writeScaffold(resolved, 3000);
+  const { htmlPath } = writeScaffold(resolved);
 
   const result = await Bun.build({
     entrypoints: [htmlPath],
