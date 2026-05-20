@@ -1,11 +1,9 @@
 import { expressiveJSX } from "@expressive/bun-style-plugin";
 
-import { resolveProject } from "./resolve";
 import { writeScaffold } from "./scaffold";
 
 export async function runBuild(cwd = process.cwd()): Promise<void> {
-  const resolved = await resolveProject(cwd);
-  const { htmlPath } = writeScaffold(resolved);
+  const { htmlPath } = writeScaffold(cwd);
 
   const result = await Bun.build({
     entrypoints: [htmlPath],

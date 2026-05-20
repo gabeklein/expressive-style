@@ -1,8 +1,6 @@
 import { createRequire } from "node:module";
-import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
-
-import type { Resolved } from "./resolve";
 
 const SHELL = `\
 <!doctype html>
@@ -26,8 +24,9 @@ export interface Scaffold {
   bunfigPath: string;
 }
 
-export function writeScaffold(resolved: Resolved): Scaffold {
-  const dir = join(resolved.cwd, "node_modules", ".expressive");
+export function writeScaffold(cwd: string): Scaffold {
+  const resolved = resolveProject(cwd);
+  const dir = join(cwd, "node_modules", ".expressive");
   mkdirSync(dir, { recursive: true });
 
   const htmlPath = join(dir, "index.html");
@@ -100,4 +99,32 @@ function ensureBootstrap(html: string): string {
   }
 
   return out;
+}
+
+function resolveProject(cwd: string) {
+  if (existsSync(join(cwd, "app")))
+    throw new Error(
+      "Found app/ directory: file-based routing requires @expressive/framework " +
+        "(not implemented in @expressive/bun-dev). Use a single app.tsx for SPA mode.",
+    );
+
+  const rootApp = join(cwd, "app.tsx");
+  const srcApp = join(cwd, "src", "app.tsx");
+  const rootHas = existsSync(rootApp);
+  const srcHas = existsSync(srcApp);
+
+  if (rootHas && srcHas)
+    throw new Error("Found both ./app.tsx and ./src/app.tsx - pick one.");
+
+  if (!rootHas && !srcHas)
+    throw new Error("Missing app.tsx at project root or under src/.");
+
+  const indexTs = join(cwd, "index.ts");
+  const indexHtml = join(cwd, "index.html");
+
+  return {
+    appPath: rootHas ? rootApp : srcApp,
+    configPath: existsSync(indexTs) ? indexTs : undefined,
+    htmlPath: existsSync(indexHtml) ? indexHtml : undefined,
+  };
 }
