@@ -9,6 +9,9 @@
     "url": "https://github.com/gabeklein"
   },
   "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  },
   "type": "module",
   "bin": {
     "expressive": "dist/cli.js"
