@@ -1,7 +1,6 @@
 {
   "name": "@expressive/bun-dev",
   "version": "0.0.0",
-  "private": true,
   "description": "Expressive Dev runtime for Bun",
   "repository": "https://github.com/gabeklein/expressive-dsl",
   "author": {
