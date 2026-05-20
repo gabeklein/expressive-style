@@ -1,6 +1,6 @@
 {
   "name": "@expressive/css",
-  "version": "0.8.0",
+  "version": "0.9.0",
   "description": "CSS macros and type definitions for Expressive JSX",
   "repository": "https://github.com/gabeklein/expressive-dsl",
   "author": {

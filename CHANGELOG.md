@@ -3,6 +3,27 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.9.0](https://github.com/gabeklein/expressive-style/compare/v0.8.0...v0.9.0) (2026-05-20)
+
+
+### Bug Fixes
+
+* reject completions in expression and type contexts ([13661cf](https://github.com/gabeklein/expressive-style/commit/13661cf0056de07c8b277730d783f81cb57b092e))
+* **skill:** rename skill from expressive-jsx to expressive-style ([b059c27](https://github.com/gabeklein/expressive-style/commit/b059c27d957cbcb1815ad7060c9a2b560641e3ff))
+* update condition to ignore non-block and non-expression statements in plugin ([3daf52b](https://github.com/gabeklein/expressive-style/commit/3daf52b559c1cff2b971d5cdc57cde6fbbf2b214))
+
+
+### Features
+
+* **bun-dev:** generate runtime files into node_modules/.expressive ([6c095d8](https://github.com/gabeklein/expressive-style/commit/6c095d822917bc4f82b15ff7edda69a25894a8fd))
+* **bun-dev:** scaffold @expressive/bun-dev package (draft) ([ba73e81](https://github.com/gabeklein/expressive-style/commit/ba73e816c2a2d07ee33546593fa88b3d4be949b2))
+* **bun-plugin:** add @expressive/bun-plugin package ([38e6012](https://github.com/gabeklein/expressive-style/commit/38e6012713674976ef60fe3ef64598eac5b31bf0))
+* **bun-plugin:** add CLI bin mirroring bun build flags ([c18bb01](https://github.com/gabeklein/expressive-style/commit/c18bb017357648356765517baef0a0813e67699e))
+
+
+
+
+
 # [0.8.0](https://github.com/gabeklein/expressive-dsl/compare/v0.7.0...v0.8.0) (2026-04-20)
 
 

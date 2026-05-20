@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.9.0](https://github.com/gabeklein/expressive-dsl/compare/v0.8.0...v0.9.0) (2026-05-20)
+
+
+### Bug Fixes
+
+* update condition to ignore non-block and non-expression statements in plugin ([3daf52b](https://github.com/gabeklein/expressive-dsl/commit/3daf52b559c1cff2b971d5cdc57cde6fbbf2b214))
+
+
+
+
+
 # [0.8.0](https://github.com/gabeklein/expressive-dsl/compare/v0.7.0...v0.8.0) (2026-04-20)
 
 **Note:** Version bump only for package @expressive/babel-preset
