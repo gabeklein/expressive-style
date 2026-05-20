@@ -1,4 +1,4 @@
-# @expressive/bun-plugin
+# @expressive/bun-style-plugin
 
 ## 0.8.0
 

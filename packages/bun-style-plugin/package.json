@@ -1,7 +1,7 @@
 {
-  "name": "@expressive/bun-plugin",
+  "name": "@expressive/bun-style-plugin",
   "version": "0.8.0",
-  "description": "Expressive JSX Bun Plugin",
+  "description": "Expressive JSX style plugin for Bun",
   "repository": "https://github.com/gabeklein/expressive-dsl",
   "author": {
     "name": "Gabe Klein",
@@ -25,7 +25,9 @@
     "jsx"
   ],
   "type": "module",
-  "bin": "dist/cli.js",
+  "bin": {
+    "expressive-bun": "dist/cli.js"
+  },
   "types": "dist/index.d.ts",
   "exports": {
     ".": {

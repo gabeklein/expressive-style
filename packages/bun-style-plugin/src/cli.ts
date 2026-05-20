@@ -3,9 +3,9 @@ import { expressiveJSX } from "./index";
 
 type BuildConfig = Parameters<typeof Bun.build>[0];
 
-const HELP = `expressive-bun-plugin - bundle with Expressive JSX baked in
+const HELP = `bun-style-plugin - bundle with Expressive JSX style transform baked in
 
-Usage: expressive-bun <entrypoints...> [options]
+Usage: bun-style-plugin <entrypoints...> [options]
 
 Options mirror \`bun build\`. Supported flags:
   -o, --outdir <dir>

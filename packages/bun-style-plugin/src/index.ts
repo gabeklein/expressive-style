@@ -17,7 +17,7 @@ export function expressiveJSX(options: PluginOptions = {}): BunPlugin {
   const store = createCssStore();
 
   return {
-    name: "expressive-jsx-bun-plugin",
+    name: "expressive-bun-style-plugin",
     target: "browser",
     setup(build) {
       store.setup(build);
