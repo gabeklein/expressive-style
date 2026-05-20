@@ -1,6 +1,6 @@
-import { createRequire } from "node:module";
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
+import { fileURLToPath } from "node:url";
 
 const SHELL = `\
 <!doctype html>
@@ -76,8 +76,7 @@ console.log(\`Expressive Dev running at \${server.url}\`);
 `;
 
 function bunfig(): string {
-  const require = createRequire(import.meta.url);
-  const stylePlugin = require.resolve("@expressive/bun-style-plugin");
+  const stylePlugin = fileURLToPath(import.meta.resolve("@expressive/bun-style-plugin"));
   return `[serve.static]\nplugins = [${JSON.stringify(stylePlugin)}]\n`;
 }
 
