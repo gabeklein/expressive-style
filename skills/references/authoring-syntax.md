@@ -9,10 +9,11 @@ Use this reference when writing Expressive JSX in consumer components or reviewi
 - Top-level style declarations in a component apply to the outermost returned element.
 - Named labeled blocks create reusable scopes.
 - JSX attributes prefixed with `_` apply named scopes and are removed from output.
+- Place `_` scope attributes first on a JSX element, before any other props. They identify the style scope and read better leading the attribute list.
 
 ## Self-Styling
 
-Styles written at the top level of a component function automatically apply to the root returned element.
+Styles written at the top level of a component function automatically apply to the root returned element. Do NOT wrap them in a named label and apply via `_attr` on the root - write them bare at the top level and leave the root element without an underscore attribute.
 
 ```jsx
 const Card = ({ children }) => {
@@ -142,6 +143,8 @@ Numbers:
 | `1.5` | `1.5em` | Decimals become em |
 | `0` | `0` | Zero has no unit |
 
+Prefer bare numbers over quoted unit strings whenever the unit is the default (`borderRadius: 12` over `borderRadius: "12px"`, `minHeight: 120` over `"120px"`). Only quote when the unit is non-default (`rem`, `vh`, `%`) or the value is composite (`"2rem auto 0"`, `"2px solid #fbf0df"`).
+
 Hex colors:
 
 ```jsx
@@ -150,14 +153,23 @@ background: 0x007bff;
 background: 0xfff8;
 ```
 
-Bare identifiers become kebab-case strings:
+Bare identifiers become kebab-case strings - prefer them over quoted equivalents for single-token CSS keywords unless reserved:
 
 ```jsx
 cursor: pointer;
-cursor: notAllowed;
+cursor: notAllowed;       // not "not-allowed"
 textDecoration: underline;
-boxSizing: borderBox;
+boxSizing: borderBox;     // not "border-box"
+appearance: none;         // not "none"
+display: "block";         // valid, block is a reserved word
+resize: vertical;
+font: monospace;
+textAlign: left;
+width: minContent;        // not "min-content"
+border: none;
 ```
+
+Quote only when the value contains spaces, punctuation, or characters that aren't a valid JS identifier (e.g. `"2px solid #fbf0df"`, `"translateY(-1px)"`, `"var(--bun-cursor)"`).
 
 Special keywords:
 
@@ -380,7 +392,7 @@ export const ThemeProvider = ({ children }) => {
 4. Integers become px and decimals become em: `padding: 1` is `1px`; `padding: 1.0` is `1em`.
 5. Label names cannot match the component name.
 6. Bare identifiers become kebab-case strings; common CSS identifiers do not need quotes.
-7. Top-level styles auto-apply to the root element.
-8. `_` attributes are build-time only and do not appear in rendered HTML.
+7. Top-level styles auto-apply to the root element - never wrap them in a label and re-apply via `_attr` on the root.
+8. `_` attributes are build-time only and do not appear in rendered HTML. Place them first in the attribute list.
 9. String `if` tests create CSS selectors.
 10. Expression `if` tests create runtime conditional classes.
