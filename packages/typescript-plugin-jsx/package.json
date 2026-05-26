@@ -13,7 +13,7 @@
     "prepublish": "npm run build",
     "preversion": "npm run build"
   },
-  "dependencies": {
+  "peerDependencies": {
     "typescript": ">=4.0.0"
   },
   "devDependencies": {

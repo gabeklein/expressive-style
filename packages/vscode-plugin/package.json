@@ -28,11 +28,11 @@
     ]
   },
   "scripts": {
-    "package": "vsce package",
+    "package": "node scripts/package.mjs",
     "publish": "vsce publish"
   },
   "dependencies": {
-    "@expressive/typescript-plugin-jsx": "^0.8.0"
+    "@expressive/typescript-plugin-jsx": "workspace:^"
   },
   "devDependencies": {
     "@vscode/vsce": "^3.0.0"
