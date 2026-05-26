@@ -25,7 +25,7 @@ Keep edits close to the package that owns the behavior. Shared transformation ch
 - `packages/babel-plugin-jsx`: core JSX parser, label handling, context creation, JSX visitor, underscore attribute application.
 - `packages/babel-preset`: Babel preset composition, CSS extraction/generation, macro system, class-name generation.
 - `packages/css`: CSS property/value helpers and focused CSS unit tests.
-- `packages/vite-plugin`, `packages/webpack-plugin`, `packages/rollup-plugin-jsx`, `packages/parcel-transformer-jsx`, `packages/nextjs-plugin`, `packages/bun-plugin`: build-tool integrations.
+- `packages/vite-plugin`, `packages/webpack-plugin`, `packages/rollup-plugin-jsx`, `packages/parcel-transformer-jsx`, `packages/nextjs-plugin`, `packages/bun-style-plugin`: build-tool integrations.
 - `packages/typescript-plugin-jsx`: TypeScript language service support for `.jsx` authoring.
 - `packages/eslint-plugin`: lint rules for Expressive JSX syntax.
 

@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.9.0](https://github.com/gabeklein/expressive-style/compare/v0.8.0...v0.9.0) (2026-05-20)
+
+
+### Bug Fixes
+
+* reject completions in expression and type contexts ([13661cf](https://github.com/gabeklein/expressive-style/commit/13661cf0056de07c8b277730d783f81cb57b092e))
+
+
+
+
+
 # [0.8.0](https://github.com/gabeklein/expressive-dsl/compare/v0.7.0...v0.8.0) (2026-04-20)
 
 

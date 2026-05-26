@@ -1,9 +1,8 @@
 {
-  "name": "@expressive/webpack-plugin",
+  "name": "@expressive/bun-style-plugin",
   "version": "0.9.0",
-  "description": "Webpack plugin for Expressive JSX",
+  "description": "Expressive JSX style plugin for Bun",
   "repository": "https://github.com/gabeklein/expressive-dsl",
-  "private": true,
   "author": {
     "name": "Gabe Klein",
     "email": "gabe@expressive.dev",
@@ -11,40 +10,45 @@
   },
   "scripts": {
     "build": "tsup",
-    "test": "vitest"
+    "test": "vitest",
+    "prebuild": "rm -rf ./dist",
+    "prepublish": "npm run build"
   },
   "license": "MIT",
   "publishConfig": {
     "access": "public"
   },
   "keywords": [
-    "webpack",
+    "bun",
+    "react",
     "expressive",
     "jsx"
   ],
+  "type": "module",
+  "types": "dist/index.d.ts",
   "exports": {
     ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.mjs",
-      "require": "./dist/index.js"
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      }
     }
   },
   "files": [
     "dist"
   ],
   "dependencies": {
+    "@babel/core": "^7.22.20",
     "@expressive/babel-preset": "workspace:*",
-    "babel-loader": "^8.3.0",
-    "webpack": "^5.91.0",
-    "webpack-virtual-modules": "^0.5.0"
+    "@expressive/css": "workspace:*"
   },
   "devDependencies": {
-    "@babel/core": "^7.24.4",
-    "@babel/preset-react": "^7.24.1",
     "@types/babel__core": "^7.20.2",
-    "css-loader": "^7.0.0",
-    "prettier": "^2.8.8",
-    "swc-loader": "^0.2.6",
+    "@types/bun": "latest",
     "tsup": "^8.0.1",
     "vitest": "^1.5.0"
   }
