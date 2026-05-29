@@ -1,4 +1,4 @@
-import stylePlugin from "@expressive/vite-plugin";
+import stylePlugin from "@expressive/vite-plugin-style";
 import { type Config, defineConfig } from "waku/config";
 import mdx from "fumadocs-mdx/vite";
 import * as MdxConfig from "./source.config.js";

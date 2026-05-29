@@ -23,8 +23,8 @@
     "waku": "1.0.0-alpha.3"
   },
   "devDependencies": {
-    "@expressive/vite-plugin": "workspace:*",
-    "@expressive/typescript-plugin-jsx": "workspace:*",
+    "@expressive/vite-plugin-style": "workspace:*",
+    "@expressive/typescript-plugin-style": "workspace:*",
     "@tailwindcss/vite": "^4.1.18",
     "@types/mdx": "^2.0.13",
     "@types/node": "^25.1.0",

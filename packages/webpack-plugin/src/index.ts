@@ -1,4 +1,4 @@
-import JSXPreset from "@expressive/babel-preset";
+import JSXPreset from "@expressive/babel-preset-style";
 import VirtualModulesPlugin from "webpack-virtual-modules";
 import type { Compiler } from "webpack";
 

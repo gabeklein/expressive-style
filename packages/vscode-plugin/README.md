@@ -2,7 +2,7 @@
 
 Language support for [Expressive JSX](https://github.com/gabeklein/expressive-jsx) in TypeScript and JavaScript files.
 
-This extension contributes a TypeScript Server Plugin - no separate language server, no activation events. Once installed, `.ts`, `.tsx`, `.js`, and `.jsx` files in your workspace are analyzed by `@expressive/typescript-plugin-jsx` automatically via the built-in TypeScript extension.
+This extension contributes a TypeScript Server Plugin - no separate language server, no activation events. Once installed, `.ts`, `.tsx`, `.js`, and `.jsx` files in your workspace are analyzed by `@expressive@expressive/typescript-plugin-style` automatically via the built-in TypeScript extension.
 
 ## How it works
 

@@ -7,12 +7,12 @@ Expressive JSX only transforms `.jsx` files. Do not expect `.tsx` files to be pr
 ### Vite
 
 ```bash
-npm install @expressive/vite-plugin
+npm install @expressive/vite-plugin-style
 ```
 
 ```js
 // vite.config.js
-import jsx from '@expressive/vite-plugin';
+import jsx from '@expressive/vite-plugin-style';
 import react from '@vitejs/plugin-react';
 
 export default {
@@ -23,12 +23,12 @@ export default {
 ### Webpack
 
 ```bash
-npm install @expressive/webpack-plugin
+npm install @expressive/webpack-plugin-style
 ```
 
 ```js
 // webpack.config.js
-const ExpressivePlugin = require('@expressive/webpack-plugin');
+const ExpressivePlugin = require('@expressive/webpack-plugin-style');
 
 module.exports = {
   plugins: [new ExpressivePlugin()]
@@ -40,13 +40,13 @@ module.exports = {
 Next.js support targets Webpack mode, not Turbopack.
 
 ```bash
-npm install @expressive/nextjs-plugin
+npm install @expressive/nextjs-plugin-style
 npx next --webpack
 ```
 
 ```js
 // next.config.js
-const withExpressive = require('@expressive/nextjs-plugin');
+const withExpressive = require('@expressive/nextjs-plugin-style');
 
 module.exports = withExpressive({
   // next config
@@ -56,13 +56,13 @@ module.exports = withExpressive({
 ### TypeScript IDE Support
 
 ```bash
-npm install --save-dev @expressive/typescript-plugin-jsx
+npm install --save-dev @expressive/typescript-plugin-style
 ```
 
 ```json
 {
   "compilerOptions": {
-    "plugins": [{ "name": "@expressive/typescript-plugin-jsx" }]
+    "plugins": [{ "name": "@expressive/typescript-plugin-style" }]
   }
 }
 ```

@@ -6,7 +6,7 @@ import { fileURLToPath } from "node:url";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const stage = resolve(root, ".vsce-stage");
-const pluginName = "@expressive/typescript-plugin-jsx";
+const pluginName = "@expressive@expressive/typescript-plugin-style";
 const pluginRoot = resolve(root, "..", "typescript-plugin-jsx");
 const pkg = JSON.parse(readFileSync(resolve(root, "package.json"), "utf8"));
 

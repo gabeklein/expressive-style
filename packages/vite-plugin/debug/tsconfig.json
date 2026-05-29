@@ -16,7 +16,7 @@
     "jsx": "react-jsx",
     "plugins": [
       {
-        "name": "@expressive/typescript-plugin-jsx"
+        "name": "@expressive@expressive/typescript-plugin-style"
       }
     ]
   }

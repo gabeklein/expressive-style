@@ -14,7 +14,7 @@
 </h4>
 
 <p align="center">
-  <a href="https://www.npmjs.com/package/@expressive/babel-preset"><img alt="NPM" src="https://badge.fury.io/js/%40expressive%2Fbabel-preset.svg"></a>
+  <a href="https://www.npmjs.com/package/@expressive/babel-preset-style"><img alt="NPM" src="https://badge.fury.io/js/%40expressive%2Fbabel-preset.svg"></a>
   <a href="https://join.slack.com/t/expressivejs/shared_invite/zt-s2j5cdhz-gffKn3bTATMbXf~iq4pvHg" alt="Join Slack">
     <img src="https://img.shields.io/badge/Slack-Come%20say%20hi!-blueviolet" />
   </a>
@@ -468,12 +468,12 @@ Choose your build tool and follow the installation steps below.
 ### Vite
 
 ```bash
-npm install @expressive/vite-plugin
+npm install @expressive/vite-plugin-style
 ```
 
 ```js
 // vite.config.js
-import jsx from '@expressive/vite-plugin';
+import jsx from '@expressive/vite-plugin-style';
 import react from '@vitejs/plugin-react';
 
 export default {
@@ -487,12 +487,12 @@ export default {
 ### Next.js
 
 ```bash
-npm install @expressive/nextjs-plugin
+npm install @expressive/nextjs-plugin-style
 ```
 
 ```js
 // next.config.js
-const withExpressive = require('@expressive/nextjs-plugin');
+const withExpressive = require('@expressive/nextjs-plugin-style');
 
 module.exports = withExpressive({
   // your Next.js config
@@ -504,12 +504,12 @@ module.exports = withExpressive({
 ### Webpack
 
 ```bash
-npm install @expressive/webpack-plugin
+npm install @expressive/webpack-plugin-style
 ```
 
 ```js
 // webpack.config.js
-const ExpressivePlugin = require('@expressive/webpack-plugin');
+const ExpressivePlugin = require('@expressive/webpack-plugin-style');
 
 module.exports = {
   plugins: [
@@ -524,7 +524,7 @@ module.exports = {
 Install the TypeScript plugin for IDE autocomplete:
 
 ```bash
-npm install --save-dev @expressive/typescript-plugin-jsx
+npm install --save-dev @expressive/typescript-plugin-style
 ```
 
 ```json
@@ -532,7 +532,7 @@ npm install --save-dev @expressive/typescript-plugin-jsx
 {
   "compilerOptions": {
     "plugins": [
-      { "name": "@expressive/typescript-plugin-jsx" }
+      { "name": "@expressive/typescript-plugin-style" }
     ]
   }
 }
@@ -540,9 +540,9 @@ npm install --save-dev @expressive/typescript-plugin-jsx
 
 ### Other Build Tools
 
-- **Babel**: `@expressive/babel-preset`
-- **Parcel**: `@expressive/parcel-transformer-jsx`
-- **Rollup**: `@expressive/rollup-plugin-jsx`
+- **Babel**: `@expressive/babel-preset-style`
+- **Parcel**: `@expressive/parcel-transformer-style`
+- **Rollup**: `@expressive/rollup-plugin-style`
 
 <br/>
 <h1 id="comparison-section">Feature Parity</h1>

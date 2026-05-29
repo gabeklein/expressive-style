@@ -1,5 +1,5 @@
 {
-  "name": "vscode-expressive-jsx",
+  "name": "vscode-expressive-style",
   "displayName": "Expressive JSX",
   "description": "Language support for Expressive JSX - enables the TypeScript server plugin for .ts/.tsx/.js/.jsx files.",
   "version": "0.8.0",
@@ -22,7 +22,7 @@
   "contributes": {
     "typescriptServerPlugins": [
       {
-        "name": "@expressive/typescript-plugin-jsx",
+        "name": "@expressive/typescript-plugin-style",
         "enableForWorkspaceTypeScriptVersions": true
       }
     ]
@@ -32,7 +32,7 @@
     "publish": "vsce publish"
   },
   "dependencies": {
-    "@expressive/typescript-plugin-jsx": "workspace:^"
+    "@expressive/typescript-plugin-style": "workspace:^"
   },
   "devDependencies": {
     "@vscode/vsce": "^3.0.0"
