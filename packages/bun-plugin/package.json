@@ -1,5 +1,5 @@
 {
-  "name": "@expressive/bun-style-plugin",
+  "name": "@expressive/bun-plugin-style",
   "version": "0.9.0",
   "description": "Expressive JSX style plugin for Bun",
   "repository": "https://github.com/gabeklein/expressive-dsl",
