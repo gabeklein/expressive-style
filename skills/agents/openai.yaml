@@ -1,0 +1,4 @@
+interface:
+  display_name: "Expressive JSX"
+  short_description: "Contribute safely to Expressive JSX"
+  default_prompt: "Use $expressive-jsx to modify or debug the Expressive JSX build toolchain."

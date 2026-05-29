@@ -1,0 +1,11 @@
+# Expressive JSX
+> Build-time CSS-in-JS for React using JavaScript labels.
+
+## Full Documentation
+- [Overview & contributor guide](/llm/SKILL.md): Canonical agent documentation for Expressive JSX.
+
+## References
+- [Authoring Syntax](/llm/references/authoring-syntax.md): Component syntax, values, macros, automatic behavior, gotchas.
+- [Install And Bootstrap](/llm/references/install-bootstrap.md): Consumer setup, repo bootstrap, skill installation.
+- [Architecture](/llm/references/architecture.md): Transformation pipeline, contexts, labels, macros, CSS output.
+- [Testing](/llm/references/testing.md): Test layout, parser snapshots, commands, guardrails.

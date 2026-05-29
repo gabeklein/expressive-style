@@ -16,14 +16,14 @@
   "dependencies": {
     "@babel/standalone": "^7.23.2",
     "@docs/editor": "workspace:*",
-    "@expressive/babel-preset": "workspace:*",
+    "@expressive/babel-preset-style": "workspace:*",
     "prettier": "^2.8.8",
     "react": "^19.2.4",
     "react-dom": "^19.2.4"
   },
   "devDependencies": {
     "@expressive/react": "^0.74.1",
-    "@expressive/vite-plugin": "workspace:*",
+    "@expressive/vite-plugin-style": "workspace:*",
     "@types/babel__standalone": "^7.1.7",
     "@types/prettier": "^2.7.3",
     "@types/react": "^19.2.10",

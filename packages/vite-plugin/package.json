@@ -1,5 +1,5 @@
 {
-  "name": "@expressive/vite-plugin",
+  "name": "@expressive/vite-plugin-style",
   "version": "0.8.0",
   "description": "Expressive JSX Vite Plugin",
   "repository": "https://github.com/gabeklein/expressive-dsl",
@@ -44,7 +44,7 @@
   ],
   "dependencies": {
     "@babel/core": "^7.22.20",
-    "@expressive/babel-preset": "workspace:*",
+    "@expressive/babel-preset-style": "workspace:*",
     "@expressive/css": "workspace:*"
   },
   "devDependencies": {

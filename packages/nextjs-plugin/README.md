@@ -1,18 +1,18 @@
-# @expressive/nextjs-plugin
+# @expressive/nextjs-plugin-style
 
 Next.js plugin for [Expressive JSX](https://github.com/gabeklein/expressive-dsl) - write CSS directly in your JSX components.
 
 ## Installation
 
 ```bash
-npm install @expressive/nextjs-plugin
+npm install @expressive/nextjs-plugin-style
 ```
 
 ## Usage
 
 ```javascript
 // next.config.js
-const withExpressive = require('@expressive/nextjs-plugin');
+const withExpressive = require('@expressive/nextjs-plugin-style');
 
 module.exports = withExpressive({
   // Your Next.js config here
@@ -26,7 +26,7 @@ module.exports = withExpressive({
 You can pass Expressive JSX options as the first argument:
 
 ```javascript
-const withExpressive = require('@expressive/nextjs-plugin');
+const withExpressive = require('@expressive/nextjs-plugin-style');
 
 module.exports = withExpressive({
   // Expressive options
@@ -42,7 +42,7 @@ module.exports = withExpressive({
 Compose with other Next.js plugins:
 
 ```javascript
-const withExpressive = require('@expressive/nextjs-plugin');
+const withExpressive = require('@expressive/nextjs-plugin-style');
 const withBundleAnalyzer = require('@next/bundle-analyzer');
 
 module.exports = withExpressive(
@@ -83,7 +83,7 @@ module.exports = {
 
 ## How It Works
 
-This plugin wraps `@expressive/webpack-plugin` and integrates it into Next.js's webpack configuration. It automatically:
+This plugin wraps `@expressive/webpack-plugin-style` and integrates it into Next.js's webpack configuration. It automatically:
 
 1. Processes `.jsx` files in your Next.js app
 2. Transforms Expressive JSX syntax to standard React + CSS

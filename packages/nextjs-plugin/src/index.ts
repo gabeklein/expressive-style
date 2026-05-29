@@ -1,4 +1,4 @@
-import ExpressiveJSXPlugin, { Options } from "@expressive/webpack-plugin";
+import ExpressiveJSXPlugin, { Options } from "@expressive/webpack-plugin-style";
 
 export interface ExpressiveNextPluginOptions extends Options {}
 
@@ -10,7 +10,7 @@ type NextConfig = Record<string, any>;
  * @example
  * ```js
  * // next.config.js
- * const withExpressive = require('@expressive/nextjs-plugin');
+ * const withExpressive = require('@expressive/nextjs-plugin-style');
  *
  * module.exports = withExpressive({
  *   // rest of your config

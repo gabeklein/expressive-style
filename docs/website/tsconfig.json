@@ -17,13 +17,13 @@
     "noEmit": true,
     "plugins": [
       {
-        "name": "@expressive/typescript-plugin-jsx"
+        "name": "@expressive@expressive/typescript-plugin-style"
       }
     ],
     "paths": {
       "@/*": ["./src/*"],
       "fumadocs-mdx:collections/*": ["./.source/*"],
-      "@expressive/vite-plugin": ["../../packages/vite-plugin/src/index.ts"]
+      "@expressive/vite-plugin-style": ["../../packages/vite-plugin/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "dist"]

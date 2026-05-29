@@ -1,5 +1,5 @@
 import * as Babel from '@babel/standalone';
-import Preset from '@expressive/babel-preset';
+import Preset from '@expressive/babel-preset-style';
 import * as MVC from '@expressive/react';
 import React, { Component } from 'react';
 

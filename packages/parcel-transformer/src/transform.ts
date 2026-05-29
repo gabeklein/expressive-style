@@ -1,5 +1,5 @@
 import * as babel from "@babel/core";
-import BabelPreset from "@expressive/babel-preset";
+import BabelPreset from "@expressive/babel-preset-style";
 
 export type TransformOptions = BabelPreset.Options;
 
